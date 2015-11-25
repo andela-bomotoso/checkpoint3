@@ -6,12 +6,10 @@ public class Operand extends ExpressionPart {
 
     }
 
-    @Override
     public boolean isOperand() {
         return true;
     }
 
-    @Override
     public boolean isOperator() {
         return false;
     }
