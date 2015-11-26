@@ -1,69 +1,81 @@
 package app.com.example.grace.currencycalculator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
-import app.com.example.grace.currencycalculator.models.Operand;
+import app.com.example.grace.currencycalculator.models.SubExpression;
 
 public class Calculator {
 
-    private Operand operand;
-    private Operand operator;
-    private Expression expression;
-    private double expressionResult;
+    public double computeExpression(Expression expression) {
 
-    public Operand getOperand() {
-        return operand;
+        List<ExpressionPart> expressionOperators =  new ArrayList<ExpressionPart>();
+        List<ExpressionPart> expressionOperands =  new ArrayList<ExpressionPart>();
+
+        for(ExpressionPart expressionPart:expression.getExpressionParts()) {
+
+            if(expressionPart.isOperator()) {
+                expressionOperators.add(expressionPart);
+            }
+            else {
+                expressionOperands.add(expressionPart);
+            }
+        }
+
+        return evaluateExpressionParts(expressionOperators,expressionOperands);
     }
 
-    public void setOperand(Operand operand) {
-        this.operand = operand;
-    }
+    public double evaluateExpressionParts(List<ExpressionPart> expressionOperators, List<ExpressionPart> expressionOperands) {
+        double expressionResult = Double.parseDouble(expressionOperands.get(0).getValue());
 
-    public Operand getOperator() {
-        return operator;
-    }
+        for(int i = 0; i < expressionOperators.size(); i++) {
+            double currentOperand = 0;
 
-    public void setOperator(Operand operator) {
-        this.operator = operator;
-    }
+            String currentOperandString = expressionOperands.get(i + 1).getValue();
 
-    public Expression getExpression() {
-        return expression;
-    }
+            if(currentOperandString.startsWith("(")) {
 
-    public void setExpression(Expression expression) {
-        this.expression = expression;
-    }
+                String subExpressionString =  currentOperandString.substring(1,currentOperandString.length()-1);
+                SubExpression subExpression =  new SubExpression();
+                subExpression.setValue(subExpressionString);
+                currentOperand = computeExpression(subExpression);
+            }
+            else {
+                currentOperand = Double.parseDouble(currentOperandString);
+            }
+            String currentOperator = expressionOperators.get(i).getValue();
+            expressionResult = evaluateTempResult(expressionResult,currentOperand,currentOperator);
+        }
 
-    public double getExpressionResult() {
         return expressionResult;
     }
 
-    public void setExpressionResult(double expressionResult) {
-        this.expressionResult = expressionResult;
-    }
+    public double evaluateTempResult(double tempResult, double currentOperand, String currentOperator) {
 
-    public double computeExpression(Expression expression) {
+        switch (currentOperator) {
 
-        double expressionResult;
-        List<ExpressionPart> currentExpression = expression.getExpressionParts();
-        int size = currentExpression.size();
+            case "+":
+                tempResult = tempResult + currentOperand;
+                break;
 
-        if(currentExpression.get(size-1).isOperand()) {
-            expressionResult =  Double.parseDouble(currentExpression.toString());
-            setExpressionResult(expressionResult);
+            case "-":
+                tempResult = tempResult - currentOperand;
+                break;
+
+            case "*":
+                tempResult = tempResult * currentOperand;
+                break;
+
+            case "/":
+                tempResult = tempResult / currentOperand;
         }
-
-        return getExpressionResult();
+        return tempResult;
     }
-
-    
 
     public boolean isValid(Expression expression) {
         return true;
     }
-
 
 }
