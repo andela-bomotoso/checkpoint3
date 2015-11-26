@@ -2,6 +2,10 @@ package app.com.example.grace.currencycalculator.models;
 
 public abstract class ExpressionPart {
 
+    public ExpressionPart() {
+
+    }
+
     String value;
 
     public String getValue() {
@@ -12,7 +16,17 @@ public abstract class ExpressionPart {
         this.value = value;
     }
 
-    public abstract boolean isOperand();
+    public boolean isOperand() {
+        return false;
+    };
 
-    public abstract boolean isOperator();
+    public boolean isOperator() {
+        return false;
+    }
+
+    public boolean isExpression() {
+        return false;
+    }
+
+
 }

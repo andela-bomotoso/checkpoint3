@@ -13,6 +13,7 @@ import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;
 import app.com.example.grace.currencycalculator.models.Operator;
+import app.com.example.grace.currencycalculator.models.SubExpression;
 
 public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -20,7 +21,93 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         super(MainActivity.class);
     }
 
-    public void testComputeExpression() throws Exception {
+    Calculator1 calculator1;
+    Expression expression;
+    Operand operand1,operand2,operand3,operand4,operand5,operand6;
+    Operator plusOperator,minusOperator,timesOperator,divisionOperator;
+
+    public void setUp() throws Exception {
+        super.setUp();
+
+        calculator1 = new Calculator1();
+
+        expression =  new Expression();
+
+        plusOperator = new Operator();
+        plusOperator.setValue("+");
+
+        minusOperator = new Operator();
+        minusOperator.setValue("-");
+
+        timesOperator = new Operator();
+        timesOperator.setValue("*");
+
+        divisionOperator = new Operator();
+        divisionOperator.setValue("/");
+
+        operand1= new Operand();
+        operand1.setValue("12");
+
+        operand2 = new Operand();
+        operand2.setValue("6");
+
+        operand3 = new Operand();
+        operand3.setValue("4");
+
+        operand4 = new Operand();
+        operand4.setValue("9");
+
+        operand5 = new Operand();
+        operand5.setValue("3");
+
+        operand6 = new Operand();
+        operand6.setValue("(3)");
+    }
+
+    public void testFaicalBothering() {
+        Expression expression = new Expression();
+        expression.setExpressionParts(Arrays.asList(
+                new Operand("7"),
+                new Operator("-"),
+                new Operand("4"),
+                new Operator("+"),
+                new Operand("2")
+        ));
+
+        assertEquals(5.0, calculator1.compute(expression));
+
+    }
+    public void testComputeExpressionWhenExpressionNeedsNoPrecedenceRule() throws Exception {
+
+        expression.setExpressionParts(Arrays.asList(operand1, plusOperator, operand2, minusOperator, operand3));
+
+        double expressionResult =  calculator1.compute(expression);
+
+        assertEquals(14.0,expressionResult);
+
+    }
+
+    public void testComputeExpressionWhenExpressionNeedsPrecedenceRule() throws Exception {
+
+        expression.setExpressionParts(Arrays.asList(operand1, timesOperator, operand2, plusOperator, operand3, minusOperator, operand4, divisionOperator, operand5));
+
+        double expressionResult =  calculator1.compute(expression);
+
+        assertEquals(73.0,expressionResult);
+    }
+
+    public void testComputeExpressionWhenExpressionHasBracketOperator() throws Exception {
+
+        expression.setExpressionParts(Arrays.asList(operand1, timesOperator, operand6));
+
+        double expressionResult =  calculator1.compute(expression);
+
+        assertEquals(36.0,expressionResult);
+    }
+
+    public void testComputeExpressionWhenExpressionHasSubExpression() throws Exception {
+
+        SubExpression subExpression = new SubExpression();
 
         Calculator calculator = new Calculator();
 
@@ -35,28 +122,31 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         Operator minusOperator = new Operator();
         minusOperator.setValue("-");
 
-        Operand operand1= new Operand();
-        operand1.setValue("20");
+        Operator divisionOperator = new Operator();
+        divisionOperator.setValue("/");
+
+        Operand operand1 = new Operand();
+        operand1.setValue("2");
+
+        Operand subOperand1 = new Operand();
+        subOperand1.setValue("3");
+
+        Operator subOperator1 = new Operator();
+        subOperator1.setValue("+");
+
+        Operand subOperand2 = new Operand();
+        subOperand2.setValue("9");
+
+        subExpression.setExpressionParts(Arrays.asList(subOperand1,subOperator1,subOperand2));
 
         Operand operand2 = new Operand();
-        operand2.setValue("3");
+        operand2.setValue("(3+9)");
 
-        Operand operand3 = new Operand();
-        operand3.setValue("6");
+        expression.setExpressionParts(Arrays.asList(operand1, timesOperator, subExpression));
 
-        Operand operand4 = new Operand();
-        operand4.setValue("9");
+        double expressionResult =  calculator.compute(expression);
 
-        Operand operand5 = new Operand();
-        operand5.setValue("5");
-
-        expression.setExpressionParts(Arrays.asList(operand1,timesOperator,operand2,plusOperator,operand3,minusOperator,operand4,plusOperator,operand5));
-
-
-
-        double expressionResult =  calculator.computeExpression(expression);
-
-        assertEquals(62.0,expressionResult);
+        assertEquals(24.0,expressionResult);
 
     }
 

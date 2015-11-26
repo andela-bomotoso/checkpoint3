@@ -9,7 +9,10 @@ import app.com.example.grace.currencycalculator.models.SubExpression;
 
 public class Calculator {
 
-    public double computeExpression(Expression expression) {
+    String previousOperator = "";
+    double previousOperand = 0;
+
+    public double compute(Expression expression) {
 
         List<ExpressionPart> expressionOperators =  new ArrayList<ExpressionPart>();
         List<ExpressionPart> expressionOperands =  new ArrayList<ExpressionPart>();
@@ -24,10 +27,12 @@ public class Calculator {
             }
         }
 
-        return evaluateExpressionParts(expressionOperators,expressionOperands);
+        double computedValue = evaluate(expressionOperators, expressionOperands);
+        return computedValue;
     }
 
-    public double evaluateExpressionParts(List<ExpressionPart> expressionOperators, List<ExpressionPart> expressionOperands) {
+    public double evaluate(List<ExpressionPart> expressionOperators, List<ExpressionPart> expressionOperands) {
+
         double expressionResult = Double.parseDouble(expressionOperands.get(0).getValue());
 
         for(int i = 0; i < expressionOperators.size(); i++) {
@@ -35,24 +40,25 @@ public class Calculator {
 
             String currentOperandString = expressionOperands.get(i + 1).getValue();
 
-            if(currentOperandString.startsWith("(")) {
-
-                String subExpressionString =  currentOperandString.substring(1,currentOperandString.length()-1);
-                SubExpression subExpression =  new SubExpression();
-                subExpression.setValue(subExpressionString);
-                currentOperand = computeExpression(subExpression);
-            }
-            else {
+//            if(currentOperandString.startsWith("(")) {
+//
+//                String subExpressionString =  currentOperandString.substring(1,currentOperandString.length()-1);
+//                SubExpression subExpression =  new SubExpression();
+//                subExpression.setValue(subExpressionString);
+//
+//                currentOperand = compute(subExpression);
+//            }
                 currentOperand = Double.parseDouble(currentOperandString);
-            }
+
+
             String currentOperator = expressionOperators.get(i).getValue();
-            expressionResult = evaluateTempResult(expressionResult,currentOperand,currentOperator);
+            expressionResult = getTemporaryValue(expressionResult, currentOperand, currentOperator);
         }
 
         return expressionResult;
     }
 
-    public double evaluateTempResult(double tempResult, double currentOperand, String currentOperator) {
+    public double getTemporaryValue(double tempResult, double currentOperand, String currentOperator) {
 
         switch (currentOperator) {
 
@@ -65,13 +71,40 @@ public class Calculator {
                 break;
 
             case "*":
-                tempResult = tempResult * currentOperand;
+                if(previousOperator.equals("+") && ! previousOperator.isEmpty()) {
+                    tempResult = (tempResult - previousOperand)  + (previousOperand * currentOperand);
+                }
+                else if (previousOperator.equals("-") && ! previousOperator.isEmpty()) {
+                    tempResult = (tempResult + previousOperand)  - (previousOperand * currentOperand);
+                }
+
+                else {
+                    tempResult = tempResult * currentOperand;
+                    break;
+                }
+
                 break;
 
             case "/":
-                tempResult = tempResult / currentOperand;
+                if(previousOperator.equals("+") && ! previousOperator.isEmpty()) {
+                    tempResult = (tempResult - previousOperand)  + (previousOperand / currentOperand);
+                }
+                else if (previousOperator.equals("-") && ! previousOperator.isEmpty()) {
+                    tempResult = (tempResult + previousOperand)  - (previousOperand / currentOperand);
+                }
+
+                else {
+                    tempResult = tempResult / currentOperand;
+                    break;
+                }
+
         }
+
+        previousOperand = currentOperand;
+        previousOperator = currentOperator;
+
         return tempResult;
+
     }
 
     public boolean isValid(Expression expression) {

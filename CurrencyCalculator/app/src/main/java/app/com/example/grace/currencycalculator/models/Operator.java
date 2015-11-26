@@ -7,11 +7,13 @@ public class Operator extends ExpressionPart {
 
     }
 
+    public Operator(String value){
+        setValue(value);
+    }
+
+    @Override
     public boolean isOperator() {
         return true;
     }
 
-    public boolean isOperand() {
-        return false;
-    }
 }

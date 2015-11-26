@@ -8,6 +8,15 @@ public class SubExpression extends Expression {
 
     }
 
+    public SubExpression(String value) {
+        setValue(value);
+    }
+
+    @Override
+    public boolean isExpression() {
+        return true;
+    }
+
     public String getValue() {
         return value;
     }

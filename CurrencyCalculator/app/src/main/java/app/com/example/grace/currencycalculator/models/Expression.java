@@ -2,10 +2,14 @@ package app.com.example.grace.currencycalculator.models;
 
 import java.util.List;
 
-public class Expression {
+public class Expression extends ExpressionPart {
+
+    public Expression() {
+
+    }
 
     private List<ExpressionPart> expressionParts;
-    private Expression subExpression;
+    private SubExpression subExpression;
 
     public List<ExpressionPart> getExpressionParts() {
         return expressionParts;
@@ -15,11 +19,4 @@ public class Expression {
         this.expressionParts = expressionParts;
     }
 
-    public Expression getSubExpression() {
-        return subExpression;
-    }
-
-    public void setSubExpression(Expression subExpression) {
-        this.subExpression = subExpression;
-    }
 }
