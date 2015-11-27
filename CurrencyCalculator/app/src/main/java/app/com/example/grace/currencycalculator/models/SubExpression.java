@@ -11,18 +11,16 @@ public class SubExpression extends Expression {
     public SubExpression(String value) {
         setValue(value);
     }
-
-    @Override
-    public boolean isExpression() {
-        return true;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
 }
+
+//    public void setValue(String value) {
+//        setValue(value);
+//    }
+//
+//
+//    public String getValue() {
+//        return value;
+//    }
+//
+//
+//}

@@ -71,7 +71,7 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(36.0, expressionResult);
     }
 
-    public void testComputeExpressionWhenExpressionHasBracketWithNoPreceedingOperator() throws Exception {
+    public void testComputeExpressionWhenExpressionHasBracketWithNoPrecedingOperator() throws Exception {
         List<ExpressionPart> expressionParts = new ArrayList<>();
         expressionParts.add(new Operand("12"));
         expressionParts.add(new Operand("(3)"));
@@ -81,7 +81,16 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     }
 
     public void testComputeExpressionWhenExpressionHasSubExpression() throws Exception {
-
+        expression.setExpressionParts(Arrays.asList(
+                new Operand("2"),
+                new Operator("*"),
+                new Operand("4"),
+                new Operator("+"),
+                new Operand("(3+5*2-1)"),
+                new Operator("/"),
+                new Operand("2")
+        ));
+        assertEquals(14.0,calculator.compute(expression));
     }
 
     public void testIsExpressionValidWhenExpressionIsValid() throws Exception {
@@ -120,7 +129,7 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
                 new Operator("-"),
                 new Operand("2"),
                 new Operator("+"),
-                new Operand("(12*6+6")));
+                new Operand("(12*6)+6")));
         assertFalse(calculator.isValid(expression));
     }
 
