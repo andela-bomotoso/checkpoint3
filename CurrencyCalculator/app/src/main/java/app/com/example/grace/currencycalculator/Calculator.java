@@ -12,13 +12,18 @@ public class Calculator {
     double previousOperand = 0.0;
     String previousOperator = "";
     String currentOperator = "";
+    String currentOperandString = "";
     double currentOperand = 0.0;
     double computedValue = 0.0;
+    ExpressionPart currentExpressionPart;
+    ExpressionPart previousExpressionPart;
+    ExpressionPart firstNumber;
+
 
     public double compute(Expression expression) {
 
         List<ExpressionPart> expressionParts = expression.getExpressionParts();
-        ExpressionPart firstNumber = expressionParts.get(0);
+        firstNumber = expressionParts.get(0);
         computedValue = Double.parseDouble(firstNumber.getValue());
 
         for(int i = 1; i < expressionParts.size(); i++) {
@@ -28,7 +33,7 @@ public class Calculator {
 
             if(currentExpressionPart.isOperand()) {
 
-                String currentOperandString = currentExpressionPart.getValue();
+                currentOperandString = currentExpressionPart.getValue();
                 currentOperator = previousExpressionPart.getValue();
 
                 if((currentOperandString).startsWith("(") ){
@@ -108,22 +113,47 @@ public class Calculator {
 
     public boolean isValid(Expression expression) {
 
-        //String expressionString = expression.getValue();
+        boolean isValid = true;
+        List<ExpressionPart> expressionParts = expression.getExpressionParts();
+        firstNumber = expressionParts.get(0);
+        String currentOperandString="";
 
-        return false;
+        for(int i = 1; i < expressionParts.size(); i++) {
+            ExpressionPart currentExpressionPart = expressionParts.get(i);
+            ExpressionPart previousExpressionPart = expressionParts.get(i - 1);
+
+            if(currentExpressionPart.isOperand()) {
+                currentOperandString = currentExpressionPart.getValue();
+                currentOperator = previousExpressionPart.getValue();
+            }
+
+            if (startWithOperator(firstNumber) || DoubleOperator(previousExpressionPart, currentExpressionPart) || bracketMismatch(currentOperandString)
+                    || divisionByZero(currentOperandString) || doubleDots(currentOperandString))
+            {
+                isValid = false;
+                break;
+            }
+        }
+            return isValid;
+    }
+    private boolean startWithOperator(ExpressionPart firstNumber) {
+
+        return firstNumber.isOperator();
     }
 
-    private boolean operatorTwice() {
-        return false;
+    private boolean DoubleOperator(ExpressionPart previousExpressionPart, ExpressionPart currentExpressionPart) {
+        return (currentExpressionPart.isOperator() && previousExpressionPart.isOperator());
     }
 
-    private boolean startWithOperator() {
-        return false;
+    private boolean bracketMismatch(String currentOperandString) {
+        return (currentOperandString.startsWith("(") && !currentOperandString.endsWith(")"));
     }
-    private boolean mismatchedBracket() {
-        return false;
+
+    private boolean divisionByZero(String currentOperandString) {
+        return (currentOperator.equals("/") && currentOperandString.equals("0"));
     }
-    private boolean divisionByZero() {
-        return false;
+
+    private boolean doubleDots(String currentOperandString) {
+        return ( (currentOperandString.length() - currentOperandString.replace(".", "").length()) > 1);
     }
 }

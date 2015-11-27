@@ -3,12 +3,14 @@ package app.com.example.grace.currencycalculator;
 import android.test.ActivityInstrumentationTestCase2;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import app.com.example.grace.currencycalculator.models.Expression;
+import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;
 import app.com.example.grace.currencycalculator.models.Operator;
-import app.com.example.grace.currencycalculator.models.SubExpression;
 
 public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -18,134 +20,127 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
 
     Calculator calculator;
     Expression expression;
-    Operand operand1,operand2,operand3,operand4,operand5,operand6;
-    Operator plusOperator,minusOperator,timesOperator,divisionOperator;
 
     public void setUp() throws Exception {
         super.setUp();
 
         calculator = new Calculator();
 
-        expression =  new Expression();
-
-        plusOperator = new Operator();
-        plusOperator.setValue("+");
-
-        minusOperator = new Operator();
-        minusOperator.setValue("-");
-
-        timesOperator = new Operator();
-        timesOperator.setValue("*");
-
-        divisionOperator = new Operator();
-        divisionOperator.setValue("/");
-
-        operand1= new Operand();
-        operand1.setValue("12");
-
-        operand2 = new Operand();
-        operand2.setValue("6");
-
-        operand3 = new Operand();
-        operand3.setValue("4");
-
-        operand4 = new Operand();
-        operand4.setValue("9");
-
-        operand5 = new Operand();
-        operand5.setValue("3");
-
-        operand6 = new Operand();
-        operand6.setValue("(3)");
+        expression = new Expression();
     }
 
-    public void testFaicalBothering() {
-        Expression expression = new Expression();
-        expression.setExpressionParts(Arrays.asList(
-                new Operand("7"),
-                new Operator("-"),
-                new Operand("4"),
-                new Operator("+"),
-                new Operand("2")
-        ));
-
-        assertEquals(5.0, calculator.compute(expression));
-
-    }
     public void testComputeExpressionWhenExpressionNeedsNoPrecedenceRule() throws Exception {
 
-        expression.setExpressionParts(Arrays.asList(operand1, plusOperator, operand2, minusOperator, operand3));
-
-        double expressionResult =  calculator.compute(expression);
-
-        assertEquals(14.0,expressionResult);
-
+        expression.setExpressionParts(Arrays.asList(
+                new Operand("12"),
+                new Operator("+"),
+                new Operand("6"),
+                new Operator("-"),
+                new Operand("3")
+        ));
+        assertEquals(15.0, calculator.compute(expression));
     }
 
     public void testComputeExpressionWhenExpressionNeedsPrecedenceRule() throws Exception {
 
-        expression.setExpressionParts(Arrays.asList(operand1, plusOperator, operand2, timesOperator, operand3, minusOperator, operand4, divisionOperator, operand5));
+        expression.setExpressionParts(Arrays.asList(
+                new Operand("12"),
+                new Operator("+"),
+                new Operand("6"),
+                new Operator("*"),
+                new Operand("4"),
+                new Operator("-"),
+                new Operand("9"),
+                new Operator("/"),
+                new Operand("3")
+        ));
+        assertEquals(33.0, calculator.compute(expression));
 
-        double expressionResult =  calculator.compute(expression);
-
-        assertEquals(33.0,expressionResult);
     }
 
-    public void testComputeExpressionWhenExpressionHasBracketOperator() throws Exception {
+    public void testComputeExpressionWhenExpressionHasBracketWithAPrecedingOperator() throws Exception {
+        expression.setExpressionParts(Arrays.asList(
+                new Operand("12"),
+                new Operator("+"),
+                new Operand("(6)"),
+                new Operator("*"),
+                new Operand("4")));
 
-        expression.setExpressionParts(Arrays.asList(operand1, timesOperator, operand6));
+        double expressionResult = calculator.compute(expression);
 
-        double expressionResult =  calculator.compute(expression);
+        assertEquals(36.0, expressionResult);
+    }
 
-        assertEquals(36.0,expressionResult);
+    public void testComputeExpressionWhenExpressionHasBracketWithNoPreceedingOperator() throws Exception {
+        List<ExpressionPart> expressionParts = new ArrayList<>();
+        expressionParts.add(new Operand("12"));
+        expressionParts.add(new Operand("(3)"));
+        expression.setExpressionParts(expressionParts);
+
+        assertEquals(36.0, calculator.compute(expression));
     }
 
     public void testComputeExpressionWhenExpressionHasSubExpression() throws Exception {
 
-        SubExpression subExpression = new SubExpression();
-
-        Calculator calculator = new Calculator();
-
-        Expression expression =  new Expression();
-
-        Operator plusOperator = new Operator();
-        plusOperator.setValue("+");
-
-        Operator timesOperator = new Operator();
-        timesOperator.setValue("*");
-
-        Operator minusOperator = new Operator();
-        minusOperator.setValue("-");
-
-        Operator divisionOperator = new Operator();
-        divisionOperator.setValue("/");
-
-        Operand operand1 = new Operand();
-        operand1.setValue("2");
-
-        Operand subOperand1 = new Operand();
-        subOperand1.setValue("3");
-
-        Operator subOperator1 = new Operator();
-        subOperator1.setValue("+");
-
-        Operand subOperand2 = new Operand();
-        subOperand2.setValue("9");
-
-        subExpression.setExpressionParts(Arrays.asList(subOperand1, subOperator1, subOperand2));
-
-        Operand operand2 = new Operand();
-        operand2.setValue("(3+9)");
-
-        expression.setExpressionParts(Arrays.asList(operand1, timesOperator, subExpression));
-
-        double expressionResult =  calculator.compute(expression);
-
-        assertEquals(24.0,expressionResult);
-
     }
 
-    public void testIsExpressionValid() throws Exception {
+    public void testIsExpressionValidWhenExpressionIsValid() throws Exception {
+        expression.setExpressionParts(Arrays.asList(
+                new Operand("12"),
+                new Operator("+"),
+                new Operand("(6)"),
+                new Operator("-"),
+                new Operand("4")));
+        assertTrue(calculator.isValid(expression));
+    }
 
+    public void testIsExpressionValidWhenExpressionStartsWithOperator() throws Exception {
+        expression.setExpressionParts(Arrays.asList(
+                new Operator("+"),
+                new Operator("12"),
+                new Operand("-"),
+                new Operand("4")));
+
+        assertFalse(calculator.isValid(expression));
+    }
+
+    public void testIsExpressionValidWhenExpressionHasDoubleOperator() throws Exception {
+        expression.setExpressionParts(Arrays.asList(
+                new Operator("12"),
+                new Operand("-"),
+                new Operator("+"),
+                new Operand("2")));
+
+        assertFalse(calculator.isValid(expression));
+    }
+
+    public void testIsExpressionValidWhenExpressionHasBracketMismatch() throws Exception {
+        expression.setExpressionParts(Arrays.asList(
+                new Operand("12"),
+                new Operator("-"),
+                new Operand("2"),
+                new Operator("+"),
+                new Operand("(12*6+6")));
+        assertFalse(calculator.isValid(expression));
+    }
+
+    public void testIsExpressionValidWhenExpressionHasDivisionByZeroError() throws Exception {
+        expression.setExpressionParts(Arrays.asList(
+                new Operand("12"),
+                new Operator("/"),
+                new Operand("0"),
+                new Operator("+"),
+                new Operand("1")));
+        assertFalse(calculator.isValid(expression));
+    }
+
+    public void testIsExpressionValidWhenExpressionHasOperandWithDoubleDots() throws Exception {
+        expression.setExpressionParts(Arrays.asList(
+                new Operand("12"),
+                new Operator("/"),
+                new Operand("5.2."),
+                new Operator("+"),
+                new Operand("1")));
+        assertFalse(calculator.isValid(expression));
     }
 }
