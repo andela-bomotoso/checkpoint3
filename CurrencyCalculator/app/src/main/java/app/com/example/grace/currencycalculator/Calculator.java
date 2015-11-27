@@ -1,114 +1,129 @@
 package app.com.example.grace.currencycalculator;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
-import app.com.example.grace.currencycalculator.models.SubExpression;
 
 public class Calculator {
 
+    double previousOperand = 0.0;
     String previousOperator = "";
-    double previousOperand = 0;
+    String currentOperator = "";
+    double currentOperand = 0.0;
+    double computedValue = 0.0;
 
     public double compute(Expression expression) {
 
-        List<ExpressionPart> expressionOperators =  new ArrayList<ExpressionPart>();
-        List<ExpressionPart> expressionOperands =  new ArrayList<ExpressionPart>();
+        List<ExpressionPart> expressionParts = expression.getExpressionParts();
+        ExpressionPart firstNumber = expressionParts.get(0);
+        computedValue = Double.parseDouble(firstNumber.getValue());
 
-        for(ExpressionPart expressionPart:expression.getExpressionParts()) {
+        for(int i = 1; i < expressionParts.size(); i++) {
 
-            if(expressionPart.isOperator()) {
-                expressionOperators.add(expressionPart);
-            }
-            else {
-                expressionOperands.add(expressionPart);
+            ExpressionPart currentExpressionPart = expressionParts.get(i);
+            ExpressionPart previousExpressionPart = expressionParts.get(i-1);
+
+            if(currentExpressionPart.isOperand()) {
+
+                String currentOperandString = currentExpressionPart.getValue();
+                currentOperator = previousExpressionPart.getValue();
+
+                if((currentOperandString).startsWith("(") ){
+                    currentOperandString  =  currentOperandString.substring(1, currentOperandString.length() - 1);
+
+                    if(previousExpressionPart.isOperand()){
+                        currentOperator = "*";
+                    }
+                }
+                currentOperand = Double.parseDouble(currentOperandString);
+                computedValue = getTemporaryValue();
             }
         }
 
-        double computedValue = evaluate(expressionOperators, expressionOperands);
         return computedValue;
     }
 
-    public double evaluate(List<ExpressionPart> expressionOperators, List<ExpressionPart> expressionOperands) {
-
-        double expressionResult = Double.parseDouble(expressionOperands.get(0).getValue());
-
-        for(int i = 0; i < expressionOperators.size(); i++) {
-            double currentOperand = 0;
-
-            String currentOperandString = expressionOperands.get(i + 1).getValue();
-
-//            if(currentOperandString.startsWith("(")) {
-//
-//                String subExpressionString =  currentOperandString.substring(1,currentOperandString.length()-1);
-//                SubExpression subExpression =  new SubExpression();
-//                subExpression.setValue(subExpressionString);
-//
-//                currentOperand = compute(subExpression);
-//            }
-                currentOperand = Double.parseDouble(currentOperandString);
-
-
-            String currentOperator = expressionOperators.get(i).getValue();
-            expressionResult = getTemporaryValue(expressionResult, currentOperand, currentOperator);
-        }
-
-        return expressionResult;
-    }
-
-    public double getTemporaryValue(double tempResult, double currentOperand, String currentOperator) {
+    private double getTemporaryValue() {
 
         switch (currentOperator) {
 
             case "+":
-                tempResult = tempResult + currentOperand;
+                computedValue = computedValue + currentOperand;
                 break;
 
             case "-":
-                tempResult = tempResult - currentOperand;
-                break;
+                computedValue = computedValue - currentOperand;
 
             case "*":
-                if(previousOperator.equals("+") && ! previousOperator.isEmpty()) {
-                    tempResult = (tempResult - previousOperand)  + (previousOperand * currentOperand);
-                }
-                else if (previousOperator.equals("-") && ! previousOperator.isEmpty()) {
-                    tempResult = (tempResult + previousOperand)  - (previousOperand * currentOperand);
-                }
-
-                else {
-                    tempResult = tempResult * currentOperand;
-                    break;
-                }
-
-                break;
-
             case "/":
-                if(previousOperator.equals("+") && ! previousOperator.isEmpty()) {
-                    tempResult = (tempResult - previousOperand)  + (previousOperand / currentOperand);
-                }
-                else if (previousOperator.equals("-") && ! previousOperator.isEmpty()) {
-                    tempResult = (tempResult + previousOperand)  - (previousOperand / currentOperand);
-                }
-
-                else {
-                    tempResult = tempResult / currentOperand;
-                    break;
-                }
-
+              computedValue = evaluatePrecedence();
+                break;
         }
 
         previousOperand = currentOperand;
         previousOperator = currentOperator;
 
-        return tempResult;
+        return computedValue;
+    }
 
+    private double evaluatePrecedence() {
+        double expressionValue;
+        switch (currentOperator) {
+
+            case "*":
+                if(!previousOperator.isEmpty()){
+                        expressionValue = previousOperand * currentOperand;
+                        computedValue =  analyzePrecedence(expressionValue);
+                } else {
+                computedValue = computedValue * currentOperand;
+            }
+                break;
+
+            case "/":
+                if(!previousOperator.isEmpty()){
+                    expressionValue = previousOperand / currentOperand;
+                    computedValue = analyzePrecedence(expressionValue);
+                }
+                else {
+                    computedValue = computedValue / currentOperand;
+                }
+                break;
+        }
+
+        return computedValue;
+    }
+
+    private double analyzePrecedence(double expressionValue) {
+
+        if (previousOperator.equals("+")) {
+            computedValue = (computedValue - previousOperand) + expressionValue;
+        } else if (previousOperator.equals("-")) {
+            computedValue = (computedValue + previousOperand) - expressionValue;
+        }
+        return computedValue;
     }
 
     public boolean isValid(Expression expression) {
-        return true;
+
+        //String expressionString = expression.getValue();
+
+        return false;
     }
 
+    private boolean operatorTwice() {
+        return false;
+    }
+
+    private boolean startWithOperator() {
+        return false;
+    }
+    private boolean mismatchedBracket() {
+        return false;
+    }
+    private boolean divisionByZero() {
+        return false;
+    }
 }

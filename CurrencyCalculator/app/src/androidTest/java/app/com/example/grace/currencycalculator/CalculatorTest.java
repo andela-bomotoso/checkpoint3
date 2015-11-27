@@ -2,15 +2,10 @@ package app.com.example.grace.currencycalculator;
 
 import android.test.ActivityInstrumentationTestCase2;
 
-import junit.framework.TestCase;
 
-
-import java.text.DecimalFormat;
 import java.util.Arrays;
-import java.util.List;
 
 import app.com.example.grace.currencycalculator.models.Expression;
-import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;
 import app.com.example.grace.currencycalculator.models.Operator;
 import app.com.example.grace.currencycalculator.models.SubExpression;
@@ -21,7 +16,7 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         super(MainActivity.class);
     }
 
-    Calculator1 calculator1;
+    Calculator calculator;
     Expression expression;
     Operand operand1,operand2,operand3,operand4,operand5,operand6;
     Operator plusOperator,minusOperator,timesOperator,divisionOperator;
@@ -29,7 +24,7 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     public void setUp() throws Exception {
         super.setUp();
 
-        calculator1 = new Calculator1();
+        calculator = new Calculator();
 
         expression =  new Expression();
 
@@ -74,14 +69,14 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
                 new Operand("2")
         ));
 
-        assertEquals(5.0, calculator1.compute(expression));
+        assertEquals(5.0, calculator.compute(expression));
 
     }
     public void testComputeExpressionWhenExpressionNeedsNoPrecedenceRule() throws Exception {
 
         expression.setExpressionParts(Arrays.asList(operand1, plusOperator, operand2, minusOperator, operand3));
 
-        double expressionResult =  calculator1.compute(expression);
+        double expressionResult =  calculator.compute(expression);
 
         assertEquals(14.0,expressionResult);
 
@@ -89,18 +84,18 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
 
     public void testComputeExpressionWhenExpressionNeedsPrecedenceRule() throws Exception {
 
-        expression.setExpressionParts(Arrays.asList(operand1, timesOperator, operand2, plusOperator, operand3, minusOperator, operand4, divisionOperator, operand5));
+        expression.setExpressionParts(Arrays.asList(operand1, plusOperator, operand2, timesOperator, operand3, minusOperator, operand4, divisionOperator, operand5));
 
-        double expressionResult =  calculator1.compute(expression);
+        double expressionResult =  calculator.compute(expression);
 
-        assertEquals(73.0,expressionResult);
+        assertEquals(33.0,expressionResult);
     }
 
     public void testComputeExpressionWhenExpressionHasBracketOperator() throws Exception {
 
         expression.setExpressionParts(Arrays.asList(operand1, timesOperator, operand6));
 
-        double expressionResult =  calculator1.compute(expression);
+        double expressionResult =  calculator.compute(expression);
 
         assertEquals(36.0,expressionResult);
     }
@@ -137,7 +132,7 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         Operand subOperand2 = new Operand();
         subOperand2.setValue("9");
 
-        subExpression.setExpressionParts(Arrays.asList(subOperand1,subOperator1,subOperand2));
+        subExpression.setExpressionParts(Arrays.asList(subOperand1, subOperator1, subOperand2));
 
         Operand operand2 = new Operand();
         operand2.setValue("(3+9)");
