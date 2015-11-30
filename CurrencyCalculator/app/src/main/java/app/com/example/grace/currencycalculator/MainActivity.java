@@ -158,9 +158,31 @@ public class MainActivity extends AppCompatActivity {
             case R.id.zero:
                 updateWorkArea("0");
                 break;
+            case R.id.open_bracket:
+                updateWorkArea("(");
+                break;
+            case R.id.close_bracket:
+                updateWorkArea(")");
+                break;
+            case R.id.times:
+                updateWorkArea("*");
+                break;
+            case R.id.division:
+                updateWorkArea("/");
+                break;
+            case R.id.plus:
+                updateWorkArea("+");
+                break;
+            case R.id.minus:
+                updateWorkArea("-");
+                break;
+            case R.id.decimal:
+                updateWorkArea(".");
+                break;
             case R.id.clear:
                 computationArea.setText("");
                 break;
+
             case R.id.del:
                 deleteFromWorkArea();
         }
