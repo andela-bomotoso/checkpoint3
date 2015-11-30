@@ -4,11 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/work_area_background"
+
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main" tools:context=".MainActivity"
     android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/computation_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="2 x 3 x 10"
@@ -17,259 +20,14 @@
             android:textSize="50sp"/>
 
         <TextView
+            android:id="@+id/result_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:text="60"
             android:gravity="right"
             android:layout_marginBottom="15dp"
             android:textSize="35sp"/>
 
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/button_background">
-
-        <TableRow>
-            <Button
-            android:id="@+id/clear"
-            android:textStyle="normal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/button_textsize"
-            android:background="@color/button_background"
-            android:textColor="@color/button_text_color"
-            android:text="@string/clear"
-            android:paddingTop="@dimen/button_padding"
-            android:paddingBottom="@dimen/button_padding"/>
-
-            <Button
-                android:id="@+id/open_bracket"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/open_bracket"
-                android:paddingTop="@dimen/button_padding"
-                android:paddingBottom="@dimen/button_padding"/>
-            <Button
-                android:id="@+id/close_bracket"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/close_bracket"
-                android:paddingTop="@dimen/button_padding"
-                android:paddingBottom="@dimen/button_padding"/>
-            <ImageButton
-                android:id="@+id/del"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_back_white_24dp"
-                android:background="@color/button_background"
-                android:text="DEL"
-                android:paddingTop="@dimen/button_padding"
-                android:paddingBottom="@dimen/button_padding"
-                android:layout_gravity="center_vertical" />
-
-        </TableRow>
-
-        <TableRow>
-            <Button
-                android:id="@+id/seven"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/seven"
-                android:paddingBottom="@dimen/button_padding"/>
-
-            <Button
-                android:id="@+id/eight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/eight"
-                android:paddingBottom="@dimen/button_padding"/>
-            <Button
-                android:id="@+id/nine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/nine"
-                android:paddingBottom="@dimen/button_padding"/>
-            <Button
-                android:id="@+id/division"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/division"
-                android:paddingBottom="@dimen/button_padding"/>
-        </TableRow>
-
-        <TableRow>
-            <Button
-                android:id="@+id/four"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/four"
-                android:paddingBottom="@dimen/button_padding"/>
-
-            <Button
-                android:id="@+id/five"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/five"
-                android:paddingBottom="@dimen/button_padding"/>
-            <Button
-                android:id="@+id/six"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/six"
-                android:paddingBottom="@dimen/button_padding"/>
-            <Button
-                android:id="@+id/times"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/times"
-                android:paddingBottom="@dimen/button_padding"/>
-        </TableRow>
-
-        <TableRow>
-            <Button
-                android:id="@+id/one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/one"
-                android:paddingBottom="@dimen/button_padding"/>
-
-            <Button
-                android:id="@+id/two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/two"
-                android:paddingBottom="@dimen/button_padding"/>
-            <Button
-                android:id="@+id/three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/three"
-                android:paddingBottom="@dimen/button_padding"/>
-            <Button
-                android:id="@+id/minus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/minus"
-                android:paddingBottom="@dimen/button_padding"/>
-        </TableRow>
-        <TableRow>
-            <Button
-                android:id="@+id/zero"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/zero"
-                android:paddingBottom="@dimen/button_padding"/>
-
-            <Button
-                android:id="@+id/decimal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/decimal"
-                android:paddingBottom="@dimen/button_padding"/>
-
-            <Button
-                android:id="@+id/equals"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:paddingBottom="@dimen/button_padding"
-                android:text="@string/equals"/>
-
-
-            <Button
-                android:id="@+id/plus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:paddingBottom="@dimen/button_padding"
-                android:text="@string/plus"/>
-        </TableRow>
-        <TableRow>
-            <Button
-                android:id="@+id/source_currency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/source_currency"
-                android:paddingBottom="@dimen/button_padding"/>
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_forward_white_24dp"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/source_currency"
-                android:paddingBottom="@dimen/button_padding"
-                android:layout_gravity="center_vertical" />
-
-            <Button
-                android:id="@+id/destination_currency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/button_textsize"
-                android:background="@color/button_background"
-                android:textColor="@color/button_text_color"
-                android:text="@string/destination_currency"
-                android:paddingBottom="@dimen/button_padding"/>
-
-
-        </TableRow>
-    </TableLayout>
-
+    <include layout="@layout/keypad" />
 </LinearLayout>

@@ -3,20 +3,21 @@ package app.com.example.grace.currencycalculator.models;
 
 public class ExchangeRate {
 
+    private double value;
+
+    private Currency source;
+
+    private Currency destination;
+
     public ExchangeRate() {
 
     }
 
-    public ExchangeRate(Currency sourceCurrency, Currency baseCurrency) {
-        this.sourceCurrency = sourceCurrency;
-        this.baseCurrency = baseCurrency;
+    public ExchangeRate(Currency source, Currency destination) {
+        this.source = source;
+        this.destination = destination;
     }
 
-    private double value;
-
-    private Currency sourceCurrency;
-
-    private Currency baseCurrency;
 
     public double getValue() {
         return value;
@@ -26,19 +27,19 @@ public class ExchangeRate {
         this.value = value;
     }
 
-    public Currency getSourceCurrency() {
-        return sourceCurrency;
+    public Currency getSource() {
+        return source;
     }
 
-    public void setSourceCurrency(Currency sourceCurrency) {
-        this.sourceCurrency = sourceCurrency;
+    public void setSource(Currency source) {
+        this.source = source;
     }
 
-    public Currency getBaseCurrency() {
-        return baseCurrency;
+    public Currency getDestination() {
+        return destination;
     }
 
-    public void setBaseCurrency(Currency baseCurrency) {
-        this.baseCurrency = baseCurrency;
+    public void setDestination(Currency destination) {
+        this.destination = destination;
     }
 }

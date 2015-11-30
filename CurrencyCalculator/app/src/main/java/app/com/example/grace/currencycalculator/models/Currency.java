@@ -2,17 +2,17 @@ package app.com.example.grace.currencycalculator.models;
 
 public class Currency {
 
-    private String value;
+    private String code;
 
     public Currency() {
 
     }
 
-    public String getValue() {
-        return value;
+    public String getCode() {
+        return code;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setCode(String value) {
+        this.code = code;
     }
 }

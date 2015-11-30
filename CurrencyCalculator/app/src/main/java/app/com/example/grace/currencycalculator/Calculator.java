@@ -8,7 +8,6 @@ import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;
 import app.com.example.grace.currencycalculator.models.Operator;
-import app.com.example.grace.currencycalculator.models.SubExpression;
 
 public class Calculator {
 
@@ -18,7 +17,7 @@ public class Calculator {
     String currentOperandString = "";
     double currentOperand = 0.0;
     double computedValue = 0.0;
-    SubExpression subExpression;
+    Expression subExpression;
     ExpressionPart firstNumber;
 
 
@@ -59,7 +58,9 @@ public class Calculator {
     }
 
     private void recomputeSubexpression(int currentIndex, List<ExpressionPart> expressionParts,double computedValueBuffer, String currentOperatorBuffer) {
-        subExpression = new SubExpression(currentOperandString);
+
+        subExpression = new Expression(currentOperandString);
+
         breakDownSubExpression(subExpression);
         currentOperand = compute(subExpression);
         expressionParts.set(currentIndex,new Operand(currentOperand+""));
@@ -67,7 +68,7 @@ public class Calculator {
         currentOperator = currentOperatorBuffer;
     }
 
-    private void breakDownSubExpression(SubExpression subExpression) {
+    private void breakDownSubExpression(Expression subExpression) {
 
         String str = "";
         String subExpressionParts = subExpression.getValue();

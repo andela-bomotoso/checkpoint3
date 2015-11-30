@@ -2,7 +2,7 @@ package app.com.example.grace.currencycalculator.models;
 
 public class Operand extends ExpressionPart {
 
-    Currency sourceCurrency;
+    private Currency source;
 
     public Operand() {
     }
@@ -16,11 +16,11 @@ public class Operand extends ExpressionPart {
         return true;
     }
 
-    public Currency getSourceCurrency() {
-        return sourceCurrency;
+    public Currency getSource() {
+        return source;
     }
 
-    public void setSourceCurrency(Currency sourceCurrency) {
-        this.sourceCurrency = sourceCurrency;
+    public void setSource(Currency source) {
+        this.source = source;
     }
 }

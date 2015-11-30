@@ -24,9 +24,4 @@ public abstract class ExpressionPart {
         return false;
     }
 
-    public boolean isExpression() {
-        return false;
-    }
-
-
 }
