@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="2"
+    android:orientation="vertical">
 
     <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/button_background">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/button_background"
+    android:layout_weight="2">
 
-        <TableRow>
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
             <Button
                 android:id="@+id/clear"
                 android:textStyle="normal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:textColor="@color/button_text_color"
                 android:background="@drawable/button_style"
                 android:text="@string/clear"
                 android:paddingTop="@dimen/button_padding"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
 
             <Button
                 android:id="@+id/open_bracket"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -34,8 +40,8 @@
                 android:onClick="display"/>
             <Button
                 android:id="@+id/close_bracket"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -45,8 +51,8 @@
                 android:onClick="display"/>
             <ImageButton
                 android:id="@+id/del"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:src="@drawable/ic_arrow_back_white_24dp"
                 android:background="@drawable/button_style"
                 android:text="DEL"
@@ -57,11 +63,13 @@
 
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
             <Button
                 android:id="@+id/seven"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -71,8 +79,8 @@
 
             <Button
                 android:id="@+id/eight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -81,8 +89,8 @@
                 android:onClick="display"/>
             <Button
                 android:id="@+id/nine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -91,8 +99,8 @@
                 android:onClick="display"/>
             <Button
                 android:id="@+id/division"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -101,11 +109,13 @@
                 android:onClick="display"/>
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
             <Button
                 android:id="@+id/four"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -115,8 +125,8 @@
 
             <Button
                 android:id="@+id/five"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -125,8 +135,8 @@
                 android:onClick="display"/>
             <Button
                 android:id="@+id/six"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -135,8 +145,8 @@
                 android:onClick="display"/>
             <Button
                 android:id="@+id/times"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -145,11 +155,13 @@
                 android:onClick="display"/>
         </TableRow>
 
-        <TableRow>
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
             <Button
                 android:id="@+id/one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -159,8 +171,8 @@
 
             <Button
                 android:id="@+id/two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -169,8 +181,8 @@
                 android:onClick="display"/>
             <Button
                 android:id="@+id/three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -179,8 +191,8 @@
                 android:onClick="display"/>
             <Button
                 android:id="@+id/minus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -188,11 +200,13 @@
                 android:paddingBottom="@dimen/button_padding"
                 android:onClick="display"/>
         </TableRow>
-        <TableRow>
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
             <Button
                 android:id="@+id/zero"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -202,8 +216,8 @@
 
             <Button
                 android:id="@+id/decimal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -213,8 +227,8 @@
 
             <Button
                 android:id="@+id/equals"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -225,8 +239,8 @@
 
             <Button
                 android:id="@+id/plus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -234,11 +248,13 @@
                 android:text="@string/plus"
                 android:onClick="display"/>
         </TableRow>
-        <TableRow>
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
             <Button
                 android:id="@+id/source_currency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -247,8 +263,8 @@
                 android:onClick="display"/>
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:src="@drawable/ic_arrow_forward_white_24dp"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
@@ -259,17 +275,14 @@
 
             <Button
                 android:id="@+id/destination_currency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="@dimen/button_textsize"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/destination_currency"
                 android:paddingBottom="@dimen/button_padding"
                 android:onClick="display"/>
-
-
         </TableRow>
     </TableLayout>
-
-</LinearLayout>
+    </LinearLayout>

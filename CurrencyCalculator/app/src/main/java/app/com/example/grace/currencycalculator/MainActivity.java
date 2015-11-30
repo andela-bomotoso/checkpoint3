@@ -159,16 +159,27 @@ public class MainActivity extends AppCompatActivity {
                 updateWorkArea("0");
                 break;
             case R.id.clear:
-                computationArea.getText();
+                computationArea.setText("");
+                break;
+            case R.id.del:
+                deleteFromWorkArea();
         }
-
     }
 
     public void updateWorkArea(String buttonText) {
         String currentExpression = computationArea.getText().toString();
         currentExpression = currentExpression + buttonText;
         computationArea.setText(currentExpression);
+    }
+
+    public void deleteFromWorkArea() {
+        String currentExpression = computationArea.getText().toString();
+        if(!currentExpression.isEmpty()) {
+            currentExpression = currentExpression.substring(0,currentExpression.length()-1);
+            computationArea.setText(currentExpression);
+        }
 
     }
+
 
 }
