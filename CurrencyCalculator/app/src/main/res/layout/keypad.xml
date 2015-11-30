@@ -30,7 +30,8 @@
                 android:textColor="@color/button_text_color"
                 android:text="@string/open_bracket"
                 android:paddingTop="@dimen/button_padding"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
             <Button
                 android:id="@+id/close_bracket"
                 android:layout_width="wrap_content"
@@ -40,7 +41,8 @@
                 android:textColor="@color/button_text_color"
                 android:text="@string/close_bracket"
                 android:paddingTop="@dimen/button_padding"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
             <ImageButton
                 android:id="@+id/del"
                 android:layout_width="wrap_content"
@@ -50,7 +52,8 @@
                 android:text="DEL"
                 android:paddingTop="@dimen/button_padding"
                 android:paddingBottom="@dimen/button_padding"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:onClick="display"/>
 
         </TableRow>
 
@@ -63,7 +66,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/seven"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
 
             <Button
                 android:id="@+id/eight"
@@ -73,7 +77,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/eight"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
             <Button
                 android:id="@+id/nine"
                 android:layout_width="wrap_content"
@@ -82,7 +87,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/nine"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
             <Button
                 android:id="@+id/division"
                 android:layout_width="wrap_content"
@@ -91,7 +97,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/division"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
         </TableRow>
 
         <TableRow>
@@ -103,7 +110,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/four"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
 
             <Button
                 android:id="@+id/five"
@@ -113,7 +121,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/five"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
             <Button
                 android:id="@+id/six"
                 android:layout_width="wrap_content"
@@ -122,7 +131,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/six"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
             <Button
                 android:id="@+id/times"
                 android:layout_width="wrap_content"
@@ -131,7 +141,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/times"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
         </TableRow>
 
         <TableRow>
@@ -143,7 +154,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/one"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
 
             <Button
                 android:id="@+id/two"
@@ -153,7 +165,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/two"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
             <Button
                 android:id="@+id/three"
                 android:layout_width="wrap_content"
@@ -162,7 +175,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/three"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
             <Button
                 android:id="@+id/minus"
                 android:layout_width="wrap_content"
@@ -171,7 +185,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/minus"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
         </TableRow>
         <TableRow>
             <Button
@@ -182,7 +197,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/zero"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
 
             <Button
                 android:id="@+id/decimal"
@@ -192,7 +208,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/decimal"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
 
             <Button
                 android:id="@+id/equals"
@@ -202,7 +219,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:paddingBottom="@dimen/button_padding"
-                android:text="@string/equals"/>
+                android:text="@string/equals"
+                android:onClick="display"/>
 
 
             <Button
@@ -213,7 +231,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:paddingBottom="@dimen/button_padding"
-                android:text="@string/plus"/>
+                android:text="@string/plus"
+                android:onClick="display"/>
         </TableRow>
         <TableRow>
             <Button
@@ -224,7 +243,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/source_currency"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -234,7 +254,8 @@
                 android:textColor="@color/button_text_color"
                 android:text="@string/source_currency"
                 android:paddingBottom="@dimen/button_padding"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:onClick="display"/>
 
             <Button
                 android:id="@+id/destination_currency"
@@ -244,7 +265,8 @@
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
                 android:text="@string/destination_currency"
-                android:paddingBottom="@dimen/button_padding"/>
+                android:paddingBottom="@dimen/button_padding"
+                android:onClick="display"/>
 
 
         </TableRow>

@@ -14,17 +14,15 @@
             android:id="@+id/computation_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="2 x 3 x 10"
             android:gravity="right"
             android:layout_marginBottom="15dp"
-            android:textSize="50sp"/>
+            android:textSize="45sp"
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/result_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:text="60"
             android:gravity="right"
             android:layout_marginBottom="15dp"
             android:textSize="35sp"/>

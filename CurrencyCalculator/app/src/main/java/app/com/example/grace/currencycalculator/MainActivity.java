@@ -127,7 +127,48 @@ public class MainActivity extends AppCompatActivity {
 
     public void display(View view) {
 
-       
+        switch(view.getId()) {
+            case R.id.nine:
+                updateWorkArea("9");
+                break;
+            case R.id.eight:
+                updateWorkArea("8");
+                break;
+            case R.id.seven:
+                updateWorkArea("7");
+                break;
+            case R.id.six:
+                updateWorkArea("6");
+                break;
+            case R.id.five:
+                updateWorkArea("5");
+                break;
+            case R.id.four:
+                updateWorkArea("4");
+                break;
+            case R.id.three:
+                updateWorkArea("3");
+                break;
+            case R.id.two:
+                updateWorkArea("2");
+                break;
+            case R.id.one:
+                updateWorkArea("1");
+                break;
+            case R.id.zero:
+                updateWorkArea("0");
+                break;
+            case R.id.clear:
+                computationArea.getText();
+        }
+
+    }
+
+    public void updateWorkArea(String buttonText) {
+        String currentExpression = computationArea.getText().toString();
+        currentExpression = currentExpression + buttonText;
+        computationArea.setText(currentExpression);
+
     }
 
 }
