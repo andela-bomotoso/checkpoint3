@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 public class ValidatorTest extends TestCase {
 
     Validator validator;
+
     public void setUp() throws Exception {
         super.setUp();
         validator = new Validator();
@@ -54,5 +55,27 @@ public class ValidatorTest extends TestCase {
         validator.setExpression(expression);
         assertFalse(validator.isRepeatedZeros('0'));
     }
+    public void testRepeatedDecimalsWhenThereAreRepeatedDecimalsInAnOperand() throws Exception {
+        String expression = "34+56+78.90";
+        validator.setExpression(expression);
+        assertTrue(validator.isRepeatedDecimals('.'));
+    }
+    public void testRepeatedDecimalsWhenThereAreNoRepeatedDecimalsInAnOperand() throws Exception {
+        String expression = "34+56+78";
+        validator.setExpression(expression);
+        assertFalse(validator.isRepeatedDecimals('.'));
+    }
+    public void testMismatchedBracketsWhenBracketsAreMismatched() throws Exception {
+        String expression = "4+5*";
+        validator.setExpression(expression);
+        assertTrue(validator.isMismatchedBrackets(')'));
+    }
+
+    public void testMismatchedBracketsWhenBracketsAreNotMismatched() throws Exception {
+        String expression = "4+5*(3*2";
+        validator.setExpression(expression);
+        assertFalse(validator.isMismatchedBrackets(')'));
+    }
+
 
 }

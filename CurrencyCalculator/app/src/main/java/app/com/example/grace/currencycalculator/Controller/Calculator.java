@@ -1,17 +1,14 @@
 package app.com.example.grace.currencycalculator.Controller;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;
-import app.com.example.grace.currencycalculator.models.Operator;
 
 public class Calculator {
 
-    private Validator validator;
     double previousOperand = 0.0;
     String previousOperator = "";
     String currentOperator = "";
@@ -23,7 +20,7 @@ public class Calculator {
 
 
     public double compute(Expression expression) {
-        validator = new Validator();
+
         List<ExpressionPart> expressionParts = expression.getExpressionParts();
         firstNumber = expressionParts.get(0);
         computedValue = Double.parseDouble(firstNumber.getValue());
@@ -61,36 +58,12 @@ public class Calculator {
 
     private void recomputeSubexpression(int currentIndex, List<ExpressionPart> expressionParts,double computedValueBuffer, String currentOperatorBuffer) {
 
-        subExpression = new Expression(currentOperandString);
-
-        breakDownSubExpression(subExpression);
+        ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer();
+        subExpression = expressionAnalyzer.parseToken(currentOperandString);
         currentOperand = compute(subExpression);
         expressionParts.set(currentIndex,new Operand(currentOperand+""));
         computedValue = computedValueBuffer;
         currentOperator = currentOperatorBuffer;
-    }
-
-    private void breakDownSubExpression(Expression subExpression) {
-
-        String str = "";
-        String subExpressionParts = subExpression.getValue();
-        subExpression.setValue(subExpressionParts);
-        List<ExpressionPart> expressionParts = new ArrayList<>();
-        String subExpressionString = subExpression.getValue();
-
-        for (int i = 0; i < subExpressionString.length(); i++) {
-
-            if (validator.isOperator(subExpressionString.charAt(i))) {
-                expressionParts.add(new Operand(str));
-                expressionParts.add(new Operator(subExpressionString.charAt(i) + ""));
-                str = "";
-
-            } else {
-                str = str + subExpressionString.charAt(i);
-            }
-        }
-        expressionParts.add(new Operand(str));
-        subExpression.setExpressionParts(expressionParts);
     }
 
     private double getTemporaryValue() {
@@ -153,6 +126,4 @@ public class Calculator {
         }
         return computedValue;
     }
-
-
 }

@@ -1,10 +1,14 @@
 package app.com.example.grace.currencycalculator.Controller;
 
+import java.util.List;
+
+import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 
 public class Validator {
 
     String expression;
+    ExpressionAnalyzer expressionAnalyzer;
 
     public String getExpression() {
         return expression;
@@ -14,24 +18,24 @@ public class Validator {
         this.expression = expression;
     }
 
+    public  boolean validate(char keyPressed) {
+
+        return (!startWithInvalidCharacter(keyPressed)) && (!isDivisionByZero(keyPressed)) && (!isRepeatedZeros(keyPressed))
+                && (!isRepeatedDecimals(keyPressed)) && (!isMismatchedBrackets(keyPressed));
+    }
+
     public boolean isOperator(char expressionPart) {
         return (expressionPart == ('+')||expressionPart == ('-')||expressionPart == ('*')||expressionPart == ('/' ));
     }
 
-    private boolean startWithOperator(char keyPressed) {
+    private boolean startWithInvalidCharacter(char keyPressed) {
 
-        return (expression.isEmpty() && isOperator(keyPressed));
-    }
-
-
-    public  boolean validate(char keyPressed) {
-
-        return (!startWithOperator(keyPressed)) && (!isDivisionByZero(keyPressed)) && (!isRepeatedZeros(keyPressed));
+        return (expression.isEmpty() && (isOperator(keyPressed) || keyPressed == ')'));
     }
 
     public String validateOperator(char keyPressed) {
 
-        if (!startWithOperator(keyPressed)) {
+        if (!startWithInvalidCharacter(keyPressed)) {
 
             if (expression.length() >= 1) {
                 char previous = expression.charAt(expression.length() - 1);
@@ -54,9 +58,16 @@ public class Validator {
                 && isOperator(expression.charAt(expression.length() - 2));
     }
 
-    public boolean isRepeatedDecimals(char keypressed) {
-        return true;
+    public boolean isRepeatedDecimals(char keyPressed) {
+
+        expressionAnalyzer = new ExpressionAnalyzer();
+        Expression currentExpression = expressionAnalyzer.parseToken(expression);
+        List<ExpressionPart> expressionParts = currentExpression.getExpressionParts();
+        String previousExpressionPart =  expressionParts.get(expressionParts.size()-1).getValue();
+        return previousExpressionPart.contains(".") && keyPressed == '.';
     }
 
-
+    public boolean isMismatchedBrackets(char keyPressed) {
+        return (!expression.contains("("))  && keyPressed == ')';
+    }
 }
