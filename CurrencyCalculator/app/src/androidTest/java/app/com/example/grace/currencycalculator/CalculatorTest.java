@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import app.com.example.grace.currencycalculator.Controller.Calculator;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;
@@ -93,63 +94,4 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(14.0,calculator.compute(expression));
     }
 
-    public void testIsExpressionValidWhenExpressionIsValid() throws Exception {
-        expression.setExpressionParts(Arrays.asList(
-                new Operand("12"),
-                new Operator("+"),
-                new Operand("(6)"),
-                new Operator("-"),
-                new Operand("4")));
-        assertTrue(calculator.isValid(expression));
-    }
-
-    public void testIsExpressionValidWhenExpressionStartsWithOperator() throws Exception {
-        expression.setExpressionParts(Arrays.asList(
-                new Operator("+"),
-                new Operator("12"),
-                new Operand("-"),
-                new Operand("4")));
-
-        assertFalse(calculator.isValid(expression));
-    }
-
-    public void testIsExpressionValidWhenExpressionHasDoubleOperator() throws Exception {
-        expression.setExpressionParts(Arrays.asList(
-                new Operator("12"),
-                new Operand("-"),
-                new Operator("+"),
-                new Operand("2")));
-
-        assertFalse(calculator.isValid(expression));
-    }
-
-    public void testIsExpressionValidWhenExpressionHasBracketMismatch() throws Exception {
-        expression.setExpressionParts(Arrays.asList(
-                new Operand("12"),
-                new Operator("-"),
-                new Operand("2"),
-                new Operator("+"),
-                new Operand("(12*6)+6")));
-        assertFalse(calculator.isValid(expression));
-    }
-
-    public void testIsExpressionValidWhenExpressionHasDivisionByZeroError() throws Exception {
-        expression.setExpressionParts(Arrays.asList(
-                new Operand("12"),
-                new Operator("/"),
-                new Operand("0"),
-                new Operator("+"),
-                new Operand("1")));
-        assertFalse(calculator.isValid(expression));
-    }
-
-    public void testIsExpressionValidWhenExpressionHasOperandWithDoubleDots() throws Exception {
-        expression.setExpressionParts(Arrays.asList(
-                new Operand("12"),
-                new Operator("/"),
-                new Operand("5.2."),
-                new Operator("+"),
-                new Operand("1")));
-        assertFalse(calculator.isValid(expression));
-    }
 }

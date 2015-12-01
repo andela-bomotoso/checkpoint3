@@ -1,4 +1,4 @@
-package app.com.example.grace.currencycalculator;
+package app.com.example.grace.currencycalculator.Controller;
 
 
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import app.com.example.grace.currencycalculator.models.Operator;
 
 public class Calculator {
 
+    private Validator validator;
     double previousOperand = 0.0;
     String previousOperator = "";
     String currentOperator = "";
@@ -22,6 +23,7 @@ public class Calculator {
 
 
     public double compute(Expression expression) {
+        validator = new Validator();
         List<ExpressionPart> expressionParts = expression.getExpressionParts();
         firstNumber = expressionParts.get(0);
         computedValue = Double.parseDouble(firstNumber.getValue());
@@ -78,7 +80,7 @@ public class Calculator {
 
         for (int i = 0; i < subExpressionString.length(); i++) {
 
-            if (isOperator(subExpressionString.charAt(i))) {
+            if (validator.isOperator(subExpressionString.charAt(i))) {
                 expressionParts.add(new Operand(str));
                 expressionParts.add(new Operator(subExpressionString.charAt(i) + ""));
                 str = "";
@@ -152,57 +154,5 @@ public class Calculator {
         return computedValue;
     }
 
-    public boolean isValid(Expression expression) {
 
-        boolean isValid = true;
-        List<ExpressionPart> expressionParts = expression.getExpressionParts();
-        firstNumber = expressionParts.get(0);
-        String currentOperandString="";
-
-        for(int i = 1; i < expressionParts.size(); i++) {
-
-            ExpressionPart currentExpressionPart = expressionParts.get(i);
-            ExpressionPart previousExpressionPart = expressionParts.get(i - 1);
-
-            if(currentExpressionPart.isOperand()) {
-
-                currentOperandString = currentExpressionPart.getValue();
-                currentOperator = previousExpressionPart.getValue();
-            }
-
-            if (startWithOperator(firstNumber) || DoubleOperator(previousExpressionPart, currentExpressionPart) || bracketMismatch(currentOperandString)
-                    || divisionByZero(currentOperandString) || doubleDots(currentOperandString))
-            {
-                isValid = false;
-                break;
-            }
-        }
-            return isValid;
-    }
-
-    private boolean startWithOperator(ExpressionPart firstNumber) {
-
-        return firstNumber.isOperator();
-    }
-
-    private boolean DoubleOperator(ExpressionPart previousExpressionPart, ExpressionPart currentExpressionPart) {
-        return (currentExpressionPart.isOperator() && previousExpressionPart.isOperator());
-    }
-
-    private boolean bracketMismatch(String currentOperandString) {
-        return (currentOperandString.startsWith("(") && !currentOperandString.endsWith(")"));
-    }
-
-    private boolean divisionByZero(String currentOperandString) {
-        return (currentOperator.equals("/") && currentOperandString.equals("0"));
-    }
-
-    private boolean doubleDots(String currentOperandString) {
-        return ( (currentOperandString.length() - currentOperandString.replace(".", "").length()) > 1);
-    }
-
-
-    private boolean isOperator(char expressionPart) {
-        return (expressionPart == ('+')||expressionPart == ('-')||expressionPart == ('*')||expressionPart == ('/' ));
-    }
 }

@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import app.com.example.grace.currencycalculator.Controller.Validator;
+
 public class MainActivity extends AppCompatActivity {
     private TextView computationArea;
 
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Button destinationCurrencyButton;
 
+    private Validator expressionValidator;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeComponents() {
+        expressionValidator = new Validator();
         computationArea = (TextView)findViewById(R.id.computation_area);
         resultArea = (TextView)findViewById(R.id.result_area);
         clearButton = (Button) findViewById(R.id.clear);
@@ -129,55 +134,55 @@ public class MainActivity extends AppCompatActivity {
 
         switch(view.getId()) {
             case R.id.nine:
-                updateWorkArea("9");
+                updateWorkArea('9');
                 break;
             case R.id.eight:
-                updateWorkArea("8");
+                updateWorkArea('8');
                 break;
             case R.id.seven:
-                updateWorkArea("7");
+                updateWorkArea('7');
                 break;
             case R.id.six:
-                updateWorkArea("6");
+                updateWorkArea('6');
                 break;
             case R.id.five:
-                updateWorkArea("5");
+                updateWorkArea('5');
                 break;
             case R.id.four:
-                updateWorkArea("4");
+                updateWorkArea('4');
                 break;
             case R.id.three:
-                updateWorkArea("3");
+                updateWorkArea('3');
                 break;
             case R.id.two:
-                updateWorkArea("2");
+                updateWorkArea('2');
                 break;
             case R.id.one:
-                updateWorkArea("1");
+                updateWorkArea('1');
                 break;
             case R.id.zero:
-                updateWorkArea("0");
+                updateWorkArea('0');
                 break;
             case R.id.open_bracket:
-                updateWorkArea("(");
+                updateWorkArea('(');
                 break;
             case R.id.close_bracket:
-                updateWorkArea(")");
+                updateWorkArea(')');
                 break;
             case R.id.times:
-                updateWorkArea("*");
+                checkOperatorValidity('*');
                 break;
             case R.id.division:
-                updateWorkArea("/");
+                checkOperatorValidity('/');
                 break;
             case R.id.plus:
-                updateWorkArea("+");
+                checkOperatorValidity('+');
                 break;
             case R.id.minus:
-                updateWorkArea("-");
+                checkOperatorValidity('-');
                 break;
             case R.id.decimal:
-                updateWorkArea(".");
+                updateWorkArea('.');
                 break;
             case R.id.clear:
                 computationArea.setText("");
@@ -188,10 +193,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void updateWorkArea(String buttonText) {
+    public void updateWorkArea(char buttonText) {
+
         String currentExpression = computationArea.getText().toString();
-        currentExpression = currentExpression + buttonText;
-        computationArea.setText(currentExpression);
+        expressionValidator.setExpression(currentExpression);
+
+        if(expressionValidator.validate(buttonText)) {
+            currentExpression = currentExpression + buttonText;
+            computationArea.setText(currentExpression);
+        }
+    }
+
+    public void checkOperatorValidity(char buttonText) {
+        String currentExpression = computationArea.getText().toString();
+        expressionValidator.setExpression(currentExpression);
+        computationArea.setText(expressionValidator.validateOperator(buttonText));
     }
 
     public void deleteFromWorkArea() {
