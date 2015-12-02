@@ -47,38 +47,21 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     }
 
     public void testComputeExpression1() throws Exception {
-        expression.setExpressionParts(Arrays.asList(
-                new Operand("2"),
-                new Operator("*"),
-                new Operand("3"),
-                new Operator("+"),
-                new Operand("5")));
+        String expression = "2*3+5";
 
-        double expressionResult = calculator.compute(expression.getValue());
-
-        assertEquals(11.0, expressionResult);
+        assertEquals(11.0, calculator.compute(expression));
     }
 
     public void testComputeExpressionWhenExpressionHasBracketWithNoPrecedingOperator() throws Exception {
-        List<ExpressionPart> expressionParts = new ArrayList<>();
-        expressionParts.add(new Operand("12"));
-        expressionParts.add(new Operand("(3)"));
-        expression.setExpressionParts(expressionParts);
+        String expression = "12*(3)";
 
-        assertEquals(36.0, calculator.compute(expression.getValue()));
+        assertEquals(36.0, calculator.compute(expression));
     }
 
     public void testComputeExpressionWhenExpressionHasSubExpression() throws Exception {
-        expression.setExpressionParts(Arrays.asList(
-                new Operand("2"),
-                new Operator("*"),
-                new Operand("4"),
-                new Operator("+"),
-                new Operand("(3+5*2-1)"),
-                new Operator("/"),
-                new Operand("2")
-        ));
-        assertEquals(14.0, calculator.compute(expression.getValue()));
+        String expression = "2*4+(3+5*2-1)/2";
+
+        assertEquals(14.0, calculator.compute(expression));
     }
 
 }

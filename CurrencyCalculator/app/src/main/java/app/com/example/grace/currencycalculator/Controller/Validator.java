@@ -60,10 +60,13 @@ public class Validator {
 
     public boolean isRepeatedDecimals(char keyPressed) {
 
+        String previousExpressionPart = "";
         expressionAnalyzer = new ExpressionAnalyzer();
         Expression currentExpression = expressionAnalyzer.breakDownExpression(expression);
         List<ExpressionPart> expressionParts = currentExpression.getExpressionParts();
-        String previousExpressionPart =  expressionParts.get(expressionParts.size()-1).getValue();
+        if (expressionParts.size() >= 1) {
+            previousExpressionPart = expressionParts.get(expressionParts.size() - 1).getValue();
+        }
         return previousExpressionPart.contains(".") && keyPressed == '.';
     }
 

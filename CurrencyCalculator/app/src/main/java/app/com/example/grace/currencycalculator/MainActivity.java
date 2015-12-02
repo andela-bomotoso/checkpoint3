@@ -1,5 +1,6 @@
 package app.com.example.grace.currencycalculator;
 
+import android.annotation.TargetApi;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -78,16 +79,24 @@ public class MainActivity extends AppCompatActivity {
 
     private Validator expressionValidator;
 
+    public static final String KEY_COMPUTATIONAREA = "workArea";
 
+    public static final String KEY_RESULTAREA = "resultArea";
+
+
+    @TargetApi(21)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         initializeComponents();
 
+        if(savedInstanceState != null) {
+            computationArea.setText(savedInstanceState.getString(KEY_COMPUTATIONAREA,"computationArea"));
+            resultArea.setText(savedInstanceState.getString(KEY_RESULTAREA,"resultArea"));
+        }
 
     }
 
@@ -111,6 +120,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString(KEY_COMPUTATIONAREA, computationArea.getText().toString());
+        savedInstanceState.putString(KEY_RESULTAREA,resultArea.getText().toString());
     }
 
     private void initializeComponents() {
@@ -206,9 +222,12 @@ public class MainActivity extends AppCompatActivity {
                 computationArea.setText("");
                 resultArea.setText("");
                 break;
-
             case R.id.del:
                 deleteFromWorkArea();
+                break;
+            case R.id.equals:
+                moveResultToComputationArea();
+                break;
         }
     }
 
@@ -221,7 +240,9 @@ public class MainActivity extends AppCompatActivity {
             currentExpression = currentExpression + buttonText;
             computationArea.setText("");
             computationArea.setText(currentExpression);
-            resultArea.setText(numberFormat.format(calculator.compute(currentExpression)));
+            if (buttonText != '(') {
+                resultArea.setText(numberFormat.format(calculator.compute(currentExpression)));
+            }
         }
     }
 
@@ -233,12 +254,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void deleteFromWorkArea() {
         String currentExpression = computationArea.getText().toString();
-        if(!currentExpression.isEmpty()) {
+        if(currentExpression.length() > 1) {
             currentExpression = currentExpression.substring(0, currentExpression.length() - 1);
             computationArea.setText(currentExpression);
+            resultArea.setText(numberFormat.format(calculator.compute(currentExpression)));
         }
-
+        else{
+            computationArea.setText("");
+            resultArea.setText("0");
+        }
     }
 
-
+    public void moveResultToComputationArea() {
+        computationArea.setText(resultArea.getText().toString());
+        resultArea.setText("");
+    }
+    
 }
