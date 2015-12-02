@@ -10,13 +10,23 @@ import app.com.example.grace.currencycalculator.models.Operand;
 import app.com.example.grace.currencycalculator.models.Operator;
 
 public class ExpressionAnalyzer {
+    private String value;
 
     public ExpressionAnalyzer() {
 
     }
-    public Expression parseToken(String expressionString) {
 
-        Expression expression = new Expression();;
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public Expression breakDownExpression(String expressionString) {
+
+        Expression expression = new Expression();
         Validator validator = new Validator();
         String str = "";
         List<ExpressionPart> expressionParts = new ArrayList<>();
@@ -36,5 +46,13 @@ public class ExpressionAnalyzer {
         expression.setExpressionParts(expressionParts);
 
         return expression;
+    }
+
+    public String generateExpressionString(Expression expression) {
+        String str = "";
+        for (ExpressionPart expressionPart:expression.getExpressionParts()) {
+            str += expressionPart.getValue();
+        }
+        return str;
     }
 }

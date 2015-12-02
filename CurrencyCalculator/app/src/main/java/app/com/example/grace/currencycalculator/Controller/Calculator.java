@@ -1,6 +1,9 @@
 package app.com.example.grace.currencycalculator.Controller;
 
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.models.Expression;
@@ -16,15 +19,14 @@ public class Calculator {
     double currentOperand = 0.0;
     double computedValue = 0.0;
     Expression subExpression;
-    ExpressionPart firstNumber;
+    ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer();
 
+    public double compute(String expressionString) {
 
-    public double compute(Expression expression) {
+        Expression expression = expressionAnalyzer.breakDownExpression(expressionString);
+        List < ExpressionPart > expressionParts = expression.getExpressionParts();
 
-        List<ExpressionPart> expressionParts = expression.getExpressionParts();
-        firstNumber = expressionParts.get(0);
-        computedValue = Double.parseDouble(firstNumber.getValue());
-
+        computedValue = Double.parseDouble(expressionParts.get(0).getValue());
         for(int i = 1; i < expressionParts.size(); i++) {
 
             ExpressionPart currentExpressionPart = expressionParts.get(i);
@@ -36,15 +38,7 @@ public class Calculator {
                 currentOperator = previousExpressionPart.getValue();
 
                 if ((currentOperandString).startsWith("(")) {
-                    currentOperandString = currentOperandString.substring(1, currentOperandString.length() - 1);
-                    currentExpressionPart.setValue(currentOperandString);
-
-                    if (previousExpressionPart.isOperand()) {
-                        currentOperator = "*";
-                    }
-                    double computedValueBuffer = computedValue;
-                    String currentOperatorBuffer = currentOperator;
-                    recomputeSubexpression(i, expressionParts, computedValueBuffer, currentOperatorBuffer);
+                    analyzeExpressionInParenthesis(currentExpressionPart,previousExpressionPart,expressionParts,i);
                 }
                 else {
                     currentOperand = Double.parseDouble(currentOperandString);
@@ -56,11 +50,23 @@ public class Calculator {
         return computedValue;
     }
 
+    private void analyzeExpressionInParenthesis(ExpressionPart currentExpressionPart,ExpressionPart previousExpressionPart,List<ExpressionPart> expressionParts,int i) {
+
+        currentOperandString = currentOperandString.substring(1, currentOperandString.length() - 1);
+        currentExpressionPart.setValue(currentOperandString);
+
+        if (previousExpressionPart.isOperand()) {
+            currentOperator = "*";
+        }
+        double computedValueBuffer = computedValue;
+        String currentOperatorBuffer = currentOperator;
+        recomputeSubexpression(i, expressionParts, computedValueBuffer, currentOperatorBuffer);
+    }
+
     private void recomputeSubexpression(int currentIndex, List<ExpressionPart> expressionParts,double computedValueBuffer, String currentOperatorBuffer) {
 
-        ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer();
-        subExpression = expressionAnalyzer.parseToken(currentOperandString);
-        currentOperand = compute(subExpression);
+        subExpression = expressionAnalyzer.breakDownExpression(currentOperandString);
+        currentOperand = compute(expressionAnalyzer.generateExpressionString(subExpression));
         expressionParts.set(currentIndex,new Operand(currentOperand+""));
         computedValue = computedValueBuffer;
         currentOperator = currentOperatorBuffer;
@@ -96,7 +102,7 @@ public class Calculator {
             case "*":
                 if(!previousOperator.isEmpty()){
                         expressionValue = previousOperand * currentOperand;
-                        computedValue =  analyzePrecedence(expressionValue);
+                        computedValue =  adjustComputedValue(expressionValue);
                 } else {
                 computedValue = computedValue * currentOperand;
             }
@@ -105,7 +111,7 @@ public class Calculator {
             case "/":
                 if(!previousOperator.isEmpty()){
                     expressionValue = previousOperand / currentOperand;
-                    computedValue = analyzePrecedence(expressionValue);
+                    computedValue = adjustComputedValue(expressionValue);
                 }
                 else {
                     computedValue = computedValue / currentOperand;
@@ -116,7 +122,7 @@ public class Calculator {
         return computedValue;
     }
 
-    private double analyzePrecedence(double expressionValue) {
+    private double adjustComputedValue(double expressionValue) {
 
         if (previousOperator.equals("+")) {
             computedValue = (computedValue - previousOperand) + expressionValue;

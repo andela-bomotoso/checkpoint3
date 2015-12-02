@@ -31,45 +31,32 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     }
 
     public void testComputeExpressionWhenExpressionNeedsNoPrecedenceRule() throws Exception {
-
-        expression.setExpressionParts(Arrays.asList(
-                new Operand("12"),
-                new Operator("+"),
-                new Operand("6"),
-                new Operator("-"),
-                new Operand("3")
-        ));
+        String expression = "12+6-3";
         assertEquals(15.0, calculator.compute(expression));
     }
 
     public void testComputeExpressionWhenExpressionNeedsPrecedenceRule() throws Exception {
-
-        expression.setExpressionParts(Arrays.asList(
-                new Operand("12"),
-                new Operator("+"),
-                new Operand("6"),
-                new Operator("*"),
-                new Operand("4"),
-                new Operator("-"),
-                new Operand("9"),
-                new Operator("/"),
-                new Operand("3")
-        ));
+        String expression = "12+6*4-9/3";
         assertEquals(33.0, calculator.compute(expression));
 
     }
 
     public void testComputeExpressionWhenExpressionHasBracketWithAPrecedingOperator() throws Exception {
+        String expression = "12+(6)*4";
+        assertEquals(36.0, calculator.compute(expression));
+    }
+
+    public void testComputeExpression1() throws Exception {
         expression.setExpressionParts(Arrays.asList(
-                new Operand("12"),
-                new Operator("+"),
-                new Operand("(6)"),
+                new Operand("2"),
                 new Operator("*"),
-                new Operand("4")));
+                new Operand("3"),
+                new Operator("+"),
+                new Operand("5")));
 
-        double expressionResult = calculator.compute(expression);
+        double expressionResult = calculator.compute(expression.getValue());
 
-        assertEquals(36.0, expressionResult);
+        assertEquals(11.0, expressionResult);
     }
 
     public void testComputeExpressionWhenExpressionHasBracketWithNoPrecedingOperator() throws Exception {
@@ -78,7 +65,7 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         expressionParts.add(new Operand("(3)"));
         expression.setExpressionParts(expressionParts);
 
-        assertEquals(36.0, calculator.compute(expression));
+        assertEquals(36.0, calculator.compute(expression.getValue()));
     }
 
     public void testComputeExpressionWhenExpressionHasSubExpression() throws Exception {
@@ -91,7 +78,7 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
                 new Operator("/"),
                 new Operand("2")
         ));
-        assertEquals(14.0,calculator.compute(expression));
+        assertEquals(14.0, calculator.compute(expression.getValue()));
     }
 
 }

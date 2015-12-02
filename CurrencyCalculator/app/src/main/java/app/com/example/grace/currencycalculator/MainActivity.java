@@ -1,8 +1,6 @@
 package app.com.example.grace.currencycalculator;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -12,9 +10,24 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
+import app.com.example.grace.currencycalculator.Controller.Calculator;
+import app.com.example.grace.currencycalculator.Controller.ExpressionAnalyzer;
 import app.com.example.grace.currencycalculator.Controller.Validator;
+import app.com.example.grace.currencycalculator.models.Expression;
 
 public class MainActivity extends AppCompatActivity {
+
+    NumberFormat numberFormat;
+
+    private Calculator calculator;
+
+    private ExpressionAnalyzer expressionAnalyzer;
+
+    private Expression expression;
+
     private TextView computationArea;
 
     private TextView resultArea;
@@ -101,6 +114,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeComponents() {
+
+        numberFormat = new DecimalFormat("##.###");
+        calculator = new Calculator();
+        expression = new Expression();
+        expressionAnalyzer = new ExpressionAnalyzer();
         expressionValidator = new Validator();
         computationArea = (TextView)findViewById(R.id.computation_area);
         resultArea = (TextView)findViewById(R.id.result_area);
@@ -186,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.clear:
                 computationArea.setText("");
+                resultArea.setText("");
                 break;
 
             case R.id.del:
@@ -200,7 +219,9 @@ public class MainActivity extends AppCompatActivity {
 
         if(expressionValidator.validate(buttonText)) {
             currentExpression = currentExpression + buttonText;
+            computationArea.setText("");
             computationArea.setText(currentExpression);
+            resultArea.setText(numberFormat.format(calculator.compute(currentExpression)));
         }
     }
 
@@ -213,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
     public void deleteFromWorkArea() {
         String currentExpression = computationArea.getText().toString();
         if(!currentExpression.isEmpty()) {
-            currentExpression = currentExpression.substring(0,currentExpression.length()-1);
+            currentExpression = currentExpression.substring(0, currentExpression.length() - 1);
             computationArea.setText(currentExpression);
         }
 
