@@ -1,7 +1,10 @@
 package app.com.example.grace.currencycalculator;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -83,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String KEY_RESULTAREA = "resultArea";
 
+    private R.array currencies;
+
 
     @TargetApi(21)
     @Override
@@ -162,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
         sourceCurrencyButton = (Button) findViewById(R.id.source_currency);
         destinationCurrencyButton = (Button)findViewById(R.id.destination_currency);
 
+
     }
 
     public void display(View view) {
@@ -219,8 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 updateWorkArea('.');
                 break;
             case R.id.clear:
-                computationArea.setText("");
-                resultArea.setText("");
+                clearWorkArea();
                 break;
             case R.id.del:
                 deleteFromWorkArea();
@@ -228,22 +233,49 @@ public class MainActivity extends AppCompatActivity {
             case R.id.equals:
                 moveResultToComputationArea();
                 break;
+            case R.id.source_currency:
+                displayCurrencies("source");
+                break;
+            case R.id.destination_currency:
+                displayCurrencies("destination");
+                break;
         }
     }
 
     public void updateWorkArea(char buttonText) {
-
+        String result = "";
         String currentExpression = computationArea.getText().toString();
         expressionValidator.setExpression(currentExpression);
 
         if(expressionValidator.validate(buttonText)) {
             currentExpression = currentExpression + buttonText;
-            computationArea.setText("");
             computationArea.setText(currentExpression);
+
             if (buttonText != '(') {
-                resultArea.setText(numberFormat.format(calculator.compute(currentExpression)));
+                double computed = calculator.compute(currentExpression);
+
+                result = numberFormat.format(computed);
+                resultArea.setText(result);
             }
         }
+    }
+
+    public String updateWorkArea1(String currentExpression, char buttonText) {
+        NumberFormat numberFormat = new DecimalFormat("##.###");
+        Calculator calculator = new Calculator();
+        Validator expressionValidator = new Validator();
+        String result = "";
+        expressionValidator.setExpression(currentExpression);
+
+        if(expressionValidator.validate(buttonText)) {
+            currentExpression = currentExpression + buttonText;
+
+            if (buttonText != '(') {
+               // resultArea.setText(numberFormat.format(calculator.compute(currentExpression)));
+                result = numberFormat.format(calculator.compute(currentExpression));
+            }
+        }
+        return result;
     }
 
     public void checkOperatorValidity(char buttonText) {
@@ -253,21 +285,79 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteFromWorkArea() {
+
         String currentExpression = computationArea.getText().toString();
-        if(currentExpression.length() > 1) {
-            currentExpression = currentExpression.substring(0, currentExpression.length() - 1);
-            computationArea.setText(currentExpression);
-            resultArea.setText(numberFormat.format(calculator.compute(currentExpression)));
+
+        if(currentExpression.length() > 1 & !expressionAfterDelete(currentExpression) .equals("(")) {
+
+            computationArea.setText(expressionAfterDelete(currentExpression));
+            resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
         }
-        else{
-            computationArea.setText("");
+       else if(expressionAfterDelete(currentExpression).equals("(")) {
+            computationArea.setText("(");
             resultArea.setText("0");
+        }
+
+        else {
+            clearWorkArea();
         }
     }
 
-    public void moveResultToComputationArea() {
+    private void moveResultToComputationArea() {
         computationArea.setText(resultArea.getText().toString());
         resultArea.setText("");
     }
-    
+
+    private String expressionAfterDelete(String currentExpression) {
+
+        String expressionAfterDelete = "";
+
+        if(currentExpression.length() > 0) {
+            expressionAfterDelete = currentExpression.substring(0,currentExpression.length()-1);
+        }
+        return expressionAfterDelete;
+    }
+
+    private void clearWorkArea() {
+
+        computationArea.setText("");
+        resultArea.setText("0");
+    }
+
+    @TargetApi(11)
+    public void displayCurrencies(final String type) {
+
+        AlertDialog currency = null;
+        final CharSequence[] items = getResources().getStringArray(R.array.currency_codes);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(getDialogTitle(type));
+        builder.setSingleChoiceItems(items, 1, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int item) {
+                dialogInterface.dismiss();
+                switch (type) {
+                    case "source":
+                        sourceCurrencyButton.setText(items[item]);
+                        break;
+                    case "destination":
+                        destinationCurrencyButton.setText(items[item]);
+                        break;
+                }
+            }
+
+        });
+        currency = builder.create();
+        currency.show();
+    }
+
+    public String getDialogTitle(String type) {
+        String title = "";
+        if (type .equals("source")) {
+            title = "Select the currency you want to convert";
+        }
+        else {
+            title = "Select the currency you want to convert to";
+        }
+        return title;
+    }
+
 }

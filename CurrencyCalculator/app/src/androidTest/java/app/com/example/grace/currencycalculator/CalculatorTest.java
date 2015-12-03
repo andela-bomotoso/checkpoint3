@@ -53,7 +53,7 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     }
 
     public void testComputeExpressionWhenExpressionHasBracketWithNoPrecedingOperator() throws Exception {
-        String expression = "12*(3)";
+        String expression = "12(3)";
 
         assertEquals(36.0, calculator.compute(expression));
     }
@@ -62,6 +62,11 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         String expression = "2*4+(3+5*2-1)/2";
 
         assertEquals(14.0, calculator.compute(expression));
+    }
+
+    public void testCompute1() throws Exception {
+        String expression = "(5+3)*6";
+        assertEquals(48.0,calculator.compute(expression));
     }
 
 }

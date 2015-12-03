@@ -9,7 +9,6 @@ public class ValidatorTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         validator = new Validator();
-
     }
 
     public void testValidate() throws Exception {

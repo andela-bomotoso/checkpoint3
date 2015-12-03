@@ -18,10 +18,12 @@ public class Validator {
         this.expression = expression;
     }
 
-    public  boolean validate(char keyPressed) {
+    public boolean validate(char keyPressed) {
 
         return (!startWithInvalidCharacter(keyPressed)) && (!isDivisionByZero(keyPressed)) && (!isRepeatedZeros(keyPressed))
-                && (!isRepeatedDecimals(keyPressed)) && (!isMismatchedBrackets(keyPressed));
+                && (!isRepeatedDecimals(keyPressed)) && (!isMismatchedBrackets(keyPressed)) && (!closingBracketAfterOperator(keyPressed))
+                && (!repeatedOpeningBracket(keyPressed)) && (!isEmptyParenthesis(keyPressed)) && (!repeatedClosingBracket(keyPressed))
+                && (!isOperandAfterClosingParenthesis(keyPressed));
     }
 
     public boolean isOperator(char expressionPart) {
@@ -69,8 +71,25 @@ public class Validator {
         }
         return previousExpressionPart.contains(".") && keyPressed == '.';
     }
+    public boolean closingBracketAfterOperator(char keyPressed) {
+        return (expression.length() > 1) && isOperator(expression.charAt(expression.length()-1)) && keyPressed == ')';
+    }
+    public boolean repeatedOpeningBracket(char keyPressed) {
+        return (expression.length() >= 1) && expression.charAt(expression.length()-1)=='(' && keyPressed == '(';
+    }
+
+    public boolean repeatedClosingBracket(char keyPressed) {
+        return (expression.length() >= 1) && expression.charAt(expression.length()-1)==')' && keyPressed == ')';
+    }
 
     public boolean isMismatchedBrackets(char keyPressed) {
         return (!expression.contains("("))  && keyPressed == ')';
+    }
+
+    public boolean isEmptyParenthesis(char keyPressed) {
+        return (expression.length() >= 1) && expression.charAt(expression.length()-1)=='(' && keyPressed == ')';
+    }
+    public boolean isOperandAfterClosingParenthesis(char keyPressed) {
+        return (expression.length() >= 1) && expression.charAt(expression.length()-1)==')' && !isOperator(keyPressed);
     }
 }

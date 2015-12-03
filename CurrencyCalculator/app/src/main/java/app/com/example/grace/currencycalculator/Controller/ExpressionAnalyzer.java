@@ -16,6 +16,7 @@ public class ExpressionAnalyzer {
     }
 
     public Expression breakDownExpression(String expressionString) {
+
         boolean isBracket = false;
 
         Expression expression = new Expression();
@@ -36,6 +37,14 @@ public class ExpressionAnalyzer {
             }
             else if(current == '(' && i != 0) {
                 isBracket = true;
+
+                if(!validator.isOperator(expressionString.charAt(i-1))) {
+                    if(str != "") {
+                        expressionParts.add(new Operand(str));
+                        str = "";
+                    }
+                    expressionParts.add(new Operator("*"));
+                }
                 subexpression += current;
             }
             else if (isBracket && current != ')') {
@@ -43,6 +52,10 @@ public class ExpressionAnalyzer {
             }
 
             else if(current == ')' && isBracket) {
+                if(str != "") {
+                    expressionParts.add(new Operand(str));
+                    str = "";
+                }
                 isBracket = false;
                 subexpression += current;
                 expressionParts.add(new Operand(subexpression));

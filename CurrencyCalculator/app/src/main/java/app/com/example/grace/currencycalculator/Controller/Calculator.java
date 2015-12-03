@@ -18,14 +18,16 @@ public class Calculator {
     String currentOperandString = "";
     double currentOperand = 0.0;
     double computedValue = 0.0;
-    ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer();
+    ExpressionAnalyzer expressionAnalyzer;
 
     public double compute(String expressionString) {
 
+        expressionAnalyzer = new ExpressionAnalyzer();
         Expression expression = expressionAnalyzer.breakDownExpression(expressionString);
         List < ExpressionPart > expressionParts = expression.getExpressionParts();
 
         computedValue = Double.parseDouble(expressionParts.get(0).getValue());
+
         for(int index = 1; index < expressionParts.size(); index++) {
 
             ExpressionPart currentExpressionPart = expressionParts.get(index);
@@ -39,7 +41,7 @@ public class Calculator {
                 if ((currentOperandString).startsWith("(")) {
                     currentOperandString = currentOperandString.substring(1, currentOperandString.length() - 1);
                     currentExpressionPart.setValue(currentOperandString);
-                    analyzeExpressionInParenthesis(previousExpressionPart,expressionParts,index);
+                    analyzeExpressionInParenthesis(expressionParts,index);
                 }
                 else {
                     currentOperand = Double.parseDouble(currentOperandString);
@@ -48,14 +50,12 @@ public class Calculator {
             }
         }
 
+        clear();
+
         return computedValue;
     }
 
-    private void analyzeExpressionInParenthesis(ExpressionPart previousExpressionPart,List<ExpressionPart> expressionParts,int currentIndex) {
-
-        if (previousExpressionPart.isOperand()) {
-            currentOperator = "*";
-        }
+    private void analyzeExpressionInParenthesis(List<ExpressionPart> expressionParts,int currentIndex) {
 
         double computedValueBuffer = computedValue;
         String currentOperatorBuffer = currentOperator;
@@ -63,7 +63,6 @@ public class Calculator {
         expressionParts.set(currentIndex,new Operand(currentOperand+""));
         computedValue = computedValueBuffer;
         currentOperator = currentOperatorBuffer;
-
     }
 
     private double getTemporaryValue() {
@@ -76,6 +75,7 @@ public class Calculator {
 
             case "-":
                 computedValue = computedValue - currentOperand;
+                break;
 
             case "*":
             case "/":
@@ -112,6 +112,8 @@ public class Calculator {
                 }
                 break;
         }
+        previousOperand = currentOperand;
+        previousOperator = currentOperator;
 
         return computedValue;
     }
@@ -126,4 +128,13 @@ public class Calculator {
         }
         return computedValue;
     }
+
+    public void clear() {
+        previousOperand = 0.0;
+        previousOperator = "";
+        currentOperator = "";
+        currentOperandString = "";
+        currentOperand = 0.0;
+    }
+
 }
