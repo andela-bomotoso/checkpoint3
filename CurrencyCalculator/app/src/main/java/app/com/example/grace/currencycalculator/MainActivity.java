@@ -3,7 +3,10 @@ package app.com.example.grace.currencycalculator;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +19,9 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import app.com.example.grace.currencycalculator.Controller.Calculator;
 import app.com.example.grace.currencycalculator.Controller.ExpressionAnalyzer;
@@ -121,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this,SettingsActivity.class));
             return true;
         }
 
@@ -328,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
     public void displayCurrencies(final String type) {
 
         AlertDialog currency = null;
-        final CharSequence[] items = getResources().getStringArray(R.array.currency_codes);
+        final CharSequence[] items = currenciesToDisplay();
         AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getDialogTitle(type));
         builder.setSingleChoiceItems(items, 1, new DialogInterface.OnClickListener() {
@@ -358,6 +365,20 @@ public class MainActivity extends AppCompatActivity {
             title = "Select the currency you want to convert to";
         }
         return title;
+    }
+
+    public CharSequence[] currenciesToDisplay() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String currencies_no = preferences.getString("no_of_currency","10");
+        int noOfCurrencies = Integer.parseInt(currencies_no);
+        CharSequence[] items = getResources().getStringArray(R.array.currency_codes);
+        CharSequence[] fetchedItems;
+        List<CharSequence> currencies = new ArrayList<>();
+        for(int i = 0; i<=noOfCurrencies-1; i++) {
+            currencies.add(items[i]);
+        }
+        fetchedItems = currencies.toArray(new CharSequence[currencies.size()]);
+        return fetchedItems;
     }
 
 }
