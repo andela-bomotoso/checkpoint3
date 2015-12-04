@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="0.40">
 
         <TextView
             android:id="@+id/computation_area"
@@ -23,8 +23,8 @@
             android:ellipsize="none"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:layout_marginBottom="15dp"
-            android:textSize="45sp"
+            android:layout_marginBottom="5dp"
+            android:textSize="35sp"
             android:singleLine="true"/>
 
         <TextView
@@ -32,9 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:layout_marginBottom="15dp"
-            android:textSize="35sp"
-            android:text="0"/>
+            android:layout_marginBottom="10dp"
+            android:textSize="30sp"/>
     </LinearLayout>
     <include layout="@layout/keypad" />
 </LinearLayout>
