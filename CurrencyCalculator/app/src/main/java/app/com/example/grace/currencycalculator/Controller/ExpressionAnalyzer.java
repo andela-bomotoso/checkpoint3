@@ -28,10 +28,17 @@ public class ExpressionAnalyzer {
         for (int i = 0; i < expressionString.length(); i++) {
             char current = expressionString.charAt(i);
 
+            if( i == 0 && validator.isOperator(current)) {
+                str += current;
+                continue;
+            }
+
             if (validator.isOperator(current) & !isBracket) {
-                if (str != "") {
+
+                if (str != ""){
                     expressionParts.add(new Operand(str));
                 }
+
                 expressionParts.add(new Operator(current + ""));
                 str = "";
             }

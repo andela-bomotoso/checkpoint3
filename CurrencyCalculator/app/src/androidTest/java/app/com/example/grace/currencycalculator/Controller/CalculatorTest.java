@@ -1,4 +1,4 @@
-package app.com.example.grace.currencycalculator;
+package app.com.example.grace.currencycalculator.Controller;
 
 import android.test.ActivityInstrumentationTestCase2;
 
@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.Controller.Calculator;
+import app.com.example.grace.currencycalculator.MainActivity;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;
@@ -67,6 +68,20 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     public void testCompute1() throws Exception {
         String expression = "(5+3)*6";
         assertEquals(48.0,calculator.compute(expression));
+    }
+
+    public void testComputeWhenExpressionHasOperatorsWithSamePrecedence() throws Exception {
+        String expression = "1+4*2/4-1";
+        assertEquals(2.0,calculator.compute(expression));
+    }
+
+    public void testComputeWhenExpressionHasOperatorsWithSamePrecedenceThroughOut() throws Exception {
+        String expression = "2*3/2";
+        assertEquals(3.0,calculator.compute(expression));
+    }
+    public void testComputeWhenExpressionStartsWithAUnaryOperator() throws Exception {
+        String expression = "-2*3";
+        assertEquals(-6.0,calculator.compute(expression));
     }
 
 }
