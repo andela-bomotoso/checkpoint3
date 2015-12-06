@@ -164,13 +164,13 @@ public class Calculator {
                         computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue * currentOperand);
                     }
                     break;
-
                 case "/":
                     computedValue = computedValue / currentOperand;
                     break;
             }
         }
         previousExpressionValue = previousExpValue * expressionValue;
+        nonPrecedence = false;
         return computedValue;
     }
 
