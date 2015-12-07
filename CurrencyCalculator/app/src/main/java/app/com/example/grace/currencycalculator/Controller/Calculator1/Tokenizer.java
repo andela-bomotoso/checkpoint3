@@ -12,10 +12,16 @@ public class Tokenizer {
     private Pattern separator;
     private Matcher matcher;
 
+    public static final String DEFAULT_SEPARATOR = "\\s+";
+
     public Tokenizer(Collection<TokenType> typesOfTokens, String separator) {
         listOfTokens = new ArrayList<TokenType>(typesOfTokens);
         this.separator = Pattern.compile(separator);
         matcher = this.separator.matcher("");
+    }
+
+    public Tokenizer(Collection<TokenType> typesOfTokens) {
+        this(typesOfTokens,DEFAULT_SEPARATOR);
     }
 
     public void setInput(CharSequence input) {
@@ -26,6 +32,7 @@ public class Tokenizer {
         Iterator<TokenType> iterator;
         Token returnToken = null;
         iterator = listOfTokens.iterator();
+
         while (iterator.hasNext()) {
             TokenType tokenType = iterator.next();
             matcher.usePattern(tokenType.getPattern());
