@@ -2,14 +2,10 @@ package app.com.example.grace.currencycalculator.Controller.Calculator1;
 
 import java.util.LinkedList;
 
-/**
- * Created by GRACE on 12/7/2015.
- */
 public class CalculatorEvaluator {
     transient LinkedList<Object> stack;
 
     void evaluate() {
-
         Object object = null;
         Double d1,d2;
 

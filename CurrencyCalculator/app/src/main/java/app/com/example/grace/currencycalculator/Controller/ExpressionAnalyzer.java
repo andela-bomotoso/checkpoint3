@@ -33,19 +33,19 @@ public class ExpressionAnalyzer {
                 continue;
             }
 
-            if (validator.isOperator(current) & !isBracket) {
 
-                if (str != ""){
+            if (validator.isOperator(current) & !isBracket) {
+                if (str != "") {
                     expressionParts.add(new Operand(str));
                 }
-
                 expressionParts.add(new Operator(current + ""));
                 str = "";
             }
-            else if(current == '(' && i != 0) {
+            //else if(current == '(' && i != 0) {
+                else if(current == '(') {
                 isBracket = true;
-
-                if(!validator.isOperator(expressionString.charAt(i-1))) {
+                if( i > 0 && !validator.isOperator(expressionString.charAt(i-1))) {
+                //if(!validator.isOperator(expressionString.charAt(i-1))) {
                     if(str != "") {
                         expressionParts.add(new Operand(str));
                         str = "";
@@ -56,9 +56,13 @@ public class ExpressionAnalyzer {
             }
             else if (isBracket && current != ')') {
                 subexpression += expressionString.charAt(i);
+                if(i==expressionString.length()-1) {
+                    expressionParts.add(new Operand(subexpression));
+                    subexpression="";
+                }
             }
 
-            else if(current == ')' && isBracket) {
+            else if(current == ')' ) {
                 if(str != "") {
                     expressionParts.add(new Operand(str));
                     str = "";
@@ -80,6 +84,5 @@ public class ExpressionAnalyzer {
 
         return expression;
     }
-
 
 }

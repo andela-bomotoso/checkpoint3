@@ -21,68 +21,83 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         super(MainActivity.class);
     }
 
-    Calculator1 calculator;
+    Calculator calculator;
     Expression expression;
 
     public void setUp() throws Exception {
         super.setUp();
 
-        calculator = new Calculator1();
+        calculator = new Calculator();
 
         //expression = new Expression();
     }
 
     public void testComputeExpressionWhenExpressionNeedsNoPrecedenceRule() throws Exception {
         String expression = "12+6-3";
-        assertEquals(15.0, calculator.calculate(expression));
+        assertEquals(15.0, calculator.compute(expression));
     }
 
     public void testComputeExpressionWhenExpressionNeedsPrecedenceRule() throws Exception {
         String expression = "12+6*4-9/3";
-        assertEquals(33.0, calculator.calculate(expression));
+        assertEquals(33.0, calculator.compute(expression));
 
     }
 
     public void testComputeExpressionWhenExpressionHasBracketWithAPrecedingOperator() throws Exception {
         String expression = "12+(6)*4";
-        assertEquals(36.0, calculator.calculate(expression));
+        assertEquals(36.0, calculator.compute(expression));
     }
 
     public void testComputeExpression1() throws Exception {
         String expression = "2*3+5";
 
-        assertEquals(11.0, calculator.calculate(expression));
+        assertEquals(11.0, calculator.compute(expression));
     }
 
     public void testComputeExpressionWhenExpressionHasBracketWithNoPrecedingOperator() throws Exception {
         String expression = "12(3)";
 
-        assertEquals(36.0, calculator.calculate(expression));
+        assertEquals(36.0, calculator.compute(expression));
     }
 
     public void testComputeExpressionWhenExpressionHasSubExpression() throws Exception {
         String expression = "2*4+(3+5*2-1)/2";
 
-        assertEquals(14.0, calculator.calculate(expression));
+        assertEquals(14.0, calculator.compute(expression));
     }
 
-    public void testCompute1() throws Exception {
+    public void testComputeWhenExpressionStartsWithSubExpression() throws Exception {
         String expression = "(5+3)*6";
-        assertEquals(48.0,calculator.calculate(expression));
+        assertEquals(48.0,calculator.compute(expression));
     }
 
     public void testComputeWhenExpressionHasOperatorsWithSamePrecedence() throws Exception {
         String expression = "1+4*2/4-1";
-        assertEquals(2.0,calculator.calculate(expression));
+        assertEquals(2.0,calculator.compute(expression));
     }
 
     public void testComputeWhenExpressionHasOperatorsWithSamePrecedenceThroughOut() throws Exception {
         String expression = "2*3/2";
-        assertEquals(3.0,calculator.calculate(expression));
+        assertEquals(3.0,calculator.compute(expression));
     }
     public void testComputeWhenExpressionStartsWithAUnaryOperator() throws Exception {
         String expression = "-2*3";
-        assertEquals(-6.0,calculator.calculate(expression));
+        assertEquals(-6.0,calculator.compute(expression));
+    }
+
+    public void testCompute2() throws Exception {
+        String expression = "(3";
+        assertEquals(3.0,calculator.compute(expression));
+    }
+
+    public void testComputeWhenExpressionStartsWithSubExpression2() {
+        String expression = "(2+4)/2";
+        assertEquals(3.0,calculator.compute(expression));
+    }
+
+    public void testBug() {
+        String expression = "2+(5";
+        assertEquals(7.0,calculator.compute(expression));
     }
 
 }

@@ -8,9 +8,7 @@ public class Calculator1 {
     LinkedList<Object>result;
 
     public double calculate(String expression) {
-
-
-
+            result = new LinkedList<>();
             calculatorParser = new CalculatorParser();
             calculatorEvaluator = new CalculatorEvaluator();
         try {

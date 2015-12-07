@@ -123,4 +123,23 @@ public class Validator {
 
         return openBrackets != closeBrackets;
     }
+
+    public boolean expressionContainsOperator(String expression) {
+        return expression.contains("+") || expression.contains("-") || expression.contains("/") || expression.contains("*");
+    }
+
+    public boolean hasUnaryOperator(String expression) {
+        return expression.startsWith("-");
+    }
+
+    public String removeBrackets(String subExpression) {
+        if(subExpression.charAt(subExpression.length()-1) == ')') {
+            subExpression = subExpression.substring(1, subExpression.length() - 1);
+        }
+        else {
+            subExpression = subExpression.substring(1, subExpression.length());
+        }
+        return subExpression;
+
+    }
 }

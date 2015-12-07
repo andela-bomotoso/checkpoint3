@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     NumberFormat numberFormat;
 
-    private Calculator1 calculator;
+    private Calculator calculator;
 
     private ExpressionAnalyzer expressionAnalyzer;
 
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeComponents() {
 
         numberFormat = new DecimalFormat("##.###");
-        calculator = new Calculator1();
+        calculator = new Calculator();
         expression = new Expression();
         expressionAnalyzer = new ExpressionAnalyzer();
         expressionValidator = new Validator();
@@ -279,8 +279,8 @@ public class MainActivity extends AppCompatActivity {
             computationArea.setText(currentExpression);
 
             if (buttonText != '(') {
-                //double computed = calculator.compute(currentExpression);
-                double computed = calculator.calculate(currentExpression);
+                double computed = calculator.compute(currentExpression);
+                //double computed = calculator.calculate(currentExpression);
                 result = numberFormat.format(computed);
                 resultArea.setText(result);
             }
@@ -300,8 +300,8 @@ public class MainActivity extends AppCompatActivity {
         if (currentExpression.length() > 1 & !expressionAfterDelete(currentExpression).equals("(") & !expressionAfterDelete(currentExpression).equals("-")) {
 
             computationArea.setText(expressionAfterDelete(currentExpression));
-           // resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
-            resultArea.setText(numberFormat.format(calculator.calculate(expressionAfterDelete(currentExpression))));
+           resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
+            //resultArea.setText(numberFormat.format(calculator.calculate(expressionAfterDelete(currentExpression))));
         } else if (expressionAfterDelete(currentExpression).equals("(")) {
             computationArea.setText("(");
             resultArea.setText("0");

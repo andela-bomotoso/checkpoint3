@@ -1,6 +1,5 @@
 package app.com.example.grace.currencycalculator.Controller.Calculator1;
 
-import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -28,7 +27,7 @@ public class CalculatorParser {
         }
 
         try {
-            number = Double.parseDouble((String)lookahead.getValue());
+            number = Double.parseDouble(lookahead.getValue());
             stack.push(new Double(number));
         }
         catch (NumberFormatException numberFormatException){
@@ -50,8 +49,23 @@ public class CalculatorParser {
         }
     }
 
+    void parseExponent() throws Exception{
+        Token token;
+        parseFactor();
+        while(lookahead != null) {
+            if(lookahead.getType().equals(CalculatorTokenType.TOKEN_EXPONENT)) {
+                token = lookahead;
+                match(lookahead.getValue());
+                parseFactor();
+                stack.push(CalculatorOperator.getOperator(token.getValue()));
+            } else {
+                break;
+            }
+        }
+    }
     void parseTerm() throws Exception {
         Token token;
+        parseExponent();
         while(lookahead!=null) {
             if(lookahead.getType().equals(CalculatorTokenType.TOKEN_MULTIPLICATIVE)) {
                 token = lookahead;
@@ -91,9 +105,9 @@ public class CalculatorParser {
         stack = new LinkedList<Object>();
         parseExpression();
 
-        if(lookahead != null) {
-            throw new Exception();
-        }
+//        if(lookahead != null) {
+//            throw new Exception();
+//        }
         return stack;
     }
 }
