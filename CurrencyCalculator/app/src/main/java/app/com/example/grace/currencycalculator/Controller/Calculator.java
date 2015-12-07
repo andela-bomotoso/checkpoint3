@@ -52,7 +52,6 @@ public class Calculator {
                 currentOperator = previousExpressionPart.getValue();
 
                 if ((currentOperandString).startsWith("(")) {
-                   // currentOperandString = currentOperandString.substring(1, currentOperandString.length() - 1);
                     currentOperandString = expressionValidator.removeBrackets(currentOperandString);
                     currentExpressionPart.setValue(currentOperandString);
                     analyzeExpressionInParenthesis(expressionParts,index);

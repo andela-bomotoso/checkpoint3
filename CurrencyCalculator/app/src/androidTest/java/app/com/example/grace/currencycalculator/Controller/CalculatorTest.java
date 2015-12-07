@@ -25,11 +25,9 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     Expression expression;
 
     public void setUp() throws Exception {
+
         super.setUp();
-
         calculator = new Calculator();
-
-        //expression = new Expression();
     }
 
     public void testComputeExpressionWhenExpressionNeedsNoPrecedenceRule() throws Exception {
@@ -48,7 +46,7 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(36.0, calculator.compute(expression));
     }
 
-    public void testComputeExpression1() throws Exception {
+    public void testComputeExpressionWhenExpressionStartsWithAHigherPrecedenceOperator() throws Exception {
         String expression = "2*3+5";
 
         assertEquals(11.0, calculator.compute(expression));
@@ -85,19 +83,10 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(-6.0,calculator.compute(expression));
     }
 
-    public void testCompute2() throws Exception {
-        String expression = "(3";
-        assertEquals(3.0,calculator.compute(expression));
-    }
-
-    public void testComputeWhenExpressionStartsWithSubExpression2() {
+    public void testComputeWhenExpressionStartsWithSubExpressionFollwedByALowerPrecedence() {
         String expression = "(2+4)/2";
         assertEquals(3.0,calculator.compute(expression));
     }
 
-    public void testBug() {
-        String expression = "2+(5";
-        assertEquals(7.0,calculator.compute(expression));
-    }
 
 }

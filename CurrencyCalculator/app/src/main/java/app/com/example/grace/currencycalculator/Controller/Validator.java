@@ -23,8 +23,7 @@ public class Validator {
         return (!startWithInvalidCharacter(keyPressed)) && (!isDivisionByZero(keyPressed)) && (!isRepeatedZeros(keyPressed))
                 && (!isRepeatedDecimals(keyPressed)) && (!isMismatchedBrackets(keyPressed)) && (!closingBracketAfterOperator(keyPressed))
                 && (!repeatedOpeningBracket(keyPressed)) && (!isEmptyParenthesis(keyPressed)) && (!repeatedClosingBracket(keyPressed))
-                && (!isOperandAfterClosingParenthesis(keyPressed)) && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed))
-                && (!operatorAfterOpeningBracket(keyPressed));
+                 && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed)) && (!operatorAfterOpeningBracket(keyPressed));
     }
 
     public boolean isOperator(char expressionPart) {
@@ -34,7 +33,7 @@ public class Validator {
 
     private boolean startWithInvalidCharacter(char keyPressed) {
 
-        return (expression.isEmpty() && (isOperator(keyPressed) || keyPressed == ')'));
+        return (expression.isEmpty() &&  keyPressed == ')');
     }
 
     public String validateOperator(char keyPressed) {

@@ -2,37 +2,30 @@ package app.com.example.grace.currencycalculator;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.Controller.Calculator;
-import app.com.example.grace.currencycalculator.Controller.Calculator1.Calculator1;
 import app.com.example.grace.currencycalculator.Controller.ExchangeRatesFetcher;
 import app.com.example.grace.currencycalculator.Controller.ExpressionAnalyzer;
 import app.com.example.grace.currencycalculator.Controller.Validator;
 import app.com.example.grace.currencycalculator.data.ExchangeRateProvider;
-import app.com.example.grace.currencycalculator.models.ExchangeRate;
 import app.com.example.grace.currencycalculator.models.Expression;
 
 public class MainActivity extends AppCompatActivity {
@@ -97,9 +90,13 @@ public class MainActivity extends AppCompatActivity {
 
     private Validator expressionValidator;
 
-    public static final String KEY_COMPUTATIONAREA = "workArea";
+    public static final String KEY_COMPUTATION_AREA = "workArea";
 
-    public static final String KEY_RESULTAREA = "resultArea";
+    public static final String KEY_RESULT_AREA = "resultArea";
+
+    public static final String KEY_SOURCE_CURRENCY = "sourceCurrency";
+
+    public static final String KEY_DESTINATION_CURRENCY = "destinationCurrency";
 
     ExchangeRatesFetcher exchangeRatesFetcher;
     ExchangeRateProvider exchangeRateProvider;
@@ -124,8 +121,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (savedInstanceState != null) {
-            computationArea.setText(savedInstanceState.getString(KEY_COMPUTATIONAREA, "computationArea"));
-            resultArea.setText(savedInstanceState.getString(KEY_RESULTAREA, "resultArea"));
+            computationArea.setText(savedInstanceState.getString(KEY_COMPUTATION_AREA, "computationArea"));
+            resultArea.setText(savedInstanceState.getString(KEY_RESULT_AREA, "resultArea"));
+            sourceCurrencyButton.setText(savedInstanceState.getString(KEY_SOURCE_CURRENCY, "sourceCurrency"));
+            destinationCurrencyButton.setText(savedInstanceState.getString(KEY_DESTINATION_CURRENCY,"destinationCurrency"));
         }
     }
 
@@ -155,8 +154,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString(KEY_COMPUTATIONAREA, computationArea.getText().toString());
-        savedInstanceState.putString(KEY_RESULTAREA, resultArea.getText().toString());
+
+        savedInstanceState.putString(KEY_COMPUTATION_AREA, computationArea.getText().toString());
+        savedInstanceState.putString(KEY_RESULT_AREA, resultArea.getText().toString());
+        savedInstanceState.putString(KEY_SOURCE_CURRENCY,sourceCurrencyButton.getText().toString());
+        savedInstanceState.putString(KEY_DESTINATION_CURRENCY,destinationCurrencyButton.getText().toString());
     }
 
     private void initializeComponents() {
@@ -280,7 +282,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (buttonText != '(') {
                 double computed = calculator.compute(currentExpression);
-                //double computed = calculator.calculate(currentExpression);
                 result = numberFormat.format(computed);
                 resultArea.setText(result);
             }
@@ -297,17 +298,23 @@ public class MainActivity extends AppCompatActivity {
 
         String currentExpression = computationArea.getText().toString();
 
-        if (currentExpression.length() > 1 & !expressionAfterDelete(currentExpression).equals("(") & !expressionAfterDelete(currentExpression).equals("-")) {
+        if (currentExpression.length() > 1 & !expressionAfterDelete(currentExpression).equals("(")
+                & !expressionAfterDelete(currentExpression).equals("-") && !expressionAfterDelete(currentExpression).equals("(-")) {
 
             computationArea.setText(expressionAfterDelete(currentExpression));
            resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
-            //resultArea.setText(numberFormat.format(calculator.calculate(expressionAfterDelete(currentExpression))));
+
         } else if (expressionAfterDelete(currentExpression).equals("(")) {
             computationArea.setText("(");
             resultArea.setText("0");
         }
         else if (expressionAfterDelete(currentExpression).equals("-")){
             computationArea.setText("-");
+            resultArea.setText("0");
+        }
+
+        else if (expressionAfterDelete(currentExpression).equals("(-")){
+            computationArea.setText("(-");
             resultArea.setText("0");
         }
 
@@ -344,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
         final CharSequence[] items = currenciesToDisplay();
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getDialogTitle(type));
-        builder.setSingleChoiceItems(items, 1, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(items, 3, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int item) {
                 dialogInterface.dismiss();
                 switch (type) {

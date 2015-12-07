@@ -41,11 +41,10 @@ public class ExpressionAnalyzer {
                 expressionParts.add(new Operator(current + ""));
                 str = "";
             }
-            //else if(current == '(' && i != 0) {
                 else if(current == '(') {
                 isBracket = true;
                 if( i > 0 && !validator.isOperator(expressionString.charAt(i-1))) {
-                //if(!validator.isOperator(expressionString.charAt(i-1))) {
+
                     if(str != "") {
                         expressionParts.add(new Operand(str));
                         str = "";

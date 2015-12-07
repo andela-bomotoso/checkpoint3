@@ -3,15 +3,16 @@
     <string-array name="currency_codes">
         <item>KWD</item>
         <item>BHD</item>
+        <item>USD</item>
         <item>OMR</item>
         <item>GBP</item>
         <item>JOD</item>
         <item>KYD</item>
         <item>EUR</item>
         <item>CHF</item>
+        <item>NGN</item>
         <item>AZN</item>
         <item>CAD</item>
-        <item>NGN</item>
         <item>ARS</item>
         <item>AUD</item>
         <item>BSD</item>

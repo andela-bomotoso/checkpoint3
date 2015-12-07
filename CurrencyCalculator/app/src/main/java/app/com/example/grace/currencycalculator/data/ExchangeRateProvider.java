@@ -18,6 +18,8 @@ import app.com.example.grace.currencycalculator.models.ExchangeRate;
 
 public class ExchangeRateProvider extends ContentProvider {
 
+    ExchangeRateDbHelper exchangeRateDbHelper;
+
 
 
     Context context;
@@ -45,7 +47,7 @@ public class ExchangeRateProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
 
-        ExchangeRateDbHelper exchangeRateDbHelper = new  ExchangeRateDbHelper(this.getContext());
+        exchangeRateDbHelper = new  ExchangeRateDbHelper(this.getContext());
         return true;
     }
 
