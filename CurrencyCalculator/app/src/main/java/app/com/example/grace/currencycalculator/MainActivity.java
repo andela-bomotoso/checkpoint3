@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,12 +19,14 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.Controller.Calculator;
+import app.com.example.grace.currencycalculator.Controller.ExchangeRateMap;
+import app.com.example.grace.currencycalculator.Controller.ExchangeRatesFetcher;
 import app.com.example.grace.currencycalculator.Controller.ExpressionAnalyzer;
 import app.com.example.grace.currencycalculator.Controller.Validator;
+import app.com.example.grace.currencycalculator.data.ExchangeRateProvider;
 import app.com.example.grace.currencycalculator.models.Expression;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView computationArea;
 
     private TextView resultArea;
+
+    private TextView currencyText;
 
     private Button clearButton;
 
@@ -88,11 +91,16 @@ public class MainActivity extends AppCompatActivity {
 
     private Validator expressionValidator;
 
-    public static final String KEY_COMPUTATIONAREA = "workArea";
+    public static final String KEY_COMPUTATION_AREA = "workArea";
 
-    public static final String KEY_RESULTAREA = "resultArea";
+    public static final String KEY_RESULT_AREA = "resultArea";
 
-    private R.array currencies;
+    public static final String KEY_SOURCE_CURRENCY = "sourceCurrency";
+
+    public static final String KEY_DESTINATION_CURRENCY = "destinationCurrency";
+
+    ExchangeRatesFetcher exchangeRatesFetcher;
+    ExchangeRateProvider exchangeRateProvider;
 
 
     @TargetApi(21)
@@ -100,15 +108,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initializeComponents();
 
-        if(savedInstanceState != null) {
-            computationArea.setText(savedInstanceState.getString(KEY_COMPUTATIONAREA,"computationArea"));
-            resultArea.setText(savedInstanceState.getString(KEY_RESULTAREA,"resultArea"));
-        }
+        exchangeRatesFetcher = new ExchangeRatesFetcher(this);
+        exchangeRateProvider = new ExchangeRateProvider(MainActivity.this);
 
+        exchangeRatesFetcher.execute();
+
+
+        if (savedInstanceState != null) {
+            computationArea.setText(savedInstanceState.getString(KEY_COMPUTATION_AREA, "computationArea"));
+            resultArea.setText(savedInstanceState.getString(KEY_RESULT_AREA, "resultArea"));
+            sourceCurrencyButton.setText(savedInstanceState.getString(KEY_SOURCE_CURRENCY, "sourceCurrency"));
+            destinationCurrencyButton.setText(savedInstanceState.getString(KEY_DESTINATION_CURRENCY,"destinationCurrency"));
+        }
     }
 
     @Override
@@ -120,14 +136,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
+         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(this,SettingsActivity.class));
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
@@ -137,8 +153,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString(KEY_COMPUTATIONAREA, computationArea.getText().toString());
-        savedInstanceState.putString(KEY_RESULTAREA,resultArea.getText().toString());
+
+        savedInstanceState.putString(KEY_COMPUTATION_AREA, computationArea.getText().toString());
+        savedInstanceState.putString(KEY_RESULT_AREA, resultArea.getText().toString());
+        savedInstanceState.putString(KEY_SOURCE_CURRENCY,sourceCurrencyButton.getText().toString());
+        savedInstanceState.putString(KEY_DESTINATION_CURRENCY,destinationCurrencyButton.getText().toString());
     }
 
     private void initializeComponents() {
@@ -148,38 +167,40 @@ public class MainActivity extends AppCompatActivity {
         expression = new Expression();
         expressionAnalyzer = new ExpressionAnalyzer();
         expressionValidator = new Validator();
-        computationArea = (TextView)findViewById(R.id.computation_area);
-        resultArea = (TextView)findViewById(R.id.result_area);
+        computationArea = (TextView) findViewById(R.id.computation_area);
+        resultArea = (TextView) findViewById(R.id.result_area);
         clearButton = (Button) findViewById(R.id.clear);
         openBracketButton = (Button) findViewById(R.id.open_bracket);
         closeBracketButton = (Button) findViewById(R.id.close_bracket);
-        delButton = (ImageButton)findViewById(R.id.del);
+        delButton = (ImageButton) findViewById(R.id.del);
         sevenButton = (Button) findViewById(R.id.seven);
 
         eightButton = (Button) findViewById(R.id.eight);
         nineButton = (Button) findViewById(R.id.nine);
         divisionButton = (Button) findViewById(R.id.division);
-        fourButton = (Button)findViewById(R.id.four);
+        fourButton = (Button) findViewById(R.id.four);
         fiveButton = (Button) findViewById(R.id.five);
 
         sixButton = (Button) findViewById(R.id.six);
         multiplicationButton = (Button) findViewById(R.id.times);
         minusButton = (Button) findViewById(R.id.minus);
-        delButton = (ImageButton)findViewById(R.id.del);
+        delButton = (ImageButton) findViewById(R.id.del);
         zeroButton = (Button) findViewById(R.id.zero);
 
         decimalButton = (Button) findViewById(R.id.decimal);
         equalsButton = (Button) findViewById(R.id.equals);
         plusButton = (Button) findViewById(R.id.plus);
         sourceCurrencyButton = (Button) findViewById(R.id.source_currency);
-        destinationCurrencyButton = (Button)findViewById(R.id.destination_currency);
+        destinationCurrencyButton = (Button) findViewById(R.id.destination_currency);
+        currencyText = (TextView) findViewById(R.id.currency_area);
+
 
 
     }
 
     public void display(View view) {
 
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.nine:
                 updateWorkArea('9');
                 break;
@@ -254,35 +275,16 @@ public class MainActivity extends AppCompatActivity {
         String currentExpression = computationArea.getText().toString();
         expressionValidator.setExpression(currentExpression);
 
-        if(expressionValidator.validate(buttonText)) {
+        if (expressionValidator.validate(buttonText)) {
             currentExpression = currentExpression + buttonText;
             computationArea.setText(currentExpression);
 
             if (buttonText != '(') {
-                double computed = calculator.compute(currentExpression);
-
-                result = numberFormat.format(computed);
+                //double computed = calculator.compute(currentExpression);
+                //result = numberFormat.format(computed);
                 resultArea.setText(result);
             }
         }
-    }
-
-    public String updateWorkArea1(String currentExpression, char buttonText) {
-        NumberFormat numberFormat = new DecimalFormat("##.###");
-        Calculator calculator = new Calculator();
-        Validator expressionValidator = new Validator();
-        String result = "";
-        expressionValidator.setExpression(currentExpression);
-
-        if(expressionValidator.validate(buttonText)) {
-            currentExpression = currentExpression + buttonText;
-
-            if (buttonText != '(') {
-               // resultArea.setText(numberFormat.format(calculator.compute(currentExpression)));
-                result = numberFormat.format(calculator.compute(currentExpression));
-            }
-        }
-        return result;
     }
 
     public void checkOperatorValidity(char buttonText) {
@@ -295,13 +297,23 @@ public class MainActivity extends AppCompatActivity {
 
         String currentExpression = computationArea.getText().toString();
 
-        if(currentExpression.length() > 1 & !expressionAfterDelete(currentExpression) .equals("(")) {
+        if (currentExpression.length() > 1 & !expressionAfterDelete(currentExpression).equals("(")
+                & !expressionAfterDelete(currentExpression).equals("-") && !expressionAfterDelete(currentExpression).equals("(-")) {
 
             computationArea.setText(expressionAfterDelete(currentExpression));
-            resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
-        }
-       else if(expressionAfterDelete(currentExpression).equals("(")) {
+           //resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
+
+        } else if (expressionAfterDelete(currentExpression).equals("(")) {
             computationArea.setText("(");
+            resultArea.setText("0");
+        }
+        else if (expressionAfterDelete(currentExpression).equals("-")){
+            computationArea.setText("-");
+            resultArea.setText("0");
+        }
+
+        else if (expressionAfterDelete(currentExpression).equals("(-")){
+            computationArea.setText("(-");
             resultArea.setText("0");
         }
 
@@ -319,8 +331,8 @@ public class MainActivity extends AppCompatActivity {
 
         String expressionAfterDelete = "";
 
-        if(currentExpression.length() > 0) {
-            expressionAfterDelete = currentExpression.substring(0,currentExpression.length()-1);
+        if (currentExpression.length() > 0) {
+            expressionAfterDelete = currentExpression.substring(0, currentExpression.length() - 1);
         }
         return expressionAfterDelete;
     }
@@ -336,9 +348,9 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog currency = null;
         final CharSequence[] items = currenciesToDisplay();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AppCompatAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getDialogTitle(type));
-        builder.setSingleChoiceItems(items, 1, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(items, 3, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int item) {
                 dialogInterface.dismiss();
                 switch (type) {
@@ -347,6 +359,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case "destination":
                         destinationCurrencyButton.setText(items[item]);
+                        currencyText.setText(items[item]);
                         break;
                 }
             }
@@ -358,23 +371,23 @@ public class MainActivity extends AppCompatActivity {
 
     public String getDialogTitle(String type) {
         String title = "";
-        if (type .equals("source")) {
+        if (type.equals("source")) {
             title = "Select the currency you want to convert";
-        }
-        else {
+        } else {
             title = "Select the currency you want to convert to";
         }
         return title;
     }
 
     public CharSequence[] currenciesToDisplay() {
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String currencies_no = preferences.getString("no_of_currency","10");
+        String currencies_no = preferences.getString("no_of_currency", "10");
         int noOfCurrencies = Integer.parseInt(currencies_no);
         CharSequence[] items = getResources().getStringArray(R.array.currency_codes);
         CharSequence[] fetchedItems;
         List<CharSequence> currencies = new ArrayList<>();
-        for(int i = 0; i<=noOfCurrencies-1; i++) {
+        for (int i = 0; i <= noOfCurrencies - 1; i++) {
             currencies.add(items[i]);
         }
         fetchedItems = currencies.toArray(new CharSequence[currencies.size()]);

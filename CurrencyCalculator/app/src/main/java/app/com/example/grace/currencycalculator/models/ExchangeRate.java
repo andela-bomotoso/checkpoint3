@@ -5,15 +5,15 @@ public class ExchangeRate {
 
     private double value;
 
-    private Currency source;
+    private String source;
 
-    private Currency destination;
+    private String destination;
 
     public ExchangeRate() {
 
     }
 
-    public ExchangeRate(Currency source, Currency destination) {
+    public ExchangeRate(String source, String destination) {
         this.source = source;
         this.destination = destination;
     }
@@ -27,19 +27,19 @@ public class ExchangeRate {
         this.value = value;
     }
 
-    public Currency getSource() {
+    public String getSource() {
         return source;
     }
 
-    public void setSource(Currency source) {
+    public void setSource(String source) {
         this.source = source;
     }
 
-    public Currency getDestination() {
+    public String getDestination() {
         return destination;
     }
 
-    public void setDestination(Currency destination) {
+    public void setDestination(String destination) {
         this.destination = destination;
     }
 }

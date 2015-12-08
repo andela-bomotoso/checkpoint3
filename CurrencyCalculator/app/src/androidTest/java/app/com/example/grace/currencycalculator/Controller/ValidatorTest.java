@@ -11,10 +11,6 @@ public class ValidatorTest extends TestCase {
         validator = new Validator();
     }
 
-    public void testValidate() throws Exception {
-
-    }
-
     public void testValidateOperatorWhenThePreviousExpressionPartIsAnOperator () throws Exception {
         String expression = "3+2+";
         validator.setExpression(expression);
@@ -65,16 +61,29 @@ public class ValidatorTest extends TestCase {
         assertFalse(validator.isRepeatedDecimals('.'));
     }
     public void testMismatchedBracketsWhenBracketsAreMismatched() throws Exception {
-        String expression = "4+5*";
+        String expression = "4+5)";
         validator.setExpression(expression);
         assertTrue(validator.isMismatchedBrackets(')'));
     }
 
     public void testMismatchedBracketsWhenBracketsAreNotMismatched() throws Exception {
-        String expression = "4+5*(3*2";
+        String expression = "4+5*(3*2)";
         validator.setExpression(expression);
         assertFalse(validator.isMismatchedBrackets(')'));
     }
+
+    public void testOpeningBracketMatchesClosingBracketWhenNumberOfBracketsDoNotMatch() {
+        String expression = "(8(6)";
+        validator.setExpression(expression);
+        assertTrue(validator.openingBracketsDoesNotMatchClosingBrackets('('));
+    }
+
+    public void testOpeningBracketMatchesClosingBracketWhenNumberOfBracketsMatch() {
+        String expression = "(8(6)";
+        validator.setExpression(expression);
+        assertFalse(validator.openingBracketsDoesNotMatchClosingBrackets(')'));
+    }
+
 
 
 }

@@ -1,4 +1,4 @@
-package app.com.example.grace.currencycalculator;
+package app.com.example.grace.currencycalculator.Controller;
 
 import android.test.ActivityInstrumentationTestCase2;
 
@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.Controller.Calculator;
+import app.com.example.grace.currencycalculator.Controller.Calculator1.Calculator1;
+import app.com.example.grace.currencycalculator.MainActivity;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;
@@ -23,11 +25,9 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     Expression expression;
 
     public void setUp() throws Exception {
+
         super.setUp();
-
         calculator = new Calculator();
-
-        expression = new Expression();
     }
 
     public void testComputeExpressionWhenExpressionNeedsNoPrecedenceRule() throws Exception {
@@ -46,7 +46,7 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(36.0, calculator.compute(expression));
     }
 
-    public void testComputeExpression1() throws Exception {
+    public void testComputeExpressionWhenExpressionStartsWithAHigherPrecedenceOperator() throws Exception {
         String expression = "2*3+5";
 
         assertEquals(11.0, calculator.compute(expression));
@@ -64,9 +64,29 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(14.0, calculator.compute(expression));
     }
 
-    public void testCompute1() throws Exception {
+    public void testComputeWhenExpressionStartsWithSubExpression() throws Exception {
         String expression = "(5+3)*6";
         assertEquals(48.0,calculator.compute(expression));
     }
+
+    public void testComputeWhenExpressionHasOperatorsWithSamePrecedence() throws Exception {
+        String expression = "1+4*2/4-1";
+        assertEquals(2.0,calculator.compute(expression));
+    }
+
+    public void testComputeWhenExpressionHasOperatorsWithSamePrecedenceThroughOut() throws Exception {
+        String expression = "2*3/2";
+        assertEquals(3.0,calculator.compute(expression));
+    }
+    public void testComputeWhenExpressionStartsWithAUnaryOperator() throws Exception {
+        String expression = "-2*3";
+        assertEquals(-6.0,calculator.compute(expression));
+    }
+
+    public void testComputeWhenExpressionStartsWithSubExpressionFollwedByALowerPrecedence() {
+        String expression = "(2+4)/2";
+        assertEquals(3.0,calculator.compute(expression));
+    }
+
 
 }
