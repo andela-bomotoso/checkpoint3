@@ -3,6 +3,7 @@ package app.com.example.grace.currencycalculator.data;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SyncAdapterType;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,65 +17,35 @@ import app.com.example.grace.currencycalculator.Controller.ExchangeRateMap;
 import app.com.example.grace.currencycalculator.Controller.ExchangeRatesFetcher;
 import app.com.example.grace.currencycalculator.models.ExchangeRate;
 
-public class ExchangeRateProvider extends ContentProvider {
+public class ExchangeRateProvider {
+
+
+
 
     ExchangeRateDbHelper exchangeRateDbHelper;
-
-
 
     Context context;
     public ExchangeRateProvider(Context context){
         this.context = context;
     }
 
-    @Override
-    public String getType(Uri uri) {
-        return null;
-    }
+    public int query(String source, String destination) {
 
-    @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-
-        return 0;
-    }
-
-    @Override
-    public Uri insert(Uri uri, ContentValues values) {
-
-        return null;
-    }
-
-    @Override
-    public boolean onCreate() {
-
-        exchangeRateDbHelper = new  ExchangeRateDbHelper(this.getContext());
-        return true;
-    }
-
-    @Override
-    public int delete(Uri uri, String selection,String[] selectionArgs) {
-
-        return 0;
-    }
-
-    @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,String sortOrder) {
-
+        String query = "SELECT rate FROM exchange_rate where SOURCE ='"+source+"' and DESTINATION ='" +destination+"'";
+        //String query = "SELECT rate FROM exchange_rate";
         SQLiteDatabase sqLiteDatabase = new ExchangeRateDbHelper(context).getWritableDatabase();
+        Cursor c = sqLiteDatabase.rawQuery(query, null);
+        c.moveToFirst();
 
-        //Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM exchange_rates+ WHERE source = '"+name+"'", null);
-
-        //c.moveToNext();
-
-       // tv.setText(c.getString(c.getColumnIndex("email")));
-
-        return null;
+//        if(c.moveToFirst()) {
+//            return c.getString(c.getColumnIndex("rate"));
+//        }
+//        Log.v("Result",c.getString(c.getColumnIndex("rate")));
+        return c.getCount();
     }
 
-    public int bulkInsert() {
+    public int bulkInsert(List<ExchangeRateMap<String,String,String>> currenciesRate) {
 
-        ExchangeRatesFetcher exchangeRatesFetcher = new ExchangeRatesFetcher(getContext());
-        List<ExchangeRateMap<String,String,String>> currenciesRate = exchangeRatesFetcher.getSourceDestinationRates();
         SQLiteDatabase sqLiteDatabase = new ExchangeRateDbHelper(context).getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         int returnCount = 0;
@@ -101,5 +72,7 @@ public class ExchangeRateProvider extends ContentProvider {
         return returnCount;
 
     }
+
+
 
 }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.Controller.Calculator;
+import app.com.example.grace.currencycalculator.Controller.ExchangeRateMap;
 import app.com.example.grace.currencycalculator.Controller.ExchangeRatesFetcher;
 import app.com.example.grace.currencycalculator.Controller.ExpressionAnalyzer;
 import app.com.example.grace.currencycalculator.Controller.Validator;
@@ -102,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
     ExchangeRateProvider exchangeRateProvider;
 
 
-
     @TargetApi(21)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
         exchangeRateProvider = new ExchangeRateProvider(MainActivity.this);
 
         exchangeRatesFetcher.execute();
-        exchangeRatesFetcher.getSourceDestinationRates();
 
 
         if (savedInstanceState != null) {
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
+         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
@@ -281,8 +280,8 @@ public class MainActivity extends AppCompatActivity {
             computationArea.setText(currentExpression);
 
             if (buttonText != '(') {
-                double computed = calculator.compute(currentExpression);
-                result = numberFormat.format(computed);
+                //double computed = calculator.compute(currentExpression);
+                //result = numberFormat.format(computed);
                 resultArea.setText(result);
             }
         }
@@ -302,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
                 & !expressionAfterDelete(currentExpression).equals("-") && !expressionAfterDelete(currentExpression).equals("(-")) {
 
             computationArea.setText(expressionAfterDelete(currentExpression));
-           resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
+           //resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
 
         } else if (expressionAfterDelete(currentExpression).equals("(")) {
             computationArea.setText("(");

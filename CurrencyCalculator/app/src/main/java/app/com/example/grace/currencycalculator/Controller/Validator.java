@@ -102,10 +102,6 @@ public class Validator {
 
         return (expression.length() >= 1) && expression.charAt(expression.length()-1)=='(' && keyPressed == ')';
     }
-    public boolean isOperandAfterClosingParenthesis(char keyPressed) {
-
-        return (expression.length() >= 1) && expression.charAt(expression.length()-1)==')' && !isOperator(keyPressed);
-    }
 
     public boolean openingBracketsDoesNotMatchClosingBrackets(char keyPressed) {
         int openBrackets = 0,closeBrackets = 0;
@@ -123,13 +119,6 @@ public class Validator {
         return openBrackets != closeBrackets;
     }
 
-    public boolean expressionContainsOperator(String expression) {
-        return expression.contains("+") || expression.contains("-") || expression.contains("/") || expression.contains("*");
-    }
-
-    public boolean hasUnaryOperator(String expression) {
-        return expression.startsWith("-");
-    }
 
     public String removeBrackets(String subExpression) {
         if(subExpression.charAt(subExpression.length()-1) == ')') {

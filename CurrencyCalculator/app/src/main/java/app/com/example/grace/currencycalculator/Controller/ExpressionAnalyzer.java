@@ -11,77 +11,149 @@ import app.com.example.grace.currencycalculator.models.Operator;
 
 public class ExpressionAnalyzer {
 
-    public ExpressionAnalyzer() {
+    Expression expression;
+    String currentExpressionString;
+    String expressionString;
 
+    String subexpression;
+    boolean isBracketOpen;
+    List<ExpressionPart> expressionParts;
+    char current;
+    char previous;
+    int index;
+
+
+    public ExpressionAnalyzer() {
     }
 
     public Expression breakDownExpression(String expressionString) {
 
-        boolean isBracket = false;
+        initializeVariables();
 
-        Expression expression = new Expression();
-        Validator validator = new Validator();
-        String str = "";
-        String subexpression = "";
-        List<ExpressionPart> expressionParts = new ArrayList<>();
+        for (index = 0; index < expressionString.length(); index++) {
 
-        for (int i = 0; i < expressionString.length(); i++) {
-            char current = expressionString.charAt(i);
+            current = expressionString.charAt(index);
 
-            if( i == 0 && validator.isOperator(current)) {
-                str += current;
+            if(index > 0 ) {
+                previous = expressionString.charAt(index-1);
+            }
+
+            if(expressionStartsWithUnaryOperator()) {
+                updateCurrentExpressionString();
                 continue;
             }
 
-
-            if (validator.isOperator(current) & !isBracket) {
-                if (str != "") {
-                    expressionParts.add(new Operand(str));
-                }
-                expressionParts.add(new Operator(current + ""));
-                str = "";
+            if (isOperator(current) & !isBracketOpen) {
+                    updateExpressionPartWithOperand();
+                    updateExpressionPartWithOperator();
             }
-                else if(current == '(') {
-                isBracket = true;
-                if( i > 0 && !validator.isOperator(expressionString.charAt(i-1))) {
 
-                    if(str != "") {
-                        expressionParts.add(new Operand(str));
-                        str = "";
-                    }
-                    expressionParts.add(new Operator("*"));
+            else if(currentExpressionPartIsOpeningBracket()) {
+                isBracketOpen = true;
+
+                if( index > 0 && !isOperator(previous)) {
+                    updateExpressionPartWithOperand();
+                    updateExpressionPartWithOperator("*");
                 }
-                subexpression += current;
+                updateSubExpressionString();
             }
-            else if (isBracket && current != ')') {
-                subexpression += expressionString.charAt(i);
-                if(i==expressionString.length()-1) {
-                    expressionParts.add(new Operand(subexpression));
-                    subexpression="";
+
+            else if (isBracketOpen && current != ')') {
+                updateSubExpressionString();
+                if(index==expressionString.length()-1) {
+                    updateExpressionPartWithSubExpression();
                 }
             }
 
             else if(current == ')' ) {
-                if(str != "") {
-                    expressionParts.add(new Operand(str));
-                    str = "";
+                if(currentExpressionString != "") {
+                    expressionParts.add(new Operand(currentExpressionString));
+                    currentExpressionString = "";
                 }
-                isBracket = false;
+                isBracketOpen = false;
                 subexpression += current;
                 expressionParts.add(new Operand(subexpression));
                 subexpression = "";
             }
-            else if (!isBracket && !validator.isOperator(current) & current != ')' & current != '(') {
-                str = str + expressionString.charAt(i);
+            else if (!isBracketOpen && !isOperator(current) & current != ')' & current != '(') {
+
+                if(previous == ')') {
+                    updateExpressionPartWithOperator("*");
+                }
+                currentExpressionString = currentExpressionString + expressionString.charAt(index);
             }
         }
 
-        if(str != "") {
-            expressionParts.add(new Operand(str));
+        if(currentExpressionString != "") {
+            expressionParts.add(new Operand(currentExpressionString));
         }
         expression.setExpressionParts(expressionParts);
 
         return expression;
     }
+
+    public void initializeVariables() {
+
+        expressionParts = new ArrayList<>();
+        expression = new Expression();
+        currentExpressionString = "";
+        subexpression = "";
+        isBracketOpen = false;
+    }
+
+    public boolean expressionStartsWithUnaryOperator() {
+        return (index == 0 && isOperator(current));
+    }
+
+    public boolean isOperator(char expressionPart) {
+
+        return (expressionPart == ('+')||expressionPart == ('-')||expressionPart == ('*')||expressionPart == ('/' ));
+    }
+
+    public void updateCurrentExpressionString() {
+        currentExpressionString += current;
+    }
+
+    public boolean currentExpressionStringEmpty() {
+        return currentExpressionString == "";
+    }
+
+    public void updateExpressionPartWithOperand() {
+        if (!currentExpressionStringEmpty()) {
+            expressionParts.add(new Operand(currentExpressionString));
+            clearCurrentExpressionString();
+        }
+    }
+
+    public void updateExpressionPartWithOperator() {
+        expressionParts.add(new Operator(current + ""));
+    }
+    public void updateExpressionPartWithOperator(String operator) {
+        expressionParts.add(new Operator(operator));
+    }
+
+    public void updateExpressionPartWithSubExpression() {
+        expressionParts.add(new Operand(subexpression));
+        subexpression="";
+    }
+    public void clearCurrentExpressionString(){
+        currentExpressionString = "";
+    }
+    public boolean currentExpressionPartIsOpeningBracket() {
+        return current =='(';
+    }
+    public boolean currentExpressionPartIsClosingBracket() {
+        return current ==')';
+    }
+    public void updateSubExpressionString() {
+        subexpression += current;
+    }
+    public void clearSubExpressionString() {
+        subexpression = "";
+    }
+    public boolean subExpression() {
+       return false;
+    }
+
 
 }

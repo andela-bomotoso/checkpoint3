@@ -69,9 +69,9 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                         settings_currency_no.setText(minVal);
                         Toast.makeText(getApplicationContext(), "Minimum allowed is " + 10, Toast.LENGTH_SHORT).show();
                     }
-                    if (Integer.parseInt(value) > 50) {
+                    if (Integer.parseInt(value) > 30) {
                         settings_currency_no.setText(maxVal);
-                        Toast.makeText(getApplicationContext(), "Maximum allowed is " + 50, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Maximum allowed is " + 30, Toast.LENGTH_SHORT).show();
 
                     }
                 }

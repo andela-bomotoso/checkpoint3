@@ -4,6 +4,7 @@
         <item>KWD</item>
         <item>BHD</item>
         <item>USD</item>
+        <item>AZN</item>
         <item>OMR</item>
         <item>GBP</item>
         <item>JOD</item>
@@ -11,47 +12,7 @@
         <item>EUR</item>
         <item>CHF</item>
         <item>NGN</item>
-        <item>AZN</item>
         <item>CAD</item>
-        <item>ARS</item>
-        <item>AUD</item>
-        <item>BSD</item>
-        <item>BDT</item>
-        <item>BBD</item>
-        <item>XOF</item>
-        <item>BRL</item>
-        <item>BGN</item>
-        <item>XOF</item>
-        <item>XAF</item>
-        <item>CLP</item>
-        <item>CNY</item>
-        <item>COP</item>
-        <item>HRK</item>
-        <item>CZK</item>
-        <item>DKK</item>
-        <item>EGP</item>
-        <item>CFA</item>
-        <item>XAF</item>
-        <item>FJD</item>
-        <item>XPF</item>
-        <item>XAF</item>
-        <item>GHS</item>
-        <item>GTQ</item>
-        <item>XOF</item>
-        <item>HNL</item>
-        <item>QAR</item>
-        <item>ZAR</item>
-        <item>HKD</item>
-        <item>HUF</item>
-        <item>ISK</item>
-        <item>INR</item>
-        <item>IDR</item>
-        <item>IRR</item>
-        <item>ILS</item>
-        <item>JMD</item>
-        <item>JPY</item>
-        <item>KES</item>
-        <item>KRW</item>
     </string-array>
 </resources>
 
