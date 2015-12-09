@@ -1,9 +1,7 @@
 package app.com.example.grace.currencycalculator.Controller;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,19 +14,15 @@ import java.util.List;
 
 import app.com.example.grace.currencycalculator.BuildConfig;
 import app.com.example.grace.currencycalculator.R;
-import app.com.example.grace.currencycalculator.data.ExchangeRateContract;
-import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
-import app.com.example.grace.currencycalculator.data.ExchangeRateProvider;
-import app.com.example.grace.currencycalculator.models.ExchangeRate;
 
 public class ExchangeRatesFetcher extends AsyncTask<String, Void, String> {
 
-    ExchangeRateProvider exchangeRateProvider;
+
     Context context;
 
     public ExchangeRatesFetcher(Context context){
         this.context = context;
-        exchangeRateProvider = new ExchangeRateProvider(context);
+
     }
 
     @Override

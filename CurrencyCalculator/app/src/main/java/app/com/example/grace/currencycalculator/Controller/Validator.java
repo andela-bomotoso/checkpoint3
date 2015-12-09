@@ -8,7 +8,7 @@ import app.com.example.grace.currencycalculator.models.ExpressionPart;
 public class Validator {
 
     String expression;
-    ExpressionAnalyzer expressionAnalyzer;
+    //ExpressionAnalyzer expressionAnalyzer;
 
     public String getExpression() {
         return expression;
@@ -21,10 +21,11 @@ public class Validator {
     public boolean validate(char keyPressed) {
 
         return (!startWithInvalidCharacter(keyPressed)) && (!isDivisionByZero(keyPressed)) && (!isRepeatedZeros(keyPressed))
-                && (!isRepeatedDecimals(keyPressed)) && (!isMismatchedBrackets(keyPressed)) && (!closingBracketAfterOperator(keyPressed))
+                && (!isMismatchedBrackets(keyPressed)) && (!closingBracketAfterOperator(keyPressed))
                 && (!repeatedOpeningBracket(keyPressed)) && (!isEmptyParenthesis(keyPressed)) && (!repeatedClosingBracket(keyPressed))
                  && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed)) && (!operatorAfterOpeningBracket(keyPressed))
                 && (!isOperandAfterCurrency(keyPressed));
+        // && (!isRepeatedDecimals(keyPressed))
     }
 
     public boolean validateCurrency() {
@@ -39,7 +40,7 @@ public class Validator {
     private boolean startWithInvalidCharacter(char keyPressed) {
 
        // return (expression.isEmpty() &&  (keyPressed == ')'|| keyPressed == '+' || (keyPressed == '*' || (keyPressed == '/'))));
-        return (expression.isEmpty() && !Character.isDigit(keyPressed) && keyPressed != '-' && keyPressed == '(');
+        return (expression.isEmpty() && !Character.isDigit(keyPressed) && keyPressed != '-' && keyPressed != '(');
     }
 
     public String validateOperator(char keyPressed) {
@@ -69,18 +70,18 @@ public class Validator {
                 && isOperator(expression.charAt(expression.length() - 2));
     }
 
-    public boolean isRepeatedDecimals(char keyPressed) {
-
-        String previousExpressionPart = "";
-        expressionAnalyzer = new ExpressionAnalyzer();
-        Expression currentExpression = expressionAnalyzer.breakDownExpression(expression);
-        List<ExpressionPart> expressionParts = currentExpression.getExpressionParts();
-        if (expressionParts.size() >= 1) {
-            previousExpressionPart = expressionParts.get(expressionParts.size() - 1).getValue();
-        }
-
-        return previousExpressionPart.contains(".") && keyPressed == '.';
-    }
+//    public boolean isRepeatedDecimals(char keyPressed) {
+//
+//        String previousExpressionPart = "";
+//        expressionAnalyzer = new ExpressionAnalyzer();
+//        Expression currentExpression = expressionAnalyzer.breakDownExpression(expression);
+//        List<ExpressionPart> expressionParts = currentExpression.getExpressionParts();
+//        if (expressionParts.size() >= 1) {
+//            previousExpressionPart = expressionParts.get(expressionParts.size() - 1).getValue();
+//        }
+//
+//        return previousExpressionPart.contains(".") && keyPressed == '.';
+//    }
     public boolean closingBracketAfterOperator(char keyPressed) {
 
         return (expression.length() > 1) && isOperator(expression.charAt(expression.length()-1)) && keyPressed == ')';
@@ -153,9 +154,7 @@ public class Validator {
         return expression.length() > 3 && Character.isLetter(expression.charAt(expression.length()-1)) && Character.isDigit(keyPressed);
     }
 
-//    public String updateCurrency () {
-//        for(int i = expression.length()-1; i<=0;i--) {
-//            if(cha)
-//        }
-//    }
+    public String getLastOperand() {
+        return "";
+    }
 }

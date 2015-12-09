@@ -12,12 +12,11 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "exchange.db";
     static final int DATABASE_VERSION = 2;
-    private SQLiteDatabase database;
+    //private SQLiteDatabase database;
 
     public ExchangeRateDbHelper(Context context) {
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
-        database = getWritableDatabase();
-
+       // database = getWritableDatabase();
     }
 
     @Override
@@ -28,7 +27,8 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
     }
 
     public void dropTable() {
-        database.execSQL("DROP TABLE IF EXISTS " + ExchangeRateContract.ExchangeRates.TABLE_NAME);
+        SQLiteDatabase database = getWritableDatabase();
+        // database.execSQL("DROP TABLE IF EXISTS " + ExchangeRateContract.ExchangeRates.TABLE_NAME);
 
     }
 
@@ -46,7 +46,7 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
 
         String query = "SELECT rate FROM exchange_rate where SOURCE ='" + source + "' and DESTINATION ='" + destination + "'";
         //String query = "SELECT rate FROM exchange_rate";
-        database = getReadableDatabase();
+        SQLiteDatabase database = getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
         cursor.moveToFirst();
         //return cursor.getCount();
@@ -55,7 +55,7 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
     }
 
     public int bulkInsert(Uri uri, ContentValues[] values){
-        database = getReadableDatabase();
+       SQLiteDatabase database = getReadableDatabase();
         database.beginTransaction();
         long rowID;
         int returnCount = 0;
@@ -76,6 +76,7 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
 
     public void deleteTable()
     {
+        SQLiteDatabase database = getWritableDatabase();
          database.delete(ExchangeRateContract.ExchangeRates.TABLE_NAME, null, null) ;
     }
 }

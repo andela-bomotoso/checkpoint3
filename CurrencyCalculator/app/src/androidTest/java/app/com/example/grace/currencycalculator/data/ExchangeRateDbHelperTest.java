@@ -9,8 +9,17 @@ import junit.framework.TestCase;
 
 import java.util.HashSet;
 
+import app.com.example.grace.currencycalculator.models.Expression;
+
 
 public class ExchangeRateDbHelperTest extends AndroidTestCase {
+    ExchangeRateDbHelper exchangeRateDbHelper;
+    Context context;
+    public ExchangeRateDbHelperTest(Context context) {
+        this.context = context;
+        exchangeRateDbHelper = new ExchangeRateDbHelper(mContext);
+    }
+
     public static final String LOG_TAG = ExchangeRateDbHelper.class.getName();
 
     void deleteTheDatabase() {
@@ -34,14 +43,12 @@ public class ExchangeRateDbHelperTest extends AndroidTestCase {
         SQLiteDatabase db = new ExchangeRateDbHelper(this.mContext).getWritableDatabase();
         assertEquals(true, db.isOpen());
 
-        // Has the table been created?
         Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
 
         assertTrue("Error: Database has not been created correctly",
                 c.moveToFirst());
 
-        // verify that the tables have been created
-        do {
+                do {
             tableNameHashSet.remove(c.getString(0));
         } while( c.moveToNext() );
 
@@ -49,14 +56,12 @@ public class ExchangeRateDbHelperTest extends AndroidTestCase {
         assertTrue("Error: Database was created without the exchange_rate table",
                 tableNameHashSet.isEmpty());
 
-        // now, do our tables contain the correct columns?
         c = db.rawQuery("PRAGMA table_info(" + ExchangeRateContract.ExchangeRates.TABLE_NAME + ")",
                 null);
 
         assertTrue("Error: This means that we were unable to query the database for table information.",
                 c.moveToFirst());
 
-        // Build a HashSet of all of the column names we want to look for
         final HashSet<String> ExchangeColumnHashSet = new HashSet<String>();
         ExchangeColumnHashSet.add(ExchangeRateContract.ExchangeRates.COLUMN_SOURCE);
         ExchangeColumnHashSet.add(ExchangeRateContract.ExchangeRates.COLUMN_DESTINATION);
@@ -68,11 +73,26 @@ public class ExchangeRateDbHelperTest extends AndroidTestCase {
             ExchangeColumnHashSet.remove(columnName);
         } while(c.moveToNext());
 
-        // if this fails, it means the database doesn't contain all of the required exchange_rates columns
-        // entry columns
         assertTrue("Error: The database doesn't contain all of the required location entry columns",
                 ExchangeColumnHashSet.isEmpty());
         db.close();
+    }
+
+    public void testQuery() throws Exception {
+        exchangeRateDbHelper = new ExchangeRateDbHelper(getContext());
+        assertEquals(9, exchangeRateDbHelper.query("USD", "USD"));
+        //  exchangeRateDbHelper.onCreate();
+        // exchangeRateDbHelper.dropTable();
+        //exchangeRateDbHelper.deleteTable();
+    }
+
+
+    public void testBulkInsert() throws Exception {
+
+//        exchangeRatesFetcher.getSourceDestinationRates();
+//        ExchangeRateProvider exchangeRateProvider = new ExchangeRateProvider(getContext());
+//        assertEquals(2500,exchangeRateProvider.bulkInsert());
+
     }
 
 

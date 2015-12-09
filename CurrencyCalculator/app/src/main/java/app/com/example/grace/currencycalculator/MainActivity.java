@@ -22,20 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.Controller.Calculator;
-import app.com.example.grace.currencycalculator.Controller.ExchangeRateMap;
 import app.com.example.grace.currencycalculator.Controller.ExchangeRatesFetcher;
 import app.com.example.grace.currencycalculator.Controller.ExpressionAnalyzer;
 import app.com.example.grace.currencycalculator.Controller.Validator;
-import app.com.example.grace.currencycalculator.data.ExchangeRateProvider;
 import app.com.example.grace.currencycalculator.models.Expression;
+import app.com.example.grace.currencycalculator.models.ExpressionPart;
 
 public class MainActivity extends AppCompatActivity {
 
+    List<ExpressionPart>expressionParts;
     NumberFormat numberFormat;
 
-    private Calculator calculator;
+    Bundle bundle;
 
-    private ExpressionAnalyzer expressionAnalyzer;
+    private Calculator calculator;
 
     private Expression expression;
 
@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Validator expressionValidator;
 
+    public static String destinationButtonText;
+
     public static final String KEY_COMPUTATION_AREA = "workArea";
 
     public static final String KEY_RESULT_AREA = "resultArea";
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String KEY_DESTINATION_CURRENCY = "destinationCurrency";
 
     ExchangeRatesFetcher exchangeRatesFetcher;
-    ExchangeRateProvider exchangeRateProvider;
+    ExpressionAnalyzer expressionAnalyzer;
 
 
     @TargetApi(21)
@@ -114,16 +116,17 @@ public class MainActivity extends AppCompatActivity {
         initializeComponents();
 
         exchangeRatesFetcher = new ExchangeRatesFetcher(this);
-        exchangeRateProvider = new ExchangeRateProvider(MainActivity.this);
-
-        //exchangeRatesFetcher.execute();
-
 
         if (savedInstanceState != null) {
-            computationArea.setText(savedInstanceState.getString(KEY_COMPUTATION_AREA, "computationArea"));
-            resultArea.setText(savedInstanceState.getString(KEY_RESULT_AREA, "resultArea"));
-            sourceCurrencyButton.setText(savedInstanceState.getString(KEY_SOURCE_CURRENCY, "sourceCurrency"));
-            destinationCurrencyButton.setText(savedInstanceState.getString(KEY_DESTINATION_CURRENCY,"destinationCurrency"));
+            getSavedInstanceState();
+//            computationArea.setText(savedInstanceState.getString(KEY_COMPUTATION_AREA, "computationArea"));
+//            resultArea.setText(savedInstanceState.getString(KEY_RESULT_AREA, "resultArea"));
+//            sourceCurrencyButton.setText(savedInstanceState.getString(KEY_SOURCE_CURRENCY, "sourceCurrency"));
+//            destinationCurrencyButton.setText(savedInstanceState.getString(KEY_DESTINATION_CURRENCY,"destinationCurrency"));
+       }
+
+        if(bundle != null) {
+
         }
     }
 
@@ -153,19 +156,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-
-        savedInstanceState.putString(KEY_COMPUTATION_AREA, computationArea.getText().toString());
-        savedInstanceState.putString(KEY_RESULT_AREA, resultArea.getText().toString());
-        savedInstanceState.putString(KEY_SOURCE_CURRENCY,sourceCurrencyButton.getText().toString());
-        savedInstanceState.putString(KEY_DESTINATION_CURRENCY,destinationCurrencyButton.getText().toString());
+        saveInstanceState(savedInstanceState);
+//        savedInstanceState.putString(KEY_COMPUTATION_AREA, computationArea.getText().toString());
+//        savedInstanceState.putString(KEY_RESULT_AREA, resultArea.getText().toString());
+//        savedInstanceState.putString(KEY_SOURCE_CURRENCY,sourceCurrencyButton.getText().toString());
+//        savedInstanceState.putString(KEY_DESTINATION_CURRENCY,destinationCurrencyButton.getText().toString());
     }
 
     private void initializeComponents() {
-
+        expressionParts = new ArrayList<>();
         numberFormat = new DecimalFormat("##.###");
-        calculator = new Calculator();
         expression = new Expression();
-        expressionAnalyzer = new ExpressionAnalyzer();
         expressionValidator = new Validator();
         computationArea = (TextView) findViewById(R.id.computation_area);
         resultArea = (TextView) findViewById(R.id.result_area);
@@ -193,8 +194,9 @@ public class MainActivity extends AppCompatActivity {
         sourceCurrencyButton = (Button) findViewById(R.id.source_currency);
         destinationCurrencyButton = (Button) findViewById(R.id.destination_currency);
         currencyText = (TextView) findViewById(R.id.currency_area);
-
-
+        destinationButtonText = destinationCurrencyButton.getText().toString();
+        calculator = new Calculator();
+        expressionAnalyzer = new ExpressionAnalyzer(this,destinationButtonText);
 
     }
 
@@ -280,7 +282,10 @@ public class MainActivity extends AppCompatActivity {
             computationArea.setText(currentExpression);
 
             if (buttonText != '(') {
-                double computed = calculator.compute(currentExpression);
+
+                //double computed = calculator.compute(currentExpression);
+                Expression expression = expressionAnalyzer.breakDownExpression(currentExpression);
+                double computed = calculator.compute(expression);
                 result = numberFormat.format(computed);
                 resultArea.setText(result);
             }
@@ -290,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
         String currentExpression = computationArea.getText().toString();
         expressionValidator.setExpression(currentExpression);
 
-        if(currentExpression.length()>3 && Character.isLetter(currentExpression.charAt(currentExpression.length()-1))){
+        if(currentExpression.length()>3 && Character.isLetter(currentExpression.charAt(currentExpression.length() - 1))){
             currentExpression = currentExpression.substring(0,currentExpression.length()-3) + currency;
             computationArea.setText(currentExpression);
         }
@@ -314,7 +319,9 @@ public class MainActivity extends AppCompatActivity {
                 & !expressionAfterDelete(currentExpression).equals("-") && !expressionAfterDelete(currentExpression).equals("(-")) {
 
             computationArea.setText(expressionAfterDelete(currentExpression));
-           resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
+            Expression expression = expressionAnalyzer.breakDownExpression(expressionAfterDelete(currentExpression));
+           //resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
+            resultArea.setText(numberFormat.format(calculator.compute(expression)));
 
         } else if (expressionAfterDelete(currentExpression).equals("(")) {
             computationArea.setText("(");
@@ -415,8 +422,18 @@ public class MainActivity extends AppCompatActivity {
         return fetchedItems;
     }
 
-    public String displaySelectedCurrency() {
-        return "";
+    public void getSavedInstanceState() {
+
     }
+
+    public void saveInstanceState(Bundle savedInstanceState){
+        savedInstanceState.putString(KEY_COMPUTATION_AREA, computationArea.getText().toString());
+        savedInstanceState.putString(KEY_RESULT_AREA, resultArea.getText().toString());
+        savedInstanceState.putString(KEY_SOURCE_CURRENCY,sourceCurrencyButton.getText().toString());
+        savedInstanceState.putString(KEY_DESTINATION_CURRENCY,destinationCurrencyButton.getText().toString());
+
+    }
+
+
 
 }

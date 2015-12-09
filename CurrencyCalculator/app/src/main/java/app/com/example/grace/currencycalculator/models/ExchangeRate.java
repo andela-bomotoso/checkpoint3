@@ -13,16 +13,8 @@ public class ExchangeRate {
 
     private String destination;
 
-//    private ExchangeRateDbHelper exchangeRateDbHelper = new ExchangeRateDbHelper(context);
+    public ExchangeRate() {
 
-
-    public ExchangeRate(Context context) {
-        this.context = context;
-    }
-
-    public ExchangeRate(String source, String destination) {
-        this.source = source;
-        this.destination = destination;
     }
 
     public String getSource() {
