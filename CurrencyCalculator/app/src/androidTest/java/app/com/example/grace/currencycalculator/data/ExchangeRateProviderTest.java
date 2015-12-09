@@ -13,7 +13,7 @@ import java.util.List;
 
 import app.com.example.grace.currencycalculator.Controller.ExchangeRateMap;
 import app.com.example.grace.currencycalculator.Controller.ExchangeRatesFetcher;
-
+import app.com.example.grace.currencycalculator.models.ExchangeRate;
 
 
 public class ExchangeRateProviderTest extends AndroidTestCase {
@@ -24,9 +24,6 @@ public class ExchangeRateProviderTest extends AndroidTestCase {
 
     Context context;
     String name;
-    public ExchangeRateProviderTest(Context context){
-        this.context = context;
-    }
 
     public void setUp() {
 
@@ -57,14 +54,18 @@ public class ExchangeRateProviderTest extends AndroidTestCase {
     }
 
     public void testQuery() throws Exception {
-       assertEquals(9, exchangeRateDbHelper.query("USD", "USD"));
+       assertEquals("0.67", exchangeRateDbHelper.query("USD", "NGN"));
       //  exchangeRateDbHelper.onCreate();
        // exchangeRateDbHelper.dropTable();
-        //exchangeRateDbHelper.deleteTable();
+       // exchangeRateDbHelper.deleteTable();
     }
 
 
     public void testBulkInsert() throws Exception {
+        ExchangeRate exchangeRate = new ExchangeRate(context);
+        exchangeRate.setDestination("USD");
+        exchangeRate.setSource("NGN");
+        assertEquals(190,exchangeRate.getValue());
 
 //        exchangeRatesFetcher.getSourceDestinationRates();
 //        ExchangeRateProvider exchangeRateProvider = new ExchangeRateProvider(getContext());

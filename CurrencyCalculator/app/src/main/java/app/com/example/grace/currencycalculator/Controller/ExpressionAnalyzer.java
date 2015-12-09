@@ -1,9 +1,13 @@
 package app.com.example.grace.currencycalculator.Controller;
 
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
+import app.com.example.grace.currencycalculator.models.ExchangeRate;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;
@@ -12,8 +16,10 @@ import app.com.example.grace.currencycalculator.models.Operator;
 public class ExpressionAnalyzer {
 
     Expression expression;
+    Context context;
     String currentExpressionString;
-    String expressionString;
+    //ExchangeRateDbHelper exchangeRateDbHelper = new ExchangeRateDbHelper(context);
+
 
     String subexpression;
     boolean isBracketOpen;
@@ -102,7 +108,7 @@ public class ExpressionAnalyzer {
     }
 
     public boolean expressionStartsWithUnaryOperator() {
-        return (index == 0 && isOperator(current));
+        return (index == 0 && current == '-');
     }
 
     public boolean isOperator(char expressionPart) {
@@ -128,6 +134,7 @@ public class ExpressionAnalyzer {
     public void updateExpressionPartWithOperator() {
         expressionParts.add(new Operator(current + ""));
     }
+
     public void updateExpressionPartWithOperator(String operator) {
         expressionParts.add(new Operator(operator));
     }
@@ -136,23 +143,37 @@ public class ExpressionAnalyzer {
         expressionParts.add(new Operand(subexpression));
         subexpression="";
     }
+
     public void clearCurrentExpressionString(){
         currentExpressionString = "";
     }
+
     public boolean currentExpressionPartIsOpeningBracket() {
         return current =='(';
     }
+
     public boolean currentExpressionPartIsClosingBracket() {
         return current ==')';
     }
+
     public void updateSubExpressionString() {
         subexpression += current;
     }
+
     public void clearSubExpressionString() {
         subexpression = "";
     }
+
     public boolean subExpression() {
        return false;
+    }
+
+    public boolean isCurrencyOperand(String str) {
+        if(str.length()>3 && Character.isDigit(str.charAt(str.length()-1))) {
+
+        }
+
+        return false;
     }
 
 

@@ -42,15 +42,16 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_RATES_TABLE);
     }
 
-    public int query(String source, String destination) {
+    public String query(String source, String destination) {
 
-        //String query = "SELECT rate FROM exchange_rate where SOURCE ='" + source + "' and DESTINATION ='" + destination + "'";
-        String query = "SELECT rate FROM exchange_rate";
+        String query = "SELECT rate FROM exchange_rate where SOURCE ='" + source + "' and DESTINATION ='" + destination + "'";
+        //String query = "SELECT rate FROM exchange_rate";
         database = getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
         cursor.moveToFirst();
-        return cursor.getCount();
-        //return cursor.getString(cursor.getColumnIndex("rate"));
+        //return cursor.getCount();
+        return cursor.getString(cursor.getColumnIndex("rate"));
+
     }
 
     public int bulkInsert(Uri uri, ContentValues[] values){
@@ -59,12 +60,12 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
         long rowID;
         int returnCount = 0;
         try {
-        for (ContentValues contentValues : values){
-            rowID = database.insert(ExchangeRateContract.ExchangeRates.TABLE_NAME, null, contentValues);
-            if (rowID != -1) {
-                returnCount++;
+            for (ContentValues contentValues : values){
+             rowID = database.insert(ExchangeRateContract.ExchangeRates.TABLE_NAME, null, contentValues);
+                if (rowID != -1) {
+                 returnCount++;
+                }
             }
-        }
             database.setTransactionSuccessful();
         } finally {
             database.endTransaction();

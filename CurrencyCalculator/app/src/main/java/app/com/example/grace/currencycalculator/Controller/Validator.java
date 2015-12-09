@@ -23,7 +23,12 @@ public class Validator {
         return (!startWithInvalidCharacter(keyPressed)) && (!isDivisionByZero(keyPressed)) && (!isRepeatedZeros(keyPressed))
                 && (!isRepeatedDecimals(keyPressed)) && (!isMismatchedBrackets(keyPressed)) && (!closingBracketAfterOperator(keyPressed))
                 && (!repeatedOpeningBracket(keyPressed)) && (!isEmptyParenthesis(keyPressed)) && (!repeatedClosingBracket(keyPressed))
-                 && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed)) && (!operatorAfterOpeningBracket(keyPressed));
+                 && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed)) && (!operatorAfterOpeningBracket(keyPressed))
+                && (!isOperandAfterCurrency(keyPressed));
+    }
+
+    public boolean validateCurrency() {
+        return (isLastCharacterADigit());
     }
 
     public boolean isOperator(char expressionPart) {
@@ -33,7 +38,8 @@ public class Validator {
 
     private boolean startWithInvalidCharacter(char keyPressed) {
 
-        return (expression.isEmpty() &&  keyPressed == ')');
+       // return (expression.isEmpty() &&  (keyPressed == ')'|| keyPressed == '+' || (keyPressed == '*' || (keyPressed == '/'))));
+        return (expression.isEmpty() && !Character.isDigit(keyPressed) && keyPressed != '-' && keyPressed == '(');
     }
 
     public String validateOperator(char keyPressed) {
@@ -130,4 +136,26 @@ public class Validator {
         return subExpression;
 
     }
+
+    public boolean isLastCharacterADigit() {
+        boolean ans = false;
+       if (expression.length()>1) {
+           ans = Character.isDigit(expression.charAt(expression.length() - 1));
+       }
+        else if(expression.length() == 1 && !expression.equals("-")) {
+           ans = true;
+       }
+
+       return ans;
+    }
+
+    public boolean isOperandAfterCurrency(char keyPressed) {
+        return expression.length() > 3 && Character.isLetter(expression.charAt(expression.length()-1)) && Character.isDigit(keyPressed);
+    }
+
+//    public String updateCurrency () {
+//        for(int i = expression.length()-1; i<=0;i--) {
+//            if(cha)
+//        }
+//    }
 }

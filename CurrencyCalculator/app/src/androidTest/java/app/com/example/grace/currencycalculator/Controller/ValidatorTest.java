@@ -84,6 +84,22 @@ public class ValidatorTest extends TestCase {
         assertFalse(validator.openingBracketsDoesNotMatchClosingBrackets(')'));
     }
 
+    public void testCurrencyFollowingAnOperandWhenACurrencyFollowsAtBeginningAnExpressionOperand(){
+        String expression = "2";
+        validator.setExpression(expression);
+        assertTrue(validator.isLastCharacterADigit());
+    }
 
+    public void testCurrencyFollowingAnOperandWhenACurrencyFollowsAnOperand(){
+        String expression = "2USD+3";
+        validator.setExpression(expression);
+        assertTrue(validator.isLastCharacterADigit());
+    }
+
+    public void testCurrencyFollowingAnOperandWhenACurrencyFollowsDoesNotFollowAnOperand(){
+        String expression = "2USD";
+        validator.setExpression(expression);
+        assertFalse(validator.isLastCharacterADigit());
+    }
 
 }

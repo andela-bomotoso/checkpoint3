@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         exchangeRatesFetcher = new ExchangeRatesFetcher(this);
         exchangeRateProvider = new ExchangeRateProvider(MainActivity.this);
 
-        exchangeRatesFetcher.execute();
+        //exchangeRatesFetcher.execute();
 
 
         if (savedInstanceState != null) {
@@ -280,10 +280,23 @@ public class MainActivity extends AppCompatActivity {
             computationArea.setText(currentExpression);
 
             if (buttonText != '(') {
-                //double computed = calculator.compute(currentExpression);
-                //result = numberFormat.format(computed);
+                double computed = calculator.compute(currentExpression);
+                result = numberFormat.format(computed);
                 resultArea.setText(result);
             }
+        }
+    }
+    public void updateWorkArea(String currency) {
+        String currentExpression = computationArea.getText().toString();
+        expressionValidator.setExpression(currentExpression);
+
+        if(currentExpression.length()>3 && Character.isLetter(currentExpression.charAt(currentExpression.length()-1))){
+            currentExpression = currentExpression.substring(0,currentExpression.length()-3) + currency;
+            computationArea.setText(currentExpression);
+        }
+       else if (expressionValidator.validateCurrency()) {
+            currentExpression = currentExpression + currency;
+            computationArea.setText(currentExpression);
         }
     }
 
@@ -301,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
                 & !expressionAfterDelete(currentExpression).equals("-") && !expressionAfterDelete(currentExpression).equals("(-")) {
 
             computationArea.setText(expressionAfterDelete(currentExpression));
-           //resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
+           resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
 
         } else if (expressionAfterDelete(currentExpression).equals("(")) {
             computationArea.setText("(");
@@ -332,10 +345,17 @@ public class MainActivity extends AppCompatActivity {
         String expressionAfterDelete = "";
 
         if (currentExpression.length() > 0) {
-            expressionAfterDelete = currentExpression.substring(0, currentExpression.length() - 1);
+
+            if(Character.isLetter(currentExpression.charAt(currentExpression.length()-1))) {
+                expressionAfterDelete = currentExpression.substring(0,currentExpression.length()-3);
+            }
+            else {
+                expressionAfterDelete = currentExpression.substring(0, currentExpression.length() - 1);
+            }
         }
         return expressionAfterDelete;
     }
+
 
     private void clearWorkArea() {
 
@@ -352,7 +372,6 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle(getDialogTitle(type));
         builder.setSingleChoiceItems(items, 3, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int item) {
-                dialogInterface.dismiss();
                 switch (type) {
                     case "source":
                         sourceCurrencyButton.setText(items[item]);
@@ -362,6 +381,8 @@ public class MainActivity extends AppCompatActivity {
                         currencyText.setText(items[item]);
                         break;
                 }
+                MainActivity.this.updateWorkArea(sourceCurrencyButton.getText().toString());
+                dialogInterface.dismiss();
             }
 
         });
@@ -392,6 +413,10 @@ public class MainActivity extends AppCompatActivity {
         }
         fetchedItems = currencies.toArray(new CharSequence[currencies.size()]);
         return fetchedItems;
+    }
+
+    public String displaySelectedCurrency() {
+        return "";
     }
 
 }
