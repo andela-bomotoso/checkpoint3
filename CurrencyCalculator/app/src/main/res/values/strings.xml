@@ -23,5 +23,7 @@
     <string name="times">*</string>
     <string name="plus">+</string>
     <string name="equals">=</string>
+    <string name="min_currency_display">10</string>
+    <string name="max_currency_display">30</string>
     <string name="title_activity_settings">SettingsActivity</string>
 </resources>

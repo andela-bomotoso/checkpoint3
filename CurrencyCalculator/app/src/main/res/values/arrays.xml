@@ -10,9 +10,28 @@
         <item>JOD</item>
         <item>KYD</item>
         <item>EUR</item>
-        <item>CHF</item>
         <item>NGN</item>
+        <item>CHF</item>
         <item>CAD</item>
+        <item>ARS</item>
+        <item>AUD</item>
+        <item>BSD</item>
+        <item>BDT</item>
+        <item>BBD</item>
+        <item>XOF</item>
+        <item>BRL</item>
+        <item>BGN</item>
+        <item>FJD</item>
+        <item>XAF</item>
+        <item>CNY</item>
+        <item>COP</item>
+        <item>HRK</item>
+        <item>CZK</item>
+        <item>DKK</item>
+        <item>EGP</item>
+        <item>CFA</item>
+        <item>ZAR</item>
+
     </string-array>
 </resources>
 

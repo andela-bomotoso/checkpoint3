@@ -15,7 +15,6 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
     private EditTextPreference settings_currency_no;
     private String minVal;
     private String maxVal;
-    private String oldValue;
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     @Override
@@ -26,10 +25,8 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         createListener();
         settings_currency_no = (EditTextPreference) findPreference("no_of_currency");
         minVal = "10";
-        maxVal = "50";
+        maxVal = "30";
         bindPreferenceSummaryToValue(findPreference("no_of_currency"));
-        //setSupportActionBar(toolbar);
-
     }
 
     private void bindPreferenceSummaryToValue(Preference preference) {
@@ -56,36 +53,32 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         return  true;
     }
 
-
     private void createListener() {
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(
                     SharedPreferences sharedPreferences, String key) {
-                String value = sharedPreferences.getString("no_of_currency", "10");
+                String value = sharedPreferences.getString("no_of_currency", minVal);
 
                 try {
-                    if (Integer.parseInt(value) < 10) {
+                    if (Integer.parseInt(value) < Integer.parseInt(minVal)) {
                         settings_currency_no.setText(minVal);
-                        Toast.makeText(getApplicationContext(), "Minimum allowed is " + 10, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Minimum allowed is " + R.string.min_currency_display, Toast.LENGTH_SHORT).show();
                     }
-                    if (Integer.parseInt(value) > 30) {
+
+                   else if (Integer.parseInt(value) > Integer.parseInt(maxVal)) {
                         settings_currency_no.setText(maxVal);
-                        Toast.makeText(getApplicationContext(), "Maximum allowed is " + 30, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Maximum allowed is " + R.string.max_currency_display, Toast.LENGTH_SHORT).show();
 
                     }
                 }
                 catch (NumberFormatException exception) {
-                    settings_currency_no.setText(oldValue);
                     Toast.makeText(getApplicationContext(), "Please, enter a valid number ", Toast.LENGTH_SHORT).show();
                 }
-
             }
         };
         PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .registerOnSharedPreferenceChangeListener(listener);
     }
-
-
 
 }

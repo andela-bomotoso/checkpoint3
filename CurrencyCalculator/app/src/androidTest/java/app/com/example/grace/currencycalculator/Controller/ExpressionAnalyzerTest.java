@@ -46,23 +46,12 @@ public class ExpressionAnalyzerTest extends TestCase {
     }
 
     public void testBreakDownWhenExpressionStartsWithSubExpression() throws Exception {
-        String expressionString = "(3+5)";
+        String expressionString = "(3+5)3";
         Expression expression = expressionAnalyzer.breakDownExpression(expressionString);
-        assertEquals("3",expression.getExpressionParts().get(0).getValue());
-        assertEquals("+",expression.getExpressionParts().get(1).getValue());
-        assertEquals("5",expression.getExpressionParts().get(2).getValue());
+        assertEquals("(3+5)",expression.getExpressionParts().get(0).getValue());
+        assertEquals("*",expression.getExpressionParts().get(1).getValue());
+        assertEquals("3",expression.getExpressionParts().get(2).getValue());
     }
 
-//    public void testOnOpenBracket() throws Exception {
-//        String expressionString = ("(3+4)5");
-//        Expression expression = expressionAnalyzer.breakDownExpression(expressionString);
-//        assertEquals("3",expression.getExpressionParts().get(0).getValue());
-//        assertEquals("+",expression.getExpressionParts().get(1).getValue());
-//        assertEquals("4",expression.getExpressionParts().get(2).getValue());
-//        assertEquals("*",expression.getExpressionParts().get(3).getValue());
-//        assertEquals("5",expression.getExpressionParts().get(4).getValue());
-//
-//
-//    }
 
 }

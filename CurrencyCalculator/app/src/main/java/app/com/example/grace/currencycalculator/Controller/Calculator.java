@@ -1,17 +1,22 @@
 package app.com.example.grace.currencycalculator.Controller;
 
 
+import android.content.Context;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import app.com.example.grace.currencycalculator.MainActivity;
+import app.com.example.grace.currencycalculator.models.ExchangeRate;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;
 
 public class Calculator {
 
+    Expression expression;
     double previousOperand = 0.0;
     String previousOperator = "";
     String currentOperator = "";
@@ -23,16 +28,16 @@ public class Calculator {
     boolean nonPrecedence = false;
     double nonPrecedenceComputedValue = 0;
     String firstExpressionPart="";
-    ExpressionAnalyzer expressionAnalyzer;
     Validator expressionValidator;
+    ExpressionAnalyzer expressionAnalyzer;
 
-    public double compute(String expressionString) {
-
+    public double compute(Expression expression) {
         expressionAnalyzer = new ExpressionAnalyzer();
         expressionValidator = new Validator();
-        Expression expression = expressionAnalyzer.breakDownExpression(expressionString);
+
         List < ExpressionPart > expressionParts = expression.getExpressionParts();
         firstExpressionPart = expressionParts.get(0).getValue();
+
         if(firstExpressionPart.contains("(")) {
            currentOperandString = expressionValidator.removeBrackets(firstExpressionPart);
             computedValue = 0.0;
@@ -72,8 +77,10 @@ public class Calculator {
 
         double computedValueBuffer = computedValue;
         String currentOperatorBuffer = currentOperator;
-        currentOperand = compute(currentOperandString);
-        expressionParts.set(currentIndex,new Operand(currentOperand+""));
+
+            currentOperand = compute(expressionAnalyzer.breakDownExpression(currentOperandString));
+            expressionParts.set(currentIndex, new Operand(currentOperand + ""));
+
         if(computedValueBuffer!=0) {
             computedValue = computedValueBuffer;
         }
@@ -218,6 +225,8 @@ public class Calculator {
         previousExpressionValue = 0;
         previousExpValue = 0;
         firstExpressionPart = "";
+
+        expressionAnalyzer = new ExpressionAnalyzer();
 
 
     }
