@@ -104,10 +104,4 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(2, calculator.compute(expression1));
     }
 
-//    public void testComputeWhenExprssionHasLowerPrecedenceAndHigherPrecedence() {
-//        String expression = "6+6*3*3";
-//        assertEquals(72,calculator.compute(expression));
-//    }
-
-
 }
