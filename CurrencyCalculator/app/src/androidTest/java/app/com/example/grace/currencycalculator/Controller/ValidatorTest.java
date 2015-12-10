@@ -50,16 +50,16 @@ public class ValidatorTest extends TestCase {
         validator.setExpression(expression);
         assertFalse(validator.isRepeatedZeros('0'));
     }
-    public void testRepeatedDecimalsWhenThereAreRepeatedDecimalsInAnOperand() throws Exception {
-        String expression = "34+56+78.90";
-        validator.setExpression(expression);
-        assertTrue(validator.isRepeatedDecimals('.'));
-    }
-    public void testRepeatedDecimalsWhenThereAreNoRepeatedDecimalsInAnOperand() throws Exception {
-        String expression = "34+56+78";
-        validator.setExpression(expression);
-        assertFalse(validator.isRepeatedDecimals('.'));
-    }
+//    public void testRepeatedDecimalsWhenThereAreRepeatedDecimalsInAnOperand() throws Exception {
+//        String expression = "34+56+78.90";
+//        validator.setExpression(expression);
+//        assertTrue(validator.isRepeatedDecimals('.'));
+//    }
+//    public void testRepeatedDecimalsWhenThereAreNoRepeatedDecimalsInAnOperand() throws Exception {
+//        String expression = "34+56+78";
+//        validator.setExpression(expression);
+//        assertFalse(validator.isRepeatedDecimals('.'));
+//    }
     public void testMismatchedBracketsWhenBracketsAreMismatched() throws Exception {
         String expression = "4+5)";
         validator.setExpression(expression);

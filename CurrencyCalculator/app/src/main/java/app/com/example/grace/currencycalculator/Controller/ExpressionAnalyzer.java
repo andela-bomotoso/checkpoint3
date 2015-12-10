@@ -67,6 +67,7 @@ public class ExpressionAnalyzer {
                 double currentExpressionValue = Double.parseDouble(currentExpressionString) * getExchangeRate(sourceCurrency, destinationCurrency);
                 currentExpressionString = currentExpressionValue + "";
                 currency = false;
+                sourceCurrency = "";
             }
             if(currency && isBracketOpen) {
                 double subExpressionValue = Double.parseDouble(currentExpressionString) * getExchangeRate(sourceCurrency, destinationCurrency);

@@ -91,6 +91,13 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(7.0,calculator.compute(expression1));
     }
 
+    public void testComputeWhenExpressionHasMixedCurrencies() {
+        String expression = "4USD+5GBP-2";
+        ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(getActivity(),"NGN");
+        Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
+        assertEquals(2287.665296, calculator.compute(expression1));
+    }
+
 //    public void testComputeWhenExprssionHasLowerPrecedenceAndHigherPrecedence() {
 //        String expression = "6+6*3*3";
 //        assertEquals(72,calculator.compute(expression));

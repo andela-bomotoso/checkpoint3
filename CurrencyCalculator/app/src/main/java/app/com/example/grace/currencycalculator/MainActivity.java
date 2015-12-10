@@ -268,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.destination_currency:
                 displayCurrencies("destination");
+                updateWorkArea();
                 break;
         }
     }
@@ -292,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void updateWorkArea(String currency) {
+
         String currentExpression = computationArea.getText().toString();
         expressionValidator.setExpression(currentExpression);
 
@@ -302,6 +304,17 @@ public class MainActivity extends AppCompatActivity {
        else if (expressionValidator.validateCurrency()) {
             currentExpression = currentExpression + currency;
             computationArea.setText(currentExpression);
+        }
+    }
+    public void updateWorkArea() {
+        String currentExpression = computationArea.getText().toString();
+        String result = "";
+        if(!currentExpression.isEmpty()) {
+            ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(this, currencyText.getText().toString());
+            Expression expression = expressionAnalyzer.breakDownExpression(currentExpression);
+            double computed = calculator.compute(expression);
+            result = numberFormat.format(computed);
+            resultArea.setText(result);
         }
     }
 
