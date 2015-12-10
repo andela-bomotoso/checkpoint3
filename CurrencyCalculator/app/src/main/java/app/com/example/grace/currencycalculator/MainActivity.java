@@ -91,15 +91,17 @@ public class MainActivity extends AppCompatActivity {
 
     private Validator expressionValidator;
 
-    public static String destinationButtonText;
+    private static String destinationButtonText;
 
-    public static final String KEY_COMPUTATION_AREA = "workArea";
+    private static final String KEY_COMPUTATION_AREA = "workArea";
 
-    public static final String KEY_RESULT_AREA = "resultArea";
+    private static final String KEY_RESULT_AREA = "resultArea";
 
-    public static final String KEY_SOURCE_CURRENCY = "sourceCurrency";
+    private static final String KEY_SOURCE_CURRENCY = "sourceCurrency";
 
-    public static final String KEY_DESTINATION_CURRENCY = "destinationCurrency";
+    private static final String KEY_DESTINATION_CURRENCY = "destinationCurrency";
+
+    private String currentExpression;
 
     ExchangeRatesFetcher exchangeRatesFetcher;
     ExpressionAnalyzer expressionAnalyzer;
@@ -118,16 +120,12 @@ public class MainActivity extends AppCompatActivity {
         exchangeRatesFetcher = new ExchangeRatesFetcher(this);
 
         if (savedInstanceState != null) {
-            getSavedInstanceState();
-//            computationArea.setText(savedInstanceState.getString(KEY_COMPUTATION_AREA, "computationArea"));
-//            resultArea.setText(savedInstanceState.getString(KEY_RESULT_AREA, "resultArea"));
-//            sourceCurrencyButton.setText(savedInstanceState.getString(KEY_SOURCE_CURRENCY, "sourceCurrency"));
-//            destinationCurrencyButton.setText(savedInstanceState.getString(KEY_DESTINATION_CURRENCY,"destinationCurrency"));
+
+            computationArea.setText(savedInstanceState.getString(KEY_COMPUTATION_AREA, "computationArea"));
+            resultArea.setText(savedInstanceState.getString(KEY_RESULT_AREA, "resultArea"));
+            sourceCurrencyButton.setText(savedInstanceState.getString(KEY_SOURCE_CURRENCY, "sourceCurrency"));
+            destinationCurrencyButton.setText(savedInstanceState.getString(KEY_DESTINATION_CURRENCY,"destinationCurrency"));
        }
-
-        if(bundle != null) {
-
-        }
     }
 
     @Override
@@ -139,12 +137,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
@@ -157,10 +151,10 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         saveInstanceState(savedInstanceState);
-//        savedInstanceState.putString(KEY_COMPUTATION_AREA, computationArea.getText().toString());
-//        savedInstanceState.putString(KEY_RESULT_AREA, resultArea.getText().toString());
-//        savedInstanceState.putString(KEY_SOURCE_CURRENCY,sourceCurrencyButton.getText().toString());
-//        savedInstanceState.putString(KEY_DESTINATION_CURRENCY,destinationCurrencyButton.getText().toString());
+        savedInstanceState.putString(KEY_COMPUTATION_AREA, computationArea.getText().toString());
+        savedInstanceState.putString(KEY_RESULT_AREA, resultArea.getText().toString());
+        savedInstanceState.putString(KEY_SOURCE_CURRENCY,sourceCurrencyButton.getText().toString());
+        savedInstanceState.putString(KEY_DESTINATION_CURRENCY,destinationCurrencyButton.getText().toString());
     }
 
     private void initializeComponents() {
@@ -268,13 +262,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.destination_currency:
                 displayCurrencies("destination");
-                updateWorkArea();
                 break;
         }
     }
 
     public void updateWorkArea(char buttonText) {
-        String result = "";
+
         String currentExpression = computationArea.getText().toString();
         expressionValidator.setExpression(currentExpression);
 
@@ -283,8 +276,8 @@ public class MainActivity extends AppCompatActivity {
             computationArea.setText(currentExpression);
 
             if (buttonText != '(') {
-
-                //double computed = calculator.compute(currentExpression);
+                String result;
+                ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(this, destinationButtonText);
                 Expression expression = expressionAnalyzer.breakDownExpression(currentExpression);
                 double computed = calculator.compute(expression);
                 result = numberFormat.format(computed);
@@ -292,62 +285,58 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    public void updateWorkArea(String currency) {
+    public void updateWorkArea(String sourceCurrency) {
 
-        String currentExpression = computationArea.getText().toString();
-        expressionValidator.setExpression(currentExpression);
+        setValidatorExpression();
 
-        if(currentExpression.length()>3 && Character.isLetter(currentExpression.charAt(currentExpression.length() - 1))){
-            currentExpression = currentExpression.substring(0,currentExpression.length()-3) + currency;
+        if(currentIsCurrencyOperand()){
+            currentExpression = currentExpression.substring(0,currentExpression.length()-3) + sourceCurrency;
             computationArea.setText(currentExpression);
         }
        else if (expressionValidator.validateCurrency()) {
-            currentExpression = currentExpression + currency;
+            currentExpression = currentExpression + sourceCurrency;
             computationArea.setText(currentExpression);
         }
+        updateWorkArea();
     }
+
     public void updateWorkArea() {
-        String currentExpression = computationArea.getText().toString();
-        String result = "";
+
+        currentExpression = computationArea.getText().toString();
+
         if(!currentExpression.isEmpty()) {
-            ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(this, currencyText.getText().toString());
-            Expression expression = expressionAnalyzer.breakDownExpression(currentExpression);
-            double computed = calculator.compute(expression);
-            result = numberFormat.format(computed);
-            resultArea.setText(result);
+            evaluate();
         }
     }
 
     public void checkOperatorValidity(char buttonText) {
-        String currentExpression = computationArea.getText().toString();
-        expressionValidator.setExpression(currentExpression);
+        setValidatorExpression();
         computationArea.setText(expressionValidator.validateOperator(buttonText));
     }
 
     public void deleteFromWorkArea() {
 
-        String currentExpression = computationArea.getText().toString();
+        currentExpression = computationArea.getText().toString();
 
         if (currentExpression.length() > 1 & !expressionAfterDelete(currentExpression).equals("(")
                 & !expressionAfterDelete(currentExpression).equals("-") && !expressionAfterDelete(currentExpression).equals("(-")) {
 
             computationArea.setText(expressionAfterDelete(currentExpression));
             Expression expression = expressionAnalyzer.breakDownExpression(expressionAfterDelete(currentExpression));
-           //resultArea.setText(numberFormat.format(calculator.compute(expressionAfterDelete(currentExpression))));
             resultArea.setText(numberFormat.format(calculator.compute(expression)));
 
         } else if (expressionAfterDelete(currentExpression).equals("(")) {
             computationArea.setText("(");
-            resultArea.setText("0");
+            initializeResultArea();
         }
         else if (expressionAfterDelete(currentExpression).equals("-")){
             computationArea.setText("-");
-            resultArea.setText("0");
+            initializeResultArea();
         }
 
         else if (expressionAfterDelete(currentExpression).equals("(-")){
             computationArea.setText("(-");
-            resultArea.setText("0");
+            initializeResultArea();
         }
 
         else {
@@ -358,6 +347,10 @@ public class MainActivity extends AppCompatActivity {
     private void moveResultToComputationArea() {
         computationArea.setText(resultArea.getText().toString());
         resultArea.setText("");
+    }
+
+    private boolean currentIsCurrencyOperand() {
+        return currentExpression.length()>3 && Character.isLetter(currentExpression.charAt(currentExpression.length() - 1));
     }
 
     private String expressionAfterDelete(String currentExpression) {
@@ -376,10 +369,28 @@ public class MainActivity extends AppCompatActivity {
         return expressionAfterDelete;
     }
 
+    private void evaluate() {
+        String result;
+        ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(this, destinationButtonText);
+        Expression expression = expressionAnalyzer.breakDownExpression(currentExpression);
+        double computed = calculator.compute(expression);
+        result = numberFormat.format(computed);
+        resultArea.setText(result);
+    }
+
+    private void setValidatorExpression() {
+        currentExpression = computationArea.getText().toString();
+        expressionValidator.setExpression(currentExpression);
+    }
+
 
     private void clearWorkArea() {
 
         computationArea.setText("");
+        initializeResultArea();
+    }
+
+    private void initializeResultArea() {
         resultArea.setText("0");
     }
 
@@ -395,13 +406,16 @@ public class MainActivity extends AppCompatActivity {
                 switch (type) {
                     case "source":
                         sourceCurrencyButton.setText(items[item]);
+                        updateWorkArea(sourceCurrencyButton.getText().toString());
+                        updateWorkArea();
                         break;
                     case "destination":
                         destinationCurrencyButton.setText(items[item]);
+                        destinationButtonText = items[item].toString();
                         currencyText.setText(items[item]);
+                        updateWorkArea();
                         break;
                 }
-                MainActivity.this.updateWorkArea(sourceCurrencyButton.getText().toString());
                 dialogInterface.dismiss();
             }
 
@@ -433,10 +447,6 @@ public class MainActivity extends AppCompatActivity {
         }
         fetchedItems = currencies.toArray(new CharSequence[currencies.size()]);
         return fetchedItems;
-    }
-
-    public void getSavedInstanceState() {
-
     }
 
     public void saveInstanceState(Bundle savedInstanceState){

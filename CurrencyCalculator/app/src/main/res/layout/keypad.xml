@@ -268,7 +268,6 @@
                 android:src="@drawable/ic_arrow_forward_white_24dp"
                 android:background="@drawable/button_style"
                 android:textColor="@color/button_text_color"
-                android:text="@string/source_currency"
                 android:paddingBottom="@dimen/button_padding"
                 android:layout_gravity="center_vertical"
                 android:onClick="display"/>

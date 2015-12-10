@@ -50,16 +50,17 @@ public class ValidatorTest extends TestCase {
         validator.setExpression(expression);
         assertFalse(validator.isRepeatedZeros('0'));
     }
-//    public void testRepeatedDecimalsWhenThereAreRepeatedDecimalsInAnOperand() throws Exception {
-//        String expression = "34+56+78.90";
-//        validator.setExpression(expression);
-//        assertTrue(validator.isRepeatedDecimals('.'));
-//    }
-//    public void testRepeatedDecimalsWhenThereAreNoRepeatedDecimalsInAnOperand() throws Exception {
-//        String expression = "34+56+78";
-//        validator.setExpression(expression);
-//        assertFalse(validator.isRepeatedDecimals('.'));
-//    }
+    public void testRepeatedDecimalsWhenThereAreRepeatedDecimalsInAnOperand() throws Exception {
+        String expression = "34+56+78.90";
+        validator.setExpression(expression);
+        assertTrue(validator.isRepeatedDecimal('.'));
+   }
+    public void testRepeatedDecimalsWhenThereAreNoRepeatedDecimalsInAnOperand() throws Exception {
+        String expression = "34+56+78";
+        validator.setExpression(expression);
+        assertFalse(validator.isRepeatedDecimal('.'));
+    }
+
     public void testMismatchedBracketsWhenBracketsAreMismatched() throws Exception {
         String expression = "4+5)";
         validator.setExpression(expression);
@@ -100,6 +101,18 @@ public class ValidatorTest extends TestCase {
         String expression = "2USD";
         validator.setExpression(expression);
         assertFalse(validator.isLastCharacterADigit());
+    }
+
+    public void testOperatorAfterOpeningBracketWhenOperatorFollowsOpeningBracket() {
+        String expression = "(2+3)*(";
+        validator.setExpression(expression);
+        assertTrue(validator.operatorAfterOpeningBracket('/'));
+    }
+
+    public void testOperatorAfterOpeningBracketWhenOperatorDoesNotFollowOpeningBracket() {
+        String expression = "(2+3)*(3";
+        validator.setExpression(expression);
+        assertFalse(validator.operatorAfterOpeningBracket('/'));
     }
 
 }

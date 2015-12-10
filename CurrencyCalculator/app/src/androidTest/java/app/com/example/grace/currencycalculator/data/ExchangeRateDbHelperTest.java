@@ -1,26 +1,20 @@
 package app.com.example.grace.currencycalculator.data;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 
-import junit.framework.TestCase;
-
 import java.util.HashSet;
 
-import app.com.example.grace.currencycalculator.models.Expression;
-
-
 public class ExchangeRateDbHelperTest extends AndroidTestCase {
+
     ExchangeRateDbHelper exchangeRateDbHelper;
     Context context;
     public ExchangeRateDbHelperTest(Context context) {
-        this.context = context;
-        exchangeRateDbHelper = new ExchangeRateDbHelper(mContext);
+        exchangeRateDbHelper = new ExchangeRateDbHelper(context);
     }
-
-    public static final String LOG_TAG = ExchangeRateDbHelper.class.getName();
 
     void deleteTheDatabase() {
         mContext.deleteDatabase(ExchangeRateDbHelper.DATABASE_NAME);
@@ -52,7 +46,6 @@ public class ExchangeRateDbHelperTest extends AndroidTestCase {
             tableNameHashSet.remove(c.getString(0));
         } while( c.moveToNext() );
 
-        // if this fails, it means that the database doesn't contain the exchange_rate table
         assertTrue("Error: Database was created without the exchange_rate table",
                 tableNameHashSet.isEmpty());
 
@@ -77,23 +70,5 @@ public class ExchangeRateDbHelperTest extends AndroidTestCase {
                 ExchangeColumnHashSet.isEmpty());
         db.close();
     }
-
-    public void testQuery() throws Exception {
-        exchangeRateDbHelper = new ExchangeRateDbHelper(getContext());
-        assertEquals(9, exchangeRateDbHelper.query("USD", "USD"));
-        //  exchangeRateDbHelper.onCreate();
-        // exchangeRateDbHelper.dropTable();
-        //exchangeRateDbHelper.deleteTable();
-    }
-
-
-    public void testBulkInsert() throws Exception {
-
-//        exchangeRatesFetcher.getSourceDestinationRates();
-//        ExchangeRateProvider exchangeRateProvider = new ExchangeRateProvider(getContext());
-//        assertEquals(2500,exchangeRateProvider.bulkInsert());
-
-    }
-
 
 }

@@ -9,14 +9,15 @@ import android.net.Uri;
 
 
 public class ExchangeRateDbHelper extends SQLiteOpenHelper {
-
+    Context context;
     public static final String DATABASE_NAME = "exchange.db";
     static final int DATABASE_VERSION = 2;
     //private SQLiteDatabase database;
 
     public ExchangeRateDbHelper(Context context) {
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
-       // database = getWritableDatabase();
+        this.context = context;
+        // database = getWritableDatabase();
     }
 
     @Override

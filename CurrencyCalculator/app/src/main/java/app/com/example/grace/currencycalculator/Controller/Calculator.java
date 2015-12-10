@@ -37,6 +37,7 @@ public class Calculator {
 
         List < ExpressionPart > expressionParts = expression.getExpressionParts();
         firstExpressionPart = expressionParts.get(0).getValue();
+
         if(firstExpressionPart.contains("(")) {
            currentOperandString = expressionValidator.removeBrackets(firstExpressionPart);
             computedValue = 0.0;
@@ -77,9 +78,9 @@ public class Calculator {
         double computedValueBuffer = computedValue;
         String currentOperatorBuffer = currentOperator;
 
-        //currentOperand = compute(currentOperandString);
-        currentOperand = compute(expressionAnalyzer.breakDownExpression(currentOperandString));
-        expressionParts.set(currentIndex,new Operand(currentOperand+""));
+            currentOperand = compute(expressionAnalyzer.breakDownExpression(currentOperandString));
+            expressionParts.set(currentIndex, new Operand(currentOperand + ""));
+
         if(computedValueBuffer!=0) {
             computedValue = computedValueBuffer;
         }

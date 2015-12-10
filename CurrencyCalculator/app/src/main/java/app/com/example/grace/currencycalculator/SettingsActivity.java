@@ -25,7 +25,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         createListener();
         settings_currency_no = (EditTextPreference) findPreference("no_of_currency");
         minVal = "10";
-        maxVal = "50";
+        maxVal = "30";
         bindPreferenceSummaryToValue(findPreference("no_of_currency"));
     }
 
@@ -52,7 +52,6 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         }
         return  true;
     }
-
 
     private void createListener() {
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {

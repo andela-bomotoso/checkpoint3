@@ -98,6 +98,12 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(2287.665296, calculator.compute(expression1));
     }
 
+    public void testComputeWhenExpressionIsIncomplete() {
+        String expression = "2(-";
+        Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
+        assertEquals(2, calculator.compute(expression1));
+    }
+
 //    public void testComputeWhenExprssionHasLowerPrecedenceAndHigherPrecedence() {
 //        String expression = "6+6*3*3";
 //        assertEquals(72,calculator.compute(expression));
