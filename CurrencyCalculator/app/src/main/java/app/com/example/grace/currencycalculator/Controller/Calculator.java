@@ -10,6 +10,8 @@ import app.com.example.grace.currencycalculator.models.Operand;
 public class Calculator {
 
     Expression expression;
+    Validator expressionValidator;
+    ExpressionAnalyzer expressionAnalyzer;
     double previousOperand = 0.0;
     String previousOperator = "";
     String currentOperator = "";
@@ -21,8 +23,6 @@ public class Calculator {
     boolean nonPrecedence = false;
     double nonPrecedenceComputedValue = 0;
     String firstExpressionPart="";
-    Validator expressionValidator;
-    ExpressionAnalyzer expressionAnalyzer;
 
     public double compute(Expression expression) {
         expressionAnalyzer = new ExpressionAnalyzer();
@@ -33,7 +33,7 @@ public class Calculator {
 
         if(firstExpressionPart.contains("(")) {
            currentOperandString = expressionValidator.removeBrackets(firstExpressionPart);
-            computedValue = 0.0;
+           computedValue = 0.0;
             analyzeExpressionInParenthesis(expressionParts,0);
         }
         else

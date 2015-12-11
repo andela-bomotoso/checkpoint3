@@ -15,20 +15,18 @@ import app.com.example.grace.currencycalculator.models.Operator;
 public class ExpressionAnalyzer {
         Context context;
         Expression expression;
-        String currentExpressionString;
-        String sourceCurrency;
         ExchangeRateDbHelper exchangeRateDbHelper;
-        String subExpressionCurrencyOperand = "";
-
-
+        List<ExpressionPart> expressionParts;
         String destinationCurrency;
         String subexpression;
+        String currentExpressionString;
+        String sourceCurrency;
+        String subExpressionCurrencyOperand = "";
         boolean isBracketOpen;
-        List<ExpressionPart> expressionParts;
+        boolean currency;
         char current;
         char previous;
         int index;
-        boolean currency;
         int count = 0;
 
     public ExpressionAnalyzer(Context context,String destinationCurrency) {
@@ -74,16 +72,12 @@ public class ExpressionAnalyzer {
             if(currency && !isBracketOpen) {
                 double currentExpressionValue = Double.parseDouble(currentExpressionString) * getExchangeRate(sourceCurrency, destinationCurrency);
                 currentExpressionString = currentExpressionValue + "";
-                count = 0;
-                sourceCurrency = "";
-                currency = false;
+                resetCurrencyParameters();
             }
             if(currency && isBracketOpen) {
                 double subExpressionValue = Double.parseDouble(subExpressionCurrencyOperand) * getExchangeRate(sourceCurrency, destinationCurrency);
-                subexpression = removeLatSubexpresssion(subExpressionCurrencyOperand) + subExpressionValue+ "";
-                count = 0;
-                sourceCurrency = "";
-                currency = false;
+                subexpression = removeLastSubexpresssion(subExpressionCurrencyOperand) + subExpressionValue+ "";
+                resetCurrencyParameters();
                 subExpressionCurrencyOperand = "";
             }
 
@@ -108,18 +102,13 @@ public class ExpressionAnalyzer {
                     updateExpressionPartWithSubExpression();
                 }
             }
-
-            else if(current == ')' ) {
-                if(currentExpressionString != "") {
-                    expressionParts.add(new Operand(currentExpressionString));
-                    currentExpressionString = "";
-                }
+            else if(currentExpressionPartIsClosingBracket() ) {
+                updateExpressionPartWithOperand();
                 isBracketOpen = false;
                 subexpression += current;
-                expressionParts.add(new Operand(subexpression));
-                subexpression = "";
+                updateExpressionPartWithSubExpression();
             }
-            else if (!isBracketOpen && !isOperator(current) & current != ')' & current != '(') {
+            else if (!isBracketOpen && !isOperator(current) & currentExpressionPartIsParenthesis()) {
 
                 if(previous == ')') {
                     updateExpressionPartWithOperator("*");
@@ -202,6 +191,10 @@ public class ExpressionAnalyzer {
         return current ==')';
     }
 
+    public boolean currentExpressionPartIsParenthesis() {
+        return current ==')' || current == '(';
+    }
+
     public void updateSubExpressionString() {
         if(!currency) {
             subexpression += current;
@@ -212,33 +205,19 @@ public class ExpressionAnalyzer {
         subexpression = "";
     }
 
-    public boolean subExpression() {
-       return false;
-    }
-
-    public boolean isCurrencyOperand(String str) {
-        return str.length()>3 && Character.isDigit(str.charAt(str.length()-1));
-    }
-
     public double getExchangeRate(String source, String destination) {
        String rate = exchangeRateDbHelper.query(source,destination);
         return Double.parseDouble(rate);
     }
 
-    private String SubExpressionWithoutBrackets(String s) {
-        if(s.length() > 0) {
-            return s.substring(1,s.length());
-        }
-        else {
-            return s;
-        }
-    }
-
-    private String removeLatSubexpresssion(String currencyOperand) {
+    private String removeLastSubexpresssion(String currencyOperand) {
         int len = currencyOperand.length();
         return subexpression.substring(0,subexpression.length()-len);
     }
 
-
-
+    private void resetCurrencyParameters(){
+        count = 0;
+        sourceCurrency = "";
+        currency = false;
+    }
 }

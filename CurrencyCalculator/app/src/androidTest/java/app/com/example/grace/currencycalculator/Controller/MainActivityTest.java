@@ -65,7 +65,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         equals_button = (Button)activity.findViewById(R.id.equals);
         del_button = (ImageButton)activity.findViewById(R.id.del);
 
-        ImageButton del_button = (ImageButton) activity.findViewById(R.id.del);
         computation_area = (TextView) activity.findViewById(R.id.computation_area);
         result_area = (TextView)activity.findViewById(R.id.result_area);
     }
