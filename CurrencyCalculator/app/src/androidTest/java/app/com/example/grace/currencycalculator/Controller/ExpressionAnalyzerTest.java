@@ -53,5 +53,4 @@ public class ExpressionAnalyzerTest extends TestCase {
         assertEquals("3",expression.getExpressionParts().get(2).getValue());
     }
 
-
 }

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
-import app.com.example.grace.currencycalculator.models.ExchangeRate;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;
@@ -16,20 +15,18 @@ import app.com.example.grace.currencycalculator.models.Operator;
 public class ExpressionAnalyzer {
         Context context;
         Expression expression;
-        String currentExpressionString;
-        String sourceCurrency;
         ExchangeRateDbHelper exchangeRateDbHelper;
-        String subExpressionCurrencyOperand = "";
-
-
+        List<ExpressionPart> expressionParts;
         String destinationCurrency;
         String subexpression;
+        String currentExpressionString;
+        String sourceCurrency;
+        String subExpressionCurrencyOperand = "";
         boolean isBracketOpen;
-        List<ExpressionPart> expressionParts;
+        boolean currency;
         char current;
         char previous;
         int index;
-        boolean currency;
         int count = 0;
 
     public ExpressionAnalyzer(Context context,String destinationCurrency) {
@@ -75,16 +72,12 @@ public class ExpressionAnalyzer {
             if(currency && !isBracketOpen) {
                 double currentExpressionValue = Double.parseDouble(currentExpressionString) * getExchangeRate(sourceCurrency, destinationCurrency);
                 currentExpressionString = currentExpressionValue + "";
-                count = 0;
-                sourceCurrency = "";
-                currency = false;
+                resetCurrencyParameters();
             }
             if(currency && isBracketOpen) {
                 double subExpressionValue = Double.parseDouble(subExpressionCurrencyOperand) * getExchangeRate(sourceCurrency, destinationCurrency);
-                subexpression = removeLatSubexpresssion(subExpressionCurrencyOperand) + subExpressionValue+ "";
-                count = 0;
-                sourceCurrency = "";
-                currency = false;
+                subexpression = removeLastSubexpresssion(subExpressionCurrencyOperand) + subExpressionValue+ "";
+                resetCurrencyParameters();
                 subExpressionCurrencyOperand = "";
             }
 
@@ -111,14 +104,10 @@ public class ExpressionAnalyzer {
             }
 
             else if(current == ')' ) {
-                if(currentExpressionString != "") {
-                    expressionParts.add(new Operand(currentExpressionString));
-                    currentExpressionString = "";
-                }
+                updateExpressionPartWithOperand();
                 isBracketOpen = false;
                 subexpression += current;
-                expressionParts.add(new Operand(subexpression));
-                subexpression = "";
+                updateExpressionPartWithSubExpression();
             }
             else if (!isBracketOpen && !isOperator(current) & current != ')' & current != '(') {
 
@@ -139,7 +128,7 @@ public class ExpressionAnalyzer {
         return expression;
     }
 
-    public void initializeVariables() {
+    private void initializeVariables() {
 
         expressionParts = new ArrayList<>();
         currentExpressionString = "";
@@ -149,25 +138,25 @@ public class ExpressionAnalyzer {
         expression = new Expression();
     }
 
-    public boolean expressionStartsWithUnaryOperator() {
+    private boolean expressionStartsWithUnaryOperator() {
         return (index == 0 && current == '-');
     }
 
-    public boolean isOperator(char expressionPart) {
+    private boolean isOperator(char expressionPart) {
 
         return (expressionPart == ('+')||expressionPart == ('-')||expressionPart == ('*')||expressionPart == ('/' ));
     }
 
-    public void updateCurrentExpressionString() {
+    private void updateCurrentExpressionString() {
 
         currentExpressionString += current;
     }
 
-    public boolean currentExpressionStringEmpty() {
+    private boolean currentExpressionStringEmpty() {
         return currentExpressionString == "";
     }
 
-    public void updateExpressionPartWithOperand() {
+    private void updateExpressionPartWithOperand() {
         if (!currentExpressionStringEmpty()) {
             expressionParts.add(new Operand(currentExpressionString));
             clearCurrentExpressionString();
@@ -175,32 +164,28 @@ public class ExpressionAnalyzer {
         currency = false;
     }
 
-    public void updateExpressionPartWithOperator() {
+    private void updateExpressionPartWithOperator() {
         expressionParts.add(new Operator(current + ""));
         currency = false;
     }
 
-    public void updateExpressionPartWithOperator(String operator) {
+    private void updateExpressionPartWithOperator(String operator) {
         expressionParts.add(new Operator(operator));
         currency = false;
     }
 
-    public void updateExpressionPartWithSubExpression() {
+    private void updateExpressionPartWithSubExpression() {
         expressionParts.add(new Operand(subexpression));
         subexpression="";
         currency = false;
     }
 
-    public void clearCurrentExpressionString(){
+    private void clearCurrentExpressionString(){
         currentExpressionString = "";
     }
 
-    public boolean currentExpressionPartIsOpeningBracket() {
+    private boolean currentExpressionPartIsOpeningBracket() {
         return current =='(';
-    }
-
-    public boolean currentExpressionPartIsClosingBracket() {
-        return current ==')';
     }
 
     public void updateSubExpressionString() {
@@ -209,37 +194,20 @@ public class ExpressionAnalyzer {
         }
     }
 
-    public void clearSubExpressionString() {
-        subexpression = "";
-    }
-
-    public boolean subExpression() {
-       return false;
-    }
-
-    public boolean isCurrencyOperand(String str) {
-        return str.length()>3 && Character.isDigit(str.charAt(str.length()-1));
-    }
-
-    public double getExchangeRate(String source, String destination) {
+    private double getExchangeRate(String source, String destination) {
        String rate = exchangeRateDbHelper.query(source,destination);
         return Double.parseDouble(rate);
     }
 
-    private String SubExpressionWithoutBrackets(String s) {
-        if(s.length() > 0) {
-            return s.substring(1,s.length());
-        }
-        else {
-            return s;
-        }
-    }
-
-    private String removeLatSubexpresssion(String currencyOperand) {
+    private String removeLastSubexpresssion(String currencyOperand) {
         int len = currencyOperand.length();
         return subexpression.substring(0,subexpression.length()-len);
     }
 
-
-
+    private void resetCurrencyParameters(){
+        count = 0;
+        sourceCurrency = "";
+        currency = false;
+        subExpressionCurrencyOperand = "";
+    }
 }

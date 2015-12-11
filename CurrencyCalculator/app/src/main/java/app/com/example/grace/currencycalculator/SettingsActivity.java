@@ -69,7 +69,6 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                    else if (Integer.parseInt(value) > Integer.parseInt(maxVal)) {
                         settings_currency_no.setText(maxVal);
                         Toast.makeText(getApplicationContext(), "Maximum allowed is " + R.string.max_currency_display, Toast.LENGTH_SHORT).show();
-
                     }
                 }
                 catch (NumberFormatException exception) {
