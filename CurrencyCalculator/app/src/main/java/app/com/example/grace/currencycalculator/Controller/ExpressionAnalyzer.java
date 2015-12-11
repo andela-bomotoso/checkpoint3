@@ -102,13 +102,14 @@ public class ExpressionAnalyzer {
                     updateExpressionPartWithSubExpression();
                 }
             }
-            else if(currentExpressionPartIsClosingBracket() ) {
+
+            else if(current == ')' ) {
                 updateExpressionPartWithOperand();
                 isBracketOpen = false;
                 subexpression += current;
                 updateExpressionPartWithSubExpression();
             }
-            else if (!isBracketOpen && !isOperator(current) & currentExpressionPartIsParenthesis()) {
+            else if (!isBracketOpen && !isOperator(current) & current != ')' & current != '(') {
 
                 if(previous == ')') {
                     updateExpressionPartWithOperator("*");
@@ -191,10 +192,6 @@ public class ExpressionAnalyzer {
         return current ==')';
     }
 
-    public boolean currentExpressionPartIsParenthesis() {
-        return current ==')' || current == '(';
-    }
-
     public void updateSubExpressionString() {
         if(!currency) {
             subexpression += current;
@@ -210,6 +207,7 @@ public class ExpressionAnalyzer {
         return Double.parseDouble(rate);
     }
 
+
     private String removeLastSubexpresssion(String currencyOperand) {
         int len = currencyOperand.length();
         return subexpression.substring(0,subexpression.length()-len);
@@ -219,5 +217,9 @@ public class ExpressionAnalyzer {
         count = 0;
         sourceCurrency = "";
         currency = false;
+        subExpressionCurrencyOperand = "";
     }
+
+
+
 }

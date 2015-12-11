@@ -10,8 +10,6 @@ import app.com.example.grace.currencycalculator.models.Operand;
 public class Calculator {
 
     Expression expression;
-    Validator expressionValidator;
-    ExpressionAnalyzer expressionAnalyzer;
     double previousOperand = 0.0;
     String previousOperator = "";
     String currentOperator = "";
@@ -23,6 +21,8 @@ public class Calculator {
     boolean nonPrecedence = false;
     double nonPrecedenceComputedValue = 0;
     String firstExpressionPart="";
+    Validator expressionValidator;
+    ExpressionAnalyzer expressionAnalyzer;
 
     public double compute(Expression expression) {
         expressionAnalyzer = new ExpressionAnalyzer();
@@ -33,7 +33,7 @@ public class Calculator {
 
         if(firstExpressionPart.contains("(")) {
            currentOperandString = expressionValidator.removeBrackets(firstExpressionPart);
-           computedValue = 0.0;
+            computedValue = 0.0;
             analyzeExpressionInParenthesis(expressionParts,0);
         }
         else
@@ -60,9 +60,7 @@ public class Calculator {
                 computedValue = getTemporaryValue();
             }
         }
-
         clear();
-
         return computedValue;
     }
 
@@ -74,7 +72,7 @@ public class Calculator {
             currentOperand = compute(expressionAnalyzer.breakDownExpression(currentOperandString));
             expressionParts.set(currentIndex, new Operand(currentOperand + ""));
 
-        if(computedValueBuffer!=0) {
+        if(computedValueBuffer != 0) {
             computedValue = computedValueBuffer;
         }
         currentOperator = currentOperatorBuffer;
@@ -86,32 +84,27 @@ public class Calculator {
             case "+":
                 computedValue = computedValue + currentOperand;
                 previousExpValue = 1;
-                nonPrecedenceComputedValue = computedValue;
-                nonPrecedence = true;
+                updatePrecedence();
                 break;
 
             case "-":
                 computedValue = computedValue - currentOperand;
                 previousExpValue = -1;
-                nonPrecedenceComputedValue = computedValue;
-                nonPrecedence = true;
+                updatePrecedence();
                 break;
 
             case "*":
             case "/":
               computedValue = evaluatePrecedence();
                 break;
-
         }
-
-        previousOperand = currentOperand;
-        previousOperator = currentOperator;
+        resetPrevious();
         return computedValue;
     }
 
     private double evaluatePrecedence() {
 
-        double expressionValue = 0;
+        double expressionValue;
 
         switch (currentOperator) {
 
@@ -121,7 +114,6 @@ public class Calculator {
                         computedValue =  adjustComputedValue(expressionValue);
                 } else {
                 computedValue = computedValue * currentOperand;
-                    //computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue/currentOperand);
             }
                 break;
 
@@ -131,20 +123,15 @@ public class Calculator {
                     computedValue = adjustComputedValue(expressionValue);
                 }
                 else {
-                    //computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue/currentOperand);
                     computedValue = computedValue / currentOperand;
                 }
                 break;
         }
-        previousOperand = currentOperand;
-        previousOperator = currentOperator;
-        //previousExpressionValue = computedValue;
-
+        resetPrevious();
         return computedValue;
     }
 
     private double adjustComputedValue(double expressionValue) {
-        //previousExpressionValue = previousExpValue * previousExpressionValue;
 
         if (previousOperator.equals("+")) {
             computedValue = (computedValue - previousOperand) + expressionValue;
@@ -157,45 +144,26 @@ public class Calculator {
             switch (currentOperator) {
                 case "*":
                     computedValue = computedValue * currentOperand;
-                    //computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue*currentOperand);
                     break;
                 case "/":
-                    if(!nonPrecedence) {
-                        //computedValue = computedValue / currentOperand;
-                        if(previousExpressionValue != 0) {
-                            computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue / currentOperand);
-                        }
-                        else {
-                            computedValue = computedValue / currentOperand;
-                        }
-                    }
-                    else {
-                        //computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue/currentOperand);
+                    if(!nonPrecedence && previousExpressionValue != 0) {
+                        computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue / currentOperand);
+                    } else {
                         computedValue = computedValue / currentOperand;
                     }
-                    //computedValue = computedValue/currentOperand;
 
                     break;
             }
-
         }
         else if (previousOperator.equals("/")) {
             switch (currentOperator) {
                 case "*":
-                    if(!nonPrecedence) {
-                        //computedValue = computedValue * currentOperand;
-                        if(previousExpressionValue != 0) {
-                            computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue * currentOperand);
-                        } else
-                        {
-                            computedValue = computedValue * currentOperand;
-                        }
-                    }
-                    else {
-                        //computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue * currentOperand);
+                    if(!nonPrecedence && previousExpressionValue != 0) {
+                        computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue * currentOperand);
+                    } else {
                         computedValue = computedValue * currentOperand;
                     }
-                    break;
+
                 case "/":
                     computedValue = computedValue / currentOperand;
                     break;
@@ -204,6 +172,16 @@ public class Calculator {
         previousExpressionValue = previousExpValue * expressionValue;
         nonPrecedence = false;
         return computedValue;
+    }
+
+    public void updatePrecedence() {
+        nonPrecedenceComputedValue = computedValue;
+        nonPrecedence = true;
+    }
+
+    private void resetPrevious() {
+        previousOperand = currentOperand;
+        previousOperator = currentOperator;
     }
 
     public void clear() {
@@ -218,10 +196,6 @@ public class Calculator {
         previousExpressionValue = 0;
         previousExpValue = 0;
         firstExpressionPart = "";
-
         expressionAnalyzer = new ExpressionAnalyzer();
-
-
     }
-
 }
