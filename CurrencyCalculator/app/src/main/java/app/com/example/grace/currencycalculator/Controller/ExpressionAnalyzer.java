@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
-import app.com.example.grace.currencycalculator.models.ExchangeRate;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;

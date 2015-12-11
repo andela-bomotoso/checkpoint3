@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -103,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String currentExpression;
 
+    private HorizontalScrollView computationAreaScroll;
+
     ExchangeRatesFetcher exchangeRatesFetcher;
     ExpressionAnalyzer expressionAnalyzer;
 
@@ -162,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         numberFormat = new DecimalFormat("##.###");
         expression = new Expression();
         expressionValidator = new Validator();
+        computationAreaScroll = (HorizontalScrollView) findViewById(R.id.horizontal_view);
         computationArea = (TextView) findViewById(R.id.computation_area);
         resultArea = (TextView) findViewById(R.id.result_area);
         clearButton = (Button) findViewById(R.id.clear);
@@ -277,11 +281,12 @@ public class MainActivity extends AppCompatActivity {
 
             if (buttonText != '(') {
                 String result;
-                ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(this, destinationButtonText);
+                expressionAnalyzer = new ExpressionAnalyzer(this, destinationButtonText);
                 Expression expression = expressionAnalyzer.breakDownExpression(currentExpression);
                 double computed = calculator.compute(expression);
                 result = numberFormat.format(computed);
                 resultArea.setText(result);
+
             }
         }
     }
@@ -305,7 +310,12 @@ public class MainActivity extends AppCompatActivity {
         currentExpression = computationArea.getText().toString();
 
         if(!currentExpression.isEmpty()) {
-            evaluate();
+            String result;
+            expressionAnalyzer = new ExpressionAnalyzer(this, destinationButtonText);
+            Expression expression = expressionAnalyzer.breakDownExpression(currentExpression);
+            double computed = calculator.compute(expression);
+            result = numberFormat.format(computed);
+            resultArea.setText(result);
         }
     }
 
@@ -318,30 +328,31 @@ public class MainActivity extends AppCompatActivity {
 
         currentExpression = computationArea.getText().toString();
 
-        if (currentExpression.length() > 1 & !expressionAfterDelete(currentExpression).equals("(")
-                & !expressionAfterDelete(currentExpression).equals("-") && !expressionAfterDelete(currentExpression).equals("(-")) {
+        if (currentExpression.length() > 1 & !isNonComputable()) {
 
             computationArea.setText(expressionAfterDelete(currentExpression));
             Expression expression = expressionAnalyzer.breakDownExpression(expressionAfterDelete(currentExpression));
             resultArea.setText(numberFormat.format(calculator.compute(expression)));
 
-        } else if (expressionAfterDelete(currentExpression).equals("(")) {
-            computationArea.setText("(");
-            initializeResultArea();
-        }
-        else if (expressionAfterDelete(currentExpression).equals("-")){
-            computationArea.setText("-");
-            initializeResultArea();
-        }
-
-        else if (expressionAfterDelete(currentExpression).equals("(-")){
-            computationArea.setText("(-");
-            initializeResultArea();
+        } else if (isNonComputable()) {
+            updateWorkAreaAfterDelete();
         }
 
         else {
             clearWorkArea();
         }
+    }
+
+    private boolean isNonComputable(){
+        String expressionAfterDel = expressionAfterDelete(currentExpression);
+
+        return expressionAfterDel.equals("(") || expressionAfterDel.equals("-") || expressionAfterDel.equals("(-") ||
+                (currentExpression.length() > 1 && expressionAfterDel.charAt(expressionAfterDel.length()-1)=='-');
+    }
+
+    private void updateWorkAreaAfterDelete() {
+        computationArea.setText(expressionAfterDelete(currentExpression));
+        initializeResultArea();
     }
 
     private void moveResultToComputationArea() {
@@ -367,15 +378,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return expressionAfterDelete;
-    }
-
-    private void evaluate() {
-        String result;
-        ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(this, destinationButtonText);
-        Expression expression = expressionAnalyzer.breakDownExpression(currentExpression);
-        double computed = calculator.compute(expression);
-        result = numberFormat.format(computed);
-        resultArea.setText(result);
     }
 
     private void setValidatorExpression() {
@@ -454,7 +456,6 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.putString(KEY_RESULT_AREA, resultArea.getText().toString());
         savedInstanceState.putString(KEY_SOURCE_CURRENCY,sourceCurrencyButton.getText().toString());
         savedInstanceState.putString(KEY_DESTINATION_CURRENCY,destinationCurrencyButton.getText().toString());
-
     }
 
 

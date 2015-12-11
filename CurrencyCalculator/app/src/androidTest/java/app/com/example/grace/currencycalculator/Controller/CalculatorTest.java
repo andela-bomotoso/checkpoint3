@@ -1,6 +1,5 @@
 package app.com.example.grace.currencycalculator.Controller;
 
-import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
 
 
@@ -99,9 +98,9 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     }
 
     public void testComputeWhenExpressionIsIncomplete() {
-        String expression = "2(-";
+        String expression = "2(-3";
         Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
-        assertEquals(2, calculator.compute(expression1));
+        assertEquals(-6.0, calculator.compute(expression1));
     }
 
 }

@@ -1,5 +1,6 @@
 package app.com.example.grace.currencycalculator.Controller;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -14,35 +15,61 @@ import java.util.List;
 
 import app.com.example.grace.currencycalculator.BuildConfig;
 import app.com.example.grace.currencycalculator.R;
+import app.com.example.grace.currencycalculator.Utilities;
+import app.com.example.grace.currencycalculator.data.ExchangeRateContract;
+import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
+import app.com.example.grace.currencycalculator.models.ExchangeRate;
 
 public class ExchangeRatesFetcher extends AsyncTask<String, Void, String> {
 
-
+    ExchangeRate exchangeRate = new ExchangeRate();
+    String result="";
+    int count = 0;
     Context context;
+    ContentValues contentValues;
+    ContentValues[] values = new ContentValues[900];
+    ExchangeRateDbHelper dbhelper;
 
-    public ExchangeRatesFetcher(Context context){
+    public ExchangeRatesFetcher(Context context) {
         this.context = context;
-
     }
 
     @Override
     protected String doInBackground(String... params) {
-        try {
-                    connectToApi();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
+        dbhelper = new ExchangeRateDbHelper(context);
+        List<String> currencies = getCurrencyCodes();
+        for (int i = 0; i < currencies.size(); i++) {
+            for (int j = 0; j < currencies.size(); i++) {
+                exchangeRate = new ExchangeRate(currencies.get(i), currencies.get(j));
             }
 
-    public String connectToApi() throws IOException {
-        String buffer = null;
+            try {
+                result = connectToApi(exchangeRate);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            exchangeRate.setRate(Double.parseDouble(result));
+
+            contentValues = new ContentValues();
+            contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_SOURCE, exchangeRate.getSource());
+            contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_DESTINATION, exchangeRate.getDestination());
+            contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_RATE, exchangeRate.getRate());
+            values[count] = contentValues;
+            count++;
+
+        }
+        dbhelper.updateTable(ExchangeRateContract.ExchangeRates.CONTENT_URI,values);
+        return null;
+    }
+
+    public String connectToApi(ExchangeRate exchangeRate) throws IOException {
+
+       String buffer = null;
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         try {
 
-            final String EXCHANGE_RATE_BASE_URL = "https://www.exchangerate-api.com/";
+            final String EXCHANGE_RATE_BASE_URL = Utilities.ApiURl;
             String url_query = EXCHANGE_RATE_BASE_URL + "USD" + "/" + "NGN" + "?k=" + BuildConfig.EXCHANGE_RATE_API_KEY;
             URL url = new URL(url_query);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -79,6 +106,10 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String> {
         }
 
         return currencies;
+
+    }
+
+    public void update() {
 
     }
 

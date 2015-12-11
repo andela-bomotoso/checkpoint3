@@ -23,9 +23,6 @@ public class ExchangeRateContract {
         public static final String COLUMN_SOURCE = "source";
         public static final String COLUMN_DESTINATION = "destination";
         public static final String COLUMN_RATE = "rate";
-
-
-
-
     }
+
 }

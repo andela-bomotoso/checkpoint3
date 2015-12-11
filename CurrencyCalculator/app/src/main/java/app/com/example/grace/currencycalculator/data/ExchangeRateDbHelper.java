@@ -9,15 +9,14 @@ import android.net.Uri;
 
 
 public class ExchangeRateDbHelper extends SQLiteOpenHelper {
+
     Context context;
     public static final String DATABASE_NAME = "exchange.db";
     static final int DATABASE_VERSION = 2;
-    //private SQLiteDatabase database;
 
     public ExchangeRateDbHelper(Context context) {
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
         this.context = context;
-        // database = getWritableDatabase();
     }
 
     @Override
@@ -29,8 +28,6 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
 
     public void dropTable() {
         SQLiteDatabase database = getWritableDatabase();
-        // database.execSQL("DROP TABLE IF EXISTS " + ExchangeRateContract.ExchangeRates.TABLE_NAME);
-
     }
 
     @Override
@@ -46,13 +43,10 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
     public String query(String source, String destination) {
 
         String query = "SELECT rate FROM exchange_rate where SOURCE ='" + source + "' and DESTINATION ='" + destination + "'";
-        //String query = "SELECT rate FROM exchange_rate";
         SQLiteDatabase database = getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
         cursor.moveToFirst();
-        //return cursor.getCount();
         return cursor.getString(cursor.getColumnIndex("rate"));
-
     }
 
     public int bulkInsert(Uri uri, ContentValues[] values){
@@ -78,6 +72,15 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
     public void deleteTable()
     {
         SQLiteDatabase database = getWritableDatabase();
-         database.delete(ExchangeRateContract.ExchangeRates.TABLE_NAME, null, null) ;
+        database.delete(ExchangeRateContract.ExchangeRates.TABLE_NAME, null, null) ;
     }
+
+    public void updateTable(Uri uri, ContentValues[] values) {
+        SQLiteDatabase database = getWritableDatabase();
+        database.beginTransaction();
+        for (ContentValues contentValues : values) {
+            database.update(ExchangeRateContract.ExchangeRates.TABLE_NAME, contentValues, null, null);
+        }
+    }
+
 }

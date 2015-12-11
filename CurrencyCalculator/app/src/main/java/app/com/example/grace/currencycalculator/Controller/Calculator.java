@@ -1,15 +1,8 @@
 package app.com.example.grace.currencycalculator.Controller;
 
 
-import android.content.Context;
-
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.List;
 
-import app.com.example.grace.currencycalculator.MainActivity;
-import app.com.example.grace.currencycalculator.models.ExchangeRate;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 import app.com.example.grace.currencycalculator.models.Operand;

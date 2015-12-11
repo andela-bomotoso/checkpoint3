@@ -19,7 +19,7 @@ public class Validator {
 
     public boolean validate(char keyPressed) {
 
-        return (!startWithInvalidCharacter(keyPressed)) && (!operatorAfterOpeningBracket(keyPressed))&& (!isDivisionByZero(keyPressed)) && (!isRepeatedZeros(keyPressed))
+       return ( !startWithInvalidCharacter(keyPressed)) && (!operatorAfterOpeningBracket(keyPressed))&& (!isDivisionByZero(keyPressed)) && (!isRepeatedZeros(keyPressed))
                 && (!isMismatchedBrackets(keyPressed)) && (!closingBracketAfterOperator(keyPressed))
                 && (!repeatedOpeningBracket(keyPressed)) && (!isEmptyParenthesis(keyPressed)) && (!repeatedClosingBracket(keyPressed))
                 && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed))
@@ -73,13 +73,14 @@ public class Validator {
     }
 
     public boolean operatorAfterOpeningBracket(char keyPressed) {
-        return (expression.length() > 1) && (expression.charAt(expression.length() - 1) == '(') && (isOperator(keyPressed));
+            return (expression.length() > 1) && expression.charAt(expression.length() - 1) == '(' && isOperator(keyPressed);
 
     }
 
+
     public boolean repeatedOpeningBracket(char keyPressed) {
 
-        return (expression.length() >= 1) && expression.charAt(expression.length() - 1) == '(' && keyPressed == '(';
+        return (expression.length() >= 1 && expression.charAt(expression.length() - 1) == '(' && keyPressed == '(');
     }
 
     public boolean repeatedClosingBracket(char keyPressed) {
@@ -150,6 +151,5 @@ public class Validator {
         }
         return currentOperand.contains(".") && keyPressed == '.';
     }
-
 
 }

@@ -1,19 +1,17 @@
 package app.com.example.grace.currencycalculator.models;
 
-
-import android.content.Context;
-
-import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
-
 public class ExchangeRate {
-    private Context context;
-    private double value;
 
     private String source;
-
     private String destination;
+    private double rate;
 
-    public ExchangeRate() {
+    public ExchangeRate(String source, String exchange) {
+        this.source = source;
+        this.destination = destination;
+    }
+
+    public ExchangeRate(){
 
     }
 
@@ -25,6 +23,14 @@ public class ExchangeRate {
         this.source = source;
     }
 
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
     public String getDestination() {
         return destination;
     }
@@ -32,18 +38,4 @@ public class ExchangeRate {
     public void setDestination(String destination) {
         this.destination = destination;
     }
-
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
-
-    public double getExchangeRate() {
-        //return exchangeRateDbHelper.query(source,destination);
-        return 0;
-    }
-
 }

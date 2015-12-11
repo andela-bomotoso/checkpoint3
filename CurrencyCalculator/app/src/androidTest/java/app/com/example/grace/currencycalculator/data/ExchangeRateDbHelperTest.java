@@ -1,6 +1,5 @@
 package app.com.example.grace.currencycalculator.data;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,7 +10,7 @@ import java.util.HashSet;
 public class ExchangeRateDbHelperTest extends AndroidTestCase {
 
     ExchangeRateDbHelper exchangeRateDbHelper;
-    Context context;
+
     public ExchangeRateDbHelperTest(Context context) {
         exchangeRateDbHelper = new ExchangeRateDbHelper(context);
     }
@@ -22,11 +21,6 @@ public class ExchangeRateDbHelperTest extends AndroidTestCase {
 
     public void setUp() {
         deleteTheDatabase();
-    }
-
-
-    public void testOnUpgrade() throws Exception {
-
     }
 
     public void testOnCreate() throws Exception {
@@ -61,6 +55,7 @@ public class ExchangeRateDbHelperTest extends AndroidTestCase {
         ExchangeColumnHashSet.add(ExchangeRateContract.ExchangeRates.COLUMN_RATE);
 
         int columnNameIndex = c.getColumnIndex("name");
+
         do {
             String columnName = c.getString(columnNameIndex);
             ExchangeColumnHashSet.remove(columnName);

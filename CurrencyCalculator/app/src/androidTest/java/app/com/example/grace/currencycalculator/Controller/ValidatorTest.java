@@ -115,4 +115,5 @@ public class ValidatorTest extends TestCase {
         assertFalse(validator.operatorAfterOpeningBracket('/'));
     }
 
+
 }
