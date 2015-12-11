@@ -2,7 +2,6 @@ package app.com.example.grace.currencycalculator.models;
 
 public class Operator extends ExpressionPart {
 
-
     public Operator() {
 
     }

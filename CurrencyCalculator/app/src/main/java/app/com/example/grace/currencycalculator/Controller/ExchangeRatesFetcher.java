@@ -63,14 +63,13 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String> {
     }
 
     public String connectToApi(ExchangeRate exchangeRate) throws IOException {
-
-       String buffer = null;
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         try {
-
+            String source = exchangeRate.getSource();
+            String destination = exchangeRate.getDestination();
             final String EXCHANGE_RATE_BASE_URL = Utilities.ApiURl;
-            String url_query = EXCHANGE_RATE_BASE_URL + "USD" + "/" + "NGN" + "?k=" + BuildConfig.EXCHANGE_RATE_API_KEY;
+            String url_query = EXCHANGE_RATE_BASE_URL + source + "/" + destination + "?k=" + BuildConfig.EXCHANGE_RATE_API_KEY;
             URL url = new URL(url_query);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
@@ -104,13 +103,7 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String> {
             currencies.add(items[i].toString());
             str+=items[i].toString()+" ";
         }
-
         return currencies;
-
-    }
-
-    public void update() {
-
     }
 
 }

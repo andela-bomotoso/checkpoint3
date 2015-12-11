@@ -128,7 +128,7 @@ public class ExpressionAnalyzer {
         return expression;
     }
 
-    public void initializeVariables() {
+    private void initializeVariables() {
 
         expressionParts = new ArrayList<>();
         currentExpressionString = "";
@@ -138,25 +138,25 @@ public class ExpressionAnalyzer {
         expression = new Expression();
     }
 
-    public boolean expressionStartsWithUnaryOperator() {
+    private boolean expressionStartsWithUnaryOperator() {
         return (index == 0 && current == '-');
     }
 
-    public boolean isOperator(char expressionPart) {
+    private boolean isOperator(char expressionPart) {
 
         return (expressionPart == ('+')||expressionPart == ('-')||expressionPart == ('*')||expressionPart == ('/' ));
     }
 
-    public void updateCurrentExpressionString() {
+    private void updateCurrentExpressionString() {
 
         currentExpressionString += current;
     }
 
-    public boolean currentExpressionStringEmpty() {
+    private boolean currentExpressionStringEmpty() {
         return currentExpressionString == "";
     }
 
-    public void updateExpressionPartWithOperand() {
+    private void updateExpressionPartWithOperand() {
         if (!currentExpressionStringEmpty()) {
             expressionParts.add(new Operand(currentExpressionString));
             clearCurrentExpressionString();
@@ -164,32 +164,28 @@ public class ExpressionAnalyzer {
         currency = false;
     }
 
-    public void updateExpressionPartWithOperator() {
+    private void updateExpressionPartWithOperator() {
         expressionParts.add(new Operator(current + ""));
         currency = false;
     }
 
-    public void updateExpressionPartWithOperator(String operator) {
+    private void updateExpressionPartWithOperator(String operator) {
         expressionParts.add(new Operator(operator));
         currency = false;
     }
 
-    public void updateExpressionPartWithSubExpression() {
+    private void updateExpressionPartWithSubExpression() {
         expressionParts.add(new Operand(subexpression));
         subexpression="";
         currency = false;
     }
 
-    public void clearCurrentExpressionString(){
+    private void clearCurrentExpressionString(){
         currentExpressionString = "";
     }
 
-    public boolean currentExpressionPartIsOpeningBracket() {
+    private boolean currentExpressionPartIsOpeningBracket() {
         return current =='(';
-    }
-
-    public boolean currentExpressionPartIsClosingBracket() {
-        return current ==')';
     }
 
     public void updateSubExpressionString() {
@@ -198,15 +194,10 @@ public class ExpressionAnalyzer {
         }
     }
 
-    public void clearSubExpressionString() {
-        subexpression = "";
-    }
-
-    public double getExchangeRate(String source, String destination) {
+    private double getExchangeRate(String source, String destination) {
        String rate = exchangeRateDbHelper.query(source,destination);
         return Double.parseDouble(rate);
     }
-
 
     private String removeLastSubexpresssion(String currencyOperand) {
         int len = currencyOperand.length();
@@ -219,7 +210,4 @@ public class ExpressionAnalyzer {
         currency = false;
         subExpressionCurrencyOperand = "";
     }
-
-
-
 }

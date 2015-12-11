@@ -13,7 +13,4 @@ public class Operand extends ExpressionPart {
     public boolean isOperand() {
         return true;
     }
-
-
-
 }

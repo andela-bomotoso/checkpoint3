@@ -174,7 +174,7 @@ public class Calculator {
         return computedValue;
     }
 
-    public void updatePrecedence() {
+    private void updatePrecedence() {
         nonPrecedenceComputedValue = computedValue;
         nonPrecedence = true;
     }
@@ -184,7 +184,7 @@ public class Calculator {
         previousOperator = currentOperator;
     }
 
-    public void clear() {
+    private void clear() {
         previousOperand = 0.0;
         previousOperator = "";
         currentOperator = "";
