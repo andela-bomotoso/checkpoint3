@@ -1,14 +1,8 @@
-package app.com.example.grace.currencycalculator.Controller;
+package app.com.example.grace.currencycalculator.controller;
 
 import junit.framework.TestCase;
 
-import java.util.Arrays;
-
-import javax.xml.xpath.XPathExpressionException;
-
 import app.com.example.grace.currencycalculator.models.Expression;
-import app.com.example.grace.currencycalculator.models.Operand;
-import app.com.example.grace.currencycalculator.models.Operator;
 
 public class ExpressionAnalyzerTest extends TestCase {
 

@@ -1,14 +1,10 @@
-package app.com.example.grace.currencycalculator.Controller;
+package app.com.example.grace.currencycalculator.controller;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.TextView;
-
-import junit.framework.TestCase;
 
 import app.com.example.grace.currencycalculator.MainActivity;
 import app.com.example.grace.currencycalculator.R;

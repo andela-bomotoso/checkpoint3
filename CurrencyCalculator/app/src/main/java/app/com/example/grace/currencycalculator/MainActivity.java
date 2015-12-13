@@ -22,10 +22,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.com.example.grace.currencycalculator.Controller.Calculator;
-import app.com.example.grace.currencycalculator.Controller.ExchangeRatesFetcher;
-import app.com.example.grace.currencycalculator.Controller.ExpressionAnalyzer;
-import app.com.example.grace.currencycalculator.Controller.Validator;
+import app.com.example.grace.currencycalculator.controller.Calculator;
+import app.com.example.grace.currencycalculator.controller.ExchangeRatesFetcher;
+import app.com.example.grace.currencycalculator.controller.ExpressionAnalyzer;
+import app.com.example.grace.currencycalculator.controller.Validator;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 
