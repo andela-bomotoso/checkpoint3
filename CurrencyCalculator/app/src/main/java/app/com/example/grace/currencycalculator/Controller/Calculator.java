@@ -9,20 +9,19 @@ import app.com.example.grace.currencycalculator.models.Operand;
 
 public class Calculator {
 
-    Expression expression;
-    double previousOperand = 0.0;
-    String previousOperator = "";
-    String currentOperator = "";
-    String currentOperandString = "";
-    double currentOperand = 0.0;
-    double computedValue = 0.0;
-    double previousExpressionValue = 0;
-    double previousExpValue = 0;
-    boolean nonPrecedence = false;
-    double nonPrecedenceComputedValue = 0;
-    String firstExpressionPart="";
-    Validator expressionValidator;
-    ExpressionAnalyzer expressionAnalyzer;
+    private Validator expressionValidator;
+    private ExpressionAnalyzer expressionAnalyzer;
+    private String previousOperator = "";
+    private String currentOperator = "";
+    private String currentOperandString = "";
+    private String firstExpressionPart="";
+    private double previousOperand = 0.0;
+    private double currentOperand = 0.0;
+    private double computedValue = 0.0;
+    private double previousExpressionValue = 0;
+    private double previousExpValue = 0;
+    private double nonPrecedenceComputedValue = 0;
+    private boolean nonPrecedence = false;
 
     public double compute(Expression expression) {
         expressionAnalyzer = new ExpressionAnalyzer();
