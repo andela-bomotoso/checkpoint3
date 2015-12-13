@@ -330,7 +330,8 @@ public class MainActivity extends AppCompatActivity {
         if (currentExpression.length() > 1 & !isNonComputable()) {
 
             computationArea.setText(expressionAfterDelete(currentExpression));
-            Expression expression = expressionAnalyzer.breakDownExpression(expressionAfterDelete(currentExpression));
+            String expressionAfterDelete = expressionAfterDelete(currentExpression);
+            Expression expression = expressionAnalyzer.breakDownExpression(expressionAfterDelete);
             resultArea.setText(numberFormat.format(calculator.compute(expression)));
 
         } else if (isNonComputable()) {

@@ -21,13 +21,13 @@ public class ExpressionAnalyzer {
        private String subexpression;
        private String currentExpressionString;
        private String sourceCurrency;
-       private String subExpressionCurrencyOperand = "";
+       private String subExpressionCurrencyOperand;
        private boolean isBracketOpen;
        private boolean currency;
        private char current;
        private char previous;
        private int index;
-       private int count = 0;
+       private int count;
 
     public ExpressionAnalyzer(Context context,String destinationCurrency) {
         this.context = context;
@@ -136,6 +136,10 @@ public class ExpressionAnalyzer {
         isBracketOpen = false;
         sourceCurrency = "";
         expression = new Expression();
+        previous = '\0';
+        current = '\0';
+        subExpressionCurrencyOperand = "";
+        count = 0;
     }
 
     private boolean expressionStartsWithUnaryOperator() {
