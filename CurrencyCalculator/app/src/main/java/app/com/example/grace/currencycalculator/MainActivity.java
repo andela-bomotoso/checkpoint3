@@ -31,10 +31,9 @@ import app.com.example.grace.currencycalculator.models.ExpressionPart;
 
 public class MainActivity extends AppCompatActivity {
 
-    List<ExpressionPart>expressionParts;
-    NumberFormat numberFormat;
+    private List<ExpressionPart>expressionParts;
 
-    Bundle bundle;
+    private NumberFormat numberFormat;
 
     private Calculator calculator;
 

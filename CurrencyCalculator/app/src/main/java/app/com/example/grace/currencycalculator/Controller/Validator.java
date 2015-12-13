@@ -2,7 +2,7 @@ package app.com.example.grace.currencycalculator.controller;
 
 public class Validator {
 
-    String expression;
+    private String expression;
 
     public String getExpression() {
         return expression;
