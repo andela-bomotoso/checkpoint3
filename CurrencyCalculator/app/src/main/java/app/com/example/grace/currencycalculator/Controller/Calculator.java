@@ -18,10 +18,11 @@ public class Calculator {
     private double previousOperand = 0.0;
     private double currentOperand = 0.0;
     private double computedValue = 0.0;
-    private double previousExpressionValue = 0;
+    private double previousExpressionValue = 1;
     private double previousExpValue = 0;
     private double nonPrecedenceComputedValue = 0;
     private boolean nonPrecedence = false;
+    double operandBeforePrecedence = 0;
 
     public double compute(Expression expression) {
         expressionAnalyzer = new ExpressionAnalyzer();
@@ -81,12 +82,14 @@ public class Calculator {
         switch (currentOperator) {
 
             case "+":
+                operandBeforePrecedence = computedValue;
                 computedValue = computedValue + currentOperand;
                 previousExpValue = 1;
                 updatePrecedence();
                 break;
 
             case "-":
+                operandBeforePrecedence = computedValue;
                 computedValue = computedValue - currentOperand;
                 previousExpValue = -1;
                 updatePrecedence();
@@ -142,6 +145,9 @@ public class Calculator {
 
             switch (currentOperator) {
                 case "*":
+                    if(operandBeforePrecedence != 0) {
+                        computedValue = previousExpressionValue * currentOperand + operandBeforePrecedence;
+                    } else
                     computedValue = computedValue * currentOperand;
                     break;
                 case "/":
@@ -190,11 +196,12 @@ public class Calculator {
         currentOperandString = "";
         currentOperand = 0.0;
         previousExpressionValue = 0.0;
-        previousExpValue = 0.0;
+        previousExpValue = 1;
         nonPrecedence = false;
         previousExpressionValue = 0;
         previousExpValue = 0;
         firstExpressionPart = "";
         expressionAnalyzer = new ExpressionAnalyzer();
+        operandBeforePrecedence = 0;
     }
 }

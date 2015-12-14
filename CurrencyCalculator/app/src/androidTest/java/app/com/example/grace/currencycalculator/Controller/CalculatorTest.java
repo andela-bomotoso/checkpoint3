@@ -104,9 +104,9 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     }
 
     public void testBugFix() {
-        String expression = "2(8-6)4";
+        String expression = "2+2*3*4";
         Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
-        assertEquals(16.0,calculator.compute(expression1));
+        assertEquals(26.0,calculator.compute(expression1));
     }
 
 }
