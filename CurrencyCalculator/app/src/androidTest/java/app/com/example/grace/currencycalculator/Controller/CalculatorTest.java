@@ -1,4 +1,4 @@
-package app.com.example.grace.currencycalculator.Controller;
+package app.com.example.grace.currencycalculator.controller;
 
 import android.test.ActivityInstrumentationTestCase2;
 
@@ -101,6 +101,12 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         String expression = "2(-3";
         Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
         assertEquals(-6.0, calculator.compute(expression1));
+    }
+
+    public void testBugFix() {
+        String expression = "2+2*3*4";
+        Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
+        assertEquals(26.0,calculator.compute(expression1));
     }
 
 }

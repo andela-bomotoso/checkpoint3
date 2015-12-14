@@ -1,17 +1,14 @@
-package app.com.example.grace.currencycalculator.Controller;
+package app.com.example.grace.currencycalculator.controller;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.TextView;
-
-import junit.framework.TestCase;
 
 import app.com.example.grace.currencycalculator.MainActivity;
 import app.com.example.grace.currencycalculator.R;
+import app.com.example.grace.currencycalculator.models.Expression;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -204,19 +201,43 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         expected = "11";
         assertEquals(expected, ans);
 
-        TouchUtils.clickView(this,closing_bracket);
+        TouchUtils.clickView(this, closing_bracket);
         TouchUtils.clickView(this, four_button);
 
         ans = result_area.getText().toString();
         expected = "26";
         assertEquals(expected, ans);
 
-        TouchUtils.clickView(this,subtraction_button);
+        TouchUtils.clickView(this, subtraction_button);
         TouchUtils.clickView(this, two_button);
 
         ans = result_area.getText().toString();
         expected = "24";
         assertEquals(expected, ans);
+    }
+
+    public void testBugFix() {
+        //"2(8-6)4"
+        TouchUtils.clickView(this,two_button);
+        TouchUtils.clickView(this,opening_bracket);
+        TouchUtils.clickView(this,eight_button);
+        TouchUtils.clickView(this,subtraction_button);
+        TouchUtils.clickView(this,six_button);
+        TouchUtils.clickView(this,closing_bracket);
+        TouchUtils.clickView(this,four_button);
+        String ans = result_area.getText().toString();
+        String expected = "16";
+        assertEquals(expected, ans);
+        TouchUtils.clickView(this, del_button);
+
+        ans = result_area.getText().toString();
+        expected = "4";
+        assertEquals(expected, ans);
+
+
+
+
+
     }
 
 }

@@ -1,4 +1,4 @@
-package app.com.example.grace.currencycalculator.Controller;
+package app.com.example.grace.currencycalculator.controller;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,13 +22,13 @@ import app.com.example.grace.currencycalculator.models.ExchangeRate;
 
 public class ExchangeRatesFetcher extends AsyncTask<String, Void, String> {
 
-    ExchangeRate exchangeRate = new ExchangeRate();
-    String result="";
-    int count = 0;
-    Context context;
-    ContentValues contentValues;
-    ContentValues[] values = new ContentValues[900];
-    ExchangeRateDbHelper dbhelper;
+    private Context context;
+    private ContentValues contentValues;
+    private ContentValues[] values = new ContentValues[900];
+    private ExchangeRateDbHelper dbhelper;
+    private ExchangeRate exchangeRate = new ExchangeRate();
+    private String result="";
+    private int count = 0;
 
     public ExchangeRatesFetcher(Context context) {
         this.context = context;

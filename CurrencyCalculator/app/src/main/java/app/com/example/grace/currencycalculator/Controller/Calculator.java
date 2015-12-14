@@ -1,4 +1,4 @@
-package app.com.example.grace.currencycalculator.Controller;
+package app.com.example.grace.currencycalculator.controller;
 
 
 import java.util.List;
@@ -9,20 +9,20 @@ import app.com.example.grace.currencycalculator.models.Operand;
 
 public class Calculator {
 
-    Expression expression;
-    double previousOperand = 0.0;
-    String previousOperator = "";
-    String currentOperator = "";
-    String currentOperandString = "";
-    double currentOperand = 0.0;
-    double computedValue = 0.0;
-    double previousExpressionValue = 0;
-    double previousExpValue = 0;
-    boolean nonPrecedence = false;
-    double nonPrecedenceComputedValue = 0;
-    String firstExpressionPart="";
-    Validator expressionValidator;
-    ExpressionAnalyzer expressionAnalyzer;
+    private Validator expressionValidator;
+    private ExpressionAnalyzer expressionAnalyzer;
+    private String previousOperator = "";
+    private String currentOperator = "";
+    private String currentOperandString = "";
+    private String firstExpressionPart="";
+    private double previousOperand = 0.0;
+    private double currentOperand = 0.0;
+    private double computedValue = 0.0;
+    private double previousExpressionValue = 1;
+    private double previousExpValue = 0;
+    private double nonPrecedenceComputedValue = 0;
+    private boolean nonPrecedence = false;
+    double operandBeforePrecedence = 0;
 
     public double compute(Expression expression) {
         expressionAnalyzer = new ExpressionAnalyzer();
@@ -82,12 +82,14 @@ public class Calculator {
         switch (currentOperator) {
 
             case "+":
+                operandBeforePrecedence = computedValue;
                 computedValue = computedValue + currentOperand;
                 previousExpValue = 1;
                 updatePrecedence();
                 break;
 
             case "-":
+                operandBeforePrecedence = computedValue;
                 computedValue = computedValue - currentOperand;
                 previousExpValue = -1;
                 updatePrecedence();
@@ -143,6 +145,9 @@ public class Calculator {
 
             switch (currentOperator) {
                 case "*":
+                    if(operandBeforePrecedence != 0) {
+                        computedValue = previousExpressionValue * currentOperand + operandBeforePrecedence;
+                    } else
                     computedValue = computedValue * currentOperand;
                     break;
                 case "/":
@@ -191,11 +196,12 @@ public class Calculator {
         currentOperandString = "";
         currentOperand = 0.0;
         previousExpressionValue = 0.0;
-        previousExpValue = 0.0;
+        previousExpValue = 1;
         nonPrecedence = false;
         previousExpressionValue = 0;
         previousExpValue = 0;
         firstExpressionPart = "";
         expressionAnalyzer = new ExpressionAnalyzer();
+        operandBeforePrecedence = 0;
     }
 }

@@ -1,4 +1,4 @@
-package app.com.example.grace.currencycalculator.Controller;
+package app.com.example.grace.currencycalculator.controller;
 
 import junit.framework.TestCase;
 
@@ -20,7 +20,7 @@ public class ValidatorTest extends TestCase {
     public void testValidateOperatorWhenThePreviousExpressionPartIsNotAnOperator() throws Exception {
         String expression = "13";
         validator.setExpression(expression);
-        assertEquals("13*",validator.validateOperator('*'));
+        assertEquals("13*", validator.validateOperator('*'));
     }
 
     public void testDivisionByZeroWhenKeyPressGeneratesDivisionByZeroException() throws Exception {

@@ -1,4 +1,4 @@
-package app.com.example.grace.currencycalculator.Controller;
+package app.com.example.grace.currencycalculator.controller;
 
 
 import android.content.Context;
@@ -13,21 +13,21 @@ import app.com.example.grace.currencycalculator.models.Operand;
 import app.com.example.grace.currencycalculator.models.Operator;
 
 public class ExpressionAnalyzer {
-        Context context;
-        Expression expression;
-        ExchangeRateDbHelper exchangeRateDbHelper;
-        List<ExpressionPart> expressionParts;
-        String destinationCurrency;
-        String subexpression;
-        String currentExpressionString;
-        String sourceCurrency;
-        String subExpressionCurrencyOperand = "";
-        boolean isBracketOpen;
-        boolean currency;
-        char current;
-        char previous;
-        int index;
-        int count = 0;
+       private Context context;
+       private Expression expression;
+       private ExchangeRateDbHelper exchangeRateDbHelper;
+       private List<ExpressionPart> expressionParts;
+       private String destinationCurrency;
+       private String subexpression;
+       private String currentExpressionString;
+       private String sourceCurrency;
+       private String subExpressionCurrencyOperand;
+       private boolean isBracketOpen;
+       private boolean currency;
+       private char current;
+       private char previous;
+       private int index;
+       private int count;
 
     public ExpressionAnalyzer(Context context,String destinationCurrency) {
         this.context = context;
@@ -136,6 +136,10 @@ public class ExpressionAnalyzer {
         isBracketOpen = false;
         sourceCurrency = "";
         expression = new Expression();
+        previous = '\0';
+        current = '\0';
+        subExpressionCurrencyOperand = "";
+        count = 0;
     }
 
     private boolean expressionStartsWithUnaryOperator() {

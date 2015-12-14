@@ -22,19 +22,18 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.com.example.grace.currencycalculator.Controller.Calculator;
-import app.com.example.grace.currencycalculator.Controller.ExchangeRatesFetcher;
-import app.com.example.grace.currencycalculator.Controller.ExpressionAnalyzer;
-import app.com.example.grace.currencycalculator.Controller.Validator;
+import app.com.example.grace.currencycalculator.controller.Calculator;
+import app.com.example.grace.currencycalculator.controller.ExchangeRatesFetcher;
+import app.com.example.grace.currencycalculator.controller.ExpressionAnalyzer;
+import app.com.example.grace.currencycalculator.controller.Validator;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 
 public class MainActivity extends AppCompatActivity {
 
-    List<ExpressionPart>expressionParts;
-    NumberFormat numberFormat;
+    private List<ExpressionPart>expressionParts;
 
-    Bundle bundle;
+    private NumberFormat numberFormat;
 
     private Calculator calculator;
 
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+       setSupportActionBar(toolbar);
         initializeComponents();
 
         exchangeRatesFetcher = new ExchangeRatesFetcher(this);
@@ -331,7 +330,8 @@ public class MainActivity extends AppCompatActivity {
         if (currentExpression.length() > 1 & !isNonComputable()) {
 
             computationArea.setText(expressionAfterDelete(currentExpression));
-            Expression expression = expressionAnalyzer.breakDownExpression(expressionAfterDelete(currentExpression));
+            String expressionAfterDelete = expressionAfterDelete(currentExpression);
+            Expression expression = expressionAnalyzer.breakDownExpression(expressionAfterDelete);
             resultArea.setText(numberFormat.format(calculator.compute(expression)));
 
         } else if (isNonComputable()) {
