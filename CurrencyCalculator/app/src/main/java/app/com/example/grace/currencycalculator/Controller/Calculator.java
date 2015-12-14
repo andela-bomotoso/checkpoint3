@@ -68,9 +68,9 @@ public class Calculator {
 
         double computedValueBuffer = computedValue;
         String currentOperatorBuffer = currentOperator;
-
-            currentOperand = compute(expressionAnalyzer.breakDownExpression(currentOperandString));
-            expressionParts.set(currentIndex, new Operand(currentOperand + ""));
+        Expression expression = expressionAnalyzer.breakDownExpression(currentOperandString);
+        currentOperand = compute(expression);
+        expressionParts.set(currentIndex, new Operand(currentOperand + ""));
 
         if(computedValueBuffer != 0) {
             computedValue = computedValueBuffer;
@@ -141,36 +141,13 @@ public class Calculator {
         } else if (previousOperator.equals("-")) {
             computedValue = (computedValue + previousOperand) - expressionValue;
         }
-        else if (previousOperator.equals("*")) {
-
+        else {
             switch (currentOperator) {
                 case "*":
-                    if(operandBeforePrecedence != 0) {
-                        computedValue = previousExpressionValue * currentOperand + operandBeforePrecedence;
-                    } else
-                    computedValue = computedValue * currentOperand;
+                   getAdjustedMultiplication();
                     break;
                 case "/":
-                    if(!nonPrecedence && previousExpressionValue != 0) {
-                        computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue / currentOperand);
-                    } else {
-                        computedValue = computedValue / currentOperand;
-                    }
-
-                    break;
-            }
-        }
-        else if (previousOperator.equals("/")) {
-            switch (currentOperator) {
-                case "*":
-                    if(!nonPrecedence && previousExpressionValue != 0) {
-                        computedValue = (computedValue - previousExpressionValue) + (previousExpressionValue * currentOperand);
-                    } else {
-                        computedValue = computedValue * currentOperand;
-                    }
-
-                case "/":
-                    computedValue = computedValue / currentOperand;
+                    getAdjustedDivision();
                     break;
             }
         }
@@ -189,6 +166,24 @@ public class Calculator {
         previousOperator = currentOperator;
     }
 
+    private double getAdjustedDivision() {
+        if(operandBeforePrecedence != 0) {
+            computedValue = previousExpressionValue / currentOperand + operandBeforePrecedence;
+        } else
+            computedValue = computedValue / currentOperand;
+        return computedValue;
+    }
+
+    private double getAdjustedMultiplication() {
+        if(operandBeforePrecedence != 0) {
+            computedValue = previousExpressionValue * currentOperand + operandBeforePrecedence;
+        } else
+            computedValue = computedValue * currentOperand;
+        return computedValue;
+    }
+
+
+
     private void clear() {
         previousOperand = 0.0;
         previousOperator = "";
@@ -203,5 +198,9 @@ public class Calculator {
         firstExpressionPart = "";
         expressionAnalyzer = new ExpressionAnalyzer();
         operandBeforePrecedence = 0;
+
+
     }
+
+
 }
