@@ -24,7 +24,6 @@ public class ExpressionAnalyzerTest extends TestCase {
         assertEquals("3", expression.getExpressionParts().get(2).getValue());
         assertEquals("+",expression.getExpressionParts().get(3).getValue());
         assertEquals("5",expression.getExpressionParts().get(4).getValue());
-
     }
 
     public void testBreakDownExpressionWhenExpressionHasSubExpression() throws Exception {
