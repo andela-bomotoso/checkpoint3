@@ -26,8 +26,6 @@ import app.com.example.grace.currencycalculator.models.ExchangeRate;
 
 public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
 
-    public static boolean downloadCompleted = false;
-
     private Context context;
 
     private ContentValues contentValues;
@@ -97,9 +95,7 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
-
             InputStream inputStream = urlConnection.getInputStream();
-
 
             if (inputStream == null) {
                 return null;

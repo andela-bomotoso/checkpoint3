@@ -182,8 +182,6 @@ public class Calculator {
         return computedValue;
     }
 
-
-
     private void clear() {
         previousOperand = 0.0;
         previousOperator = "";
@@ -198,9 +196,6 @@ public class Calculator {
         firstExpressionPart = "";
         expressionAnalyzer = new ExpressionAnalyzer();
         operandBeforePrecedence = 0;
-
-
     }
-
 
 }
