@@ -69,7 +69,7 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
         }
 
         if (dbhelper.tableRows() == 0) {
-            dbhelper.bulkInsert(ExchangeRateContract.ExchangeRates.CONTENT_URI, values)
+            dbhelper.bulkInsert(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
         }
 
         dbhelper.updateTable(ExchangeRateContract.ExchangeRates.CONTENT_URI,values);
