@@ -75,6 +75,16 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
         database.delete(ExchangeRateContract.ExchangeRates.TABLE_NAME, null, null) ;
     }
 
+    public int tableRows() {
+        String query = "SELECT COUNT(*) FROM exchange_rate";
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.rawQuery(query, null);
+        cursor.moveToFirst();
+        int rowNum = cursor.getInt(0);
+
+        return rowNum;
+    }
+
     public void updateTable(Uri uri, ContentValues[] values) {
         SQLiteDatabase database = getWritableDatabase();
         database.beginTransaction();

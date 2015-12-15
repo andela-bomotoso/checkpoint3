@@ -26,10 +26,12 @@ import app.com.example.grace.currencycalculator.controller.Calculator;
 import app.com.example.grace.currencycalculator.controller.ExchangeRatesFetcher;
 import app.com.example.grace.currencycalculator.controller.ExpressionAnalyzer;
 import app.com.example.grace.currencycalculator.controller.Validator;
+import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
 
 public class MainActivity extends AppCompatActivity {
+
 
     private List<ExpressionPart>expressionParts;
 
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
     private HorizontalScrollView computationAreaScroll;
 
     ExchangeRatesFetcher exchangeRatesFetcher;
+    ExchangeRateDbHelper exchangeRateDbHelper;
     ExpressionAnalyzer expressionAnalyzer;
 
 
@@ -120,6 +123,12 @@ public class MainActivity extends AppCompatActivity {
         initializeComponents();
 
         exchangeRatesFetcher = new ExchangeRatesFetcher(this);
+        exchangeRateDbHelper = new ExchangeRateDbHelper(this);
+
+
+        if(exchangeRateDbHelper.tableRows() == 0){
+            exchangeRatesFetcher.execute();
+        }
 
         if (savedInstanceState != null) {
 
@@ -403,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
         final CharSequence[] items = currenciesToDisplay();
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getDialogTitle(type));
-        builder.setSingleChoiceItems(items, 3, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int item) {
                 switch (type) {
                     case "source":
@@ -457,7 +466,5 @@ public class MainActivity extends AppCompatActivity {
         savedInstanceState.putString(KEY_SOURCE_CURRENCY,sourceCurrencyButton.getText().toString());
         savedInstanceState.putString(KEY_DESTINATION_CURRENCY,destinationCurrencyButton.getText().toString());
     }
-
-
 
 }

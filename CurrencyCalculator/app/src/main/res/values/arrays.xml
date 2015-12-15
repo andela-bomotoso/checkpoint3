@@ -4,7 +4,6 @@
         <item>KWD</item>
         <item>BHD</item>
         <item>USD</item>
-        <item>AZN</item>
         <item>OMR</item>
         <item>GBP</item>
         <item>JOD</item>
@@ -29,8 +28,9 @@
         <item>CZK</item>
         <item>DKK</item>
         <item>EGP</item>
-        <item>CFA</item>
+        <item>QAR</item>
         <item>ZAR</item>
+        <item>HKD</item>
 
     </string-array>
 </resources>
