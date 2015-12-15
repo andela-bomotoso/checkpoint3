@@ -70,12 +70,13 @@ public class ExpressionAnalyzer {
             }
 
             if(currency && !isBracketOpen) {
-                double currentExpressionValue = Double.parseDouble(currentExpressionString) * getExchangeRate(sourceCurrency, destinationCurrency);
+                double currentExpressionValue = getRate(currentExpressionString,sourceCurrency,destinationCurrency);
                 currentExpressionString = currentExpressionValue + "";
                 resetCurrencyParameters();
             }
+
             if(currency && isBracketOpen) {
-                double subExpressionValue = Double.parseDouble(subExpressionCurrencyOperand) * getExchangeRate(sourceCurrency, destinationCurrency);
+                double subExpressionValue = getRate(subExpressionCurrencyOperand,sourceCurrency,destinationCurrency);
                 subexpression = removeLastSubexpresssion(subExpressionCurrencyOperand) + subExpressionValue+ "";
                 resetCurrencyParameters();
                 subExpressionCurrencyOperand = "";
@@ -205,7 +206,7 @@ public class ExpressionAnalyzer {
 
     private String removeLastSubexpresssion(String currencyOperand) {
         int len = currencyOperand.length();
-        return subexpression.substring(0,subexpression.length()-len);
+        return subexpression.substring(0, subexpression.length() - len);
     }
 
     private void resetCurrencyParameters(){
@@ -213,5 +214,9 @@ public class ExpressionAnalyzer {
         sourceCurrency = "";
         currency = false;
         subExpressionCurrencyOperand = "";
+    }
+
+    private double getRate(String str, String source, String destinationCurrency) {
+       return Double.parseDouble(str) * getExchangeRate(source, destinationCurrency);
     }
 }
