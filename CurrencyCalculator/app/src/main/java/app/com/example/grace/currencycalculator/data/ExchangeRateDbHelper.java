@@ -2,10 +2,14 @@ package app.com.example.grace.currencycalculator.data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+
+import app.com.example.grace.currencycalculator.MainActivity;
+import app.com.example.grace.currencycalculator.controller.ExchangeRatesFetcher;
 
 
 public class ExchangeRateDbHelper extends SQLiteOpenHelper {
@@ -13,6 +17,7 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
     Context context;
     public static final String DATABASE_NAME = "exchange.db";
     static final int DATABASE_VERSION = 2;
+    public static boolean downloadCompleted = false;
 
     public ExchangeRateDbHelper(Context context) {
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -65,7 +70,6 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
         } finally {
             database.endTransaction();
         }
-
         return returnCount;
     }
 
@@ -91,6 +95,7 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
         for (ContentValues contentValues : values) {
             database.update(ExchangeRateContract.ExchangeRates.TABLE_NAME, contentValues, null, null);
         }
+        database.endTransaction();
     }
 
 }

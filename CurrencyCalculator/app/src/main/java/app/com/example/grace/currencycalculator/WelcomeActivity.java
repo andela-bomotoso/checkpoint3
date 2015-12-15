@@ -30,8 +30,9 @@ public class WelcomeActivity extends AppCompatActivity {
 
         if(exchangeRateDbHelper.tableRows() == 0){
             exchangeRatesFetcher.execute();
-        } else
-        {
+        }
+
+        else {
             Intent myIntent = new Intent(WelcomeActivity.this, MainActivity.class);
             WelcomeActivity.this.startActivity(myIntent);
         }

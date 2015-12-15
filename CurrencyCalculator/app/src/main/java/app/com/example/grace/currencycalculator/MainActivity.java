@@ -107,10 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
     private HorizontalScrollView computationAreaScroll;
 
-    ExchangeRatesFetcher exchangeRatesFetcher;
-    ExchangeRateDbHelper exchangeRateDbHelper;
     ExpressionAnalyzer expressionAnalyzer;
-
 
     @TargetApi(21)
     @Override
@@ -122,9 +119,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
        setSupportActionBar(toolbar);
         initializeComponents();
-
-        exchangeRatesFetcher = new ExchangeRatesFetcher(this);
-        exchangeRateDbHelper = new ExchangeRateDbHelper(this);
 
         if (savedInstanceState != null) {
 

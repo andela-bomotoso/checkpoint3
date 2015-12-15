@@ -72,14 +72,17 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
 
         if (dbhelper.tableRows() == 0) {
             dbhelper.bulkInsert(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
-            downloadCompleted = true;
-            Intent myIntent = new Intent(context, MainActivity.class);
-            context.startActivity(myIntent);
+        } else {
+            dbhelper.updateTable(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
         }
 
-        dbhelper.updateTable(ExchangeRateContract.ExchangeRates.CONTENT_URI,values);
-
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(String[] result) {
+        Intent myIntent = new Intent(context, MainActivity.class);
+        context.startActivity(myIntent);
     }
 
     public String connectToApi(ExchangeRate exchangeRate) throws IOException {
