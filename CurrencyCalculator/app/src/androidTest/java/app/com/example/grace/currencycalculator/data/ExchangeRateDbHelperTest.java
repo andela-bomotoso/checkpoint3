@@ -11,6 +11,10 @@ public class ExchangeRateDbHelperTest extends AndroidTestCase {
 
     ExchangeRateDbHelper exchangeRateDbHelper;
 
+    public ExchangeRateDbHelperTest() {
+
+    }
+
     public ExchangeRateDbHelperTest(Context context) {
         exchangeRateDbHelper = new ExchangeRateDbHelper(context);
     }

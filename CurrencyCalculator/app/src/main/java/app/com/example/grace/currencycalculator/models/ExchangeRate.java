@@ -6,7 +6,7 @@ public class ExchangeRate {
     private String destination;
     private double rate;
 
-    public ExchangeRate(String source, String exchange) {
+    public ExchangeRate(String source, String destination) {
         this.source = source;
         this.destination = destination;
     }

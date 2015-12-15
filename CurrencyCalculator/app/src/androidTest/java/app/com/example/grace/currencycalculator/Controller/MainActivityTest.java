@@ -216,7 +216,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         assertEquals(expected, ans);
     }
 
-    public void testBugFix() {
+    public void testWhenExpressionHasSubExpressionWithNoPrefixedAndSuffixedOperator() {
         //"2(8-6)4"
         TouchUtils.clickView(this,two_button);
         TouchUtils.clickView(this,opening_bracket);
@@ -233,10 +233,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         ans = result_area.getText().toString();
         expected = "4";
         assertEquals(expected, ans);
-
-
-
-
 
     }
 

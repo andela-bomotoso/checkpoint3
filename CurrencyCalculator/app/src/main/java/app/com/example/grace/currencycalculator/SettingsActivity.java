@@ -63,12 +63,12 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                 try {
                     if (Integer.parseInt(value) < Integer.parseInt(minVal)) {
                         settings_currency_no.setText(minVal);
-                        Toast.makeText(getApplicationContext(), "Minimum allowed is " + R.string.min_currency_display, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Minimum allowed is 10" , Toast.LENGTH_SHORT).show();
                     }
 
                    else if (Integer.parseInt(value) > Integer.parseInt(maxVal)) {
                         settings_currency_no.setText(maxVal);
-                        Toast.makeText(getApplicationContext(), "Maximum allowed is " + R.string.max_currency_display, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Maximum allowed is 30", Toast.LENGTH_SHORT).show();
                     }
                 }
                 catch (NumberFormatException exception) {

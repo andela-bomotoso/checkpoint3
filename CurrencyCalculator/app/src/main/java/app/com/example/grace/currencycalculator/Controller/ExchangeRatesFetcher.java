@@ -2,7 +2,9 @@ package app.com.example.grace.currencycalculator.controller;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,20 +16,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.com.example.grace.currencycalculator.BuildConfig;
+import app.com.example.grace.currencycalculator.MainActivity;
 import app.com.example.grace.currencycalculator.R;
 import app.com.example.grace.currencycalculator.Utilities;
+import app.com.example.grace.currencycalculator.WelcomeActivity;
 import app.com.example.grace.currencycalculator.data.ExchangeRateContract;
 import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
 import app.com.example.grace.currencycalculator.models.ExchangeRate;
 
-public class ExchangeRatesFetcher extends AsyncTask<String, Void, String> {
+public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
 
     private Context context;
+
     private ContentValues contentValues;
+
     private ContentValues[] values = new ContentValues[900];
+
     private ExchangeRateDbHelper dbhelper;
+
     private ExchangeRate exchangeRate = new ExchangeRate();
+
     private String result="";
+
     private int count = 0;
 
     public ExchangeRatesFetcher(Context context) {
@@ -35,31 +45,42 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected String[] doInBackground(String... params) {
+        contentValues = new ContentValues();
         dbhelper = new ExchangeRateDbHelper(context);
         List<String> currencies = getCurrencyCodes();
         for (int i = 0; i < currencies.size(); i++) {
-            for (int j = 0; j < currencies.size(); i++) {
+            for (int j = 0; j < currencies.size(); j++) {
                 exchangeRate = new ExchangeRate(currencies.get(i), currencies.get(j));
+                try {
+                    result = connectToApi(exchangeRate);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                contentValues = new ContentValues();
+                exchangeRate.setRate(Double.parseDouble(result));
+                contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_SOURCE, exchangeRate.getSource());
+                contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_DESTINATION, exchangeRate.getDestination());
+                contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_RATE, exchangeRate.getRate());
+                Log.v("RESULT", exchangeRate.getDestination() + " " + exchangeRate.getDestination()+exchangeRate.getRate());
+                values[count] = contentValues;
+                count++;
             }
-
-            try {
-                result = connectToApi(exchangeRate);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            exchangeRate.setRate(Double.parseDouble(result));
-
-            contentValues = new ContentValues();
-            contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_SOURCE, exchangeRate.getSource());
-            contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_DESTINATION, exchangeRate.getDestination());
-            contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_RATE, exchangeRate.getRate());
-            values[count] = contentValues;
-            count++;
-
         }
-        dbhelper.updateTable(ExchangeRateContract.ExchangeRates.CONTENT_URI,values);
+
+        if (dbhelper.tableRows() == 0) {
+            dbhelper.bulkInsert(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
+        } else {
+            dbhelper.updateTable(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
+        }
+
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(String[] result) {
+        Intent myIntent = new Intent(context, MainActivity.class);
+        context.startActivity(myIntent);
     }
 
     public String connectToApi(ExchangeRate exchangeRate) throws IOException {
@@ -74,9 +95,7 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String> {
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
-
             InputStream inputStream = urlConnection.getInputStream();
-
 
             if (inputStream == null) {
                 return null;
