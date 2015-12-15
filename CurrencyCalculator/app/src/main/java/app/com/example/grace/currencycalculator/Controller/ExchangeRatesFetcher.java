@@ -2,6 +2,7 @@ package app.com.example.grace.currencycalculator.controller;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,6 +19,7 @@ import app.com.example.grace.currencycalculator.BuildConfig;
 import app.com.example.grace.currencycalculator.MainActivity;
 import app.com.example.grace.currencycalculator.R;
 import app.com.example.grace.currencycalculator.Utilities;
+import app.com.example.grace.currencycalculator.WelcomeActivity;
 import app.com.example.grace.currencycalculator.data.ExchangeRateContract;
 import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
 import app.com.example.grace.currencycalculator.models.ExchangeRate;
@@ -70,6 +72,9 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
 
         if (dbhelper.tableRows() == 0) {
             dbhelper.bulkInsert(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
+            downloadCompleted = true;
+            Intent myIntent = new Intent(context, MainActivity.class);
+            context.startActivity(myIntent);
         }
 
         dbhelper.updateTable(ExchangeRateContract.ExchangeRates.CONTENT_URI,values);

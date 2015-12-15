@@ -26,4 +26,8 @@
     <string name="min_currency_display">10</string>
     <string name="max_currency_display">30</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_welcome">Currency Calculator</string>
+    <string name = "progress_report">Downloading Currencies Exchange Rates</string>
+    <string name = "progress_completion">Download completed</string>
+    <string name = "progress_error">No internet Connection</string>
 </resources>

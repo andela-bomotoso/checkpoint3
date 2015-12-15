@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -124,11 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
         exchangeRatesFetcher = new ExchangeRatesFetcher(this);
         exchangeRateDbHelper = new ExchangeRateDbHelper(this);
-
-
-        if(exchangeRateDbHelper.tableRows() == 0){
-            exchangeRatesFetcher.execute();
-        }
 
         if (savedInstanceState != null) {
 
