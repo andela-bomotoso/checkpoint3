@@ -5,6 +5,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
 import app.com.example.grace.currencycalculator.models.Expression;
@@ -21,13 +22,10 @@ public class ExpressionAnalyzer {
        private String subexpression;
        private String currentExpressionString;
        private String sourceCurrency;
-       private String subExpressionCurrencyOperand;
        private boolean isBracketOpen;
-       private boolean currency;
-       private char current;
        private char previous;
-       private int index;
-       private int count;
+       private Stack expressionStack;
+       private Stack subExpressionStack;
 
     public ExpressionAnalyzer(Context context,String destinationCurrency) {
         this.context = context;
@@ -40,96 +38,59 @@ public class ExpressionAnalyzer {
     }
 
     public Expression breakDownExpression(String expressionString) {
-
         initializeVariables();
-
-        for (index = 0; index < expressionString.length(); index++) {
-
-            current = expressionString.charAt(index);
-
-            if(index > 0 ) {
-                previous = expressionString.charAt(index-1);
-            }
-
-            if(isBracketOpen && Character.isDigit(current)) {
-                subExpressionCurrencyOperand += current;
-            }
-
-            if(expressionStartsWithUnaryOperator()) {
-                updateCurrentExpressionString();
-                continue;
-            }
-
-            if(Character.isLetter(current)) {
-                count++;
-                currency = true;
-                sourceCurrency = sourceCurrency+current;
-                if(count < 3) {
-                    continue;
-                }
-            }
-
-            if(currency && !isBracketOpen) {
-                double currentExpressionValue = Double.parseDouble(currentExpressionString) * getExchangeRate(sourceCurrency, destinationCurrency);
-                currentExpressionString = currentExpressionValue + "";
-                resetCurrencyParameters();
-            }
-            if(currency && isBracketOpen) {
-                double subExpressionValue = Double.parseDouble(subExpressionCurrencyOperand) * getExchangeRate(sourceCurrency, destinationCurrency);
-                subexpression = removeLastSubexpresssion(subExpressionCurrencyOperand) + subExpressionValue+ "";
-                resetCurrencyParameters();
-                subExpressionCurrencyOperand = "";
-            }
-
-            if (isOperator(current) & !isBracketOpen) {
-                    updateExpressionPartWithOperand();
-                    updateExpressionPartWithOperator();
-            }
-
-            else if(currentExpressionPartIsOpeningBracket()) {
-                isBracketOpen = true;
-
-                if( index > 0 && !isOperator(previous)) {
-                    updateExpressionPartWithOperand();
-                    updateExpressionPartWithOperator("*");
-                }
-                updateSubExpressionString();
-            }
-
-            else if (isBracketOpen && current != ')') {
-                updateSubExpressionString();
-                if(index==expressionString.length()-1) {
-                    updateExpressionPartWithSubExpression();
-                }
-            }
-
-            else if(current == ')' ) {
-                updateExpressionPartWithOperand();
-                isBracketOpen = false;
-                subexpression += current;
-                updateExpressionPartWithSubExpression();
-            }
-            else if (!isBracketOpen && !isOperator(current) & current != ')' & current != '(') {
-
-                if(previous == ')') {
-                    updateExpressionPartWithOperator("*");
-                }
-                if (!Character.isLetter(expressionString.charAt(index))) {
-                    currentExpressionString = currentExpressionString + expressionString.charAt(index);
-                }
-            }
-        }
-
-        if(currentExpressionString != "") {
-            expressionParts.add(new Operand(currentExpressionString));
-        }
-        expression.setExpressionParts(expressionParts);
-
-        return expression;
+        preBreakDown(expressionString,expressionStack);
+        return analyzeExpressionStack(expressionStack);
     }
 
-    private void initializeVariables() {
+    private Expression analyzeExpressionStack(Stack expressionStack) {
+        char peek = (char)expressionStack.peek();
 
+        while (!expressionStack.empty()) {
+            char current = (char) expressionStack.pop();
+
+            if(current == '-' && current == peek ) {
+                updateCurrentExpressionString(current);
+
+            } else if (Character.isLetter(current)) {
+                analyzeCurrency(current);
+
+            } else if (current == '(') {
+                analyzeOpenParenthesis(current);
+
+            } else if (!isBracketOpen && !isOperator(current) && !Character.isLetter(current)) {
+                analyzeNumericCharacter(current);
+
+            } else if (isBracketOpen && current != ')') {
+                analyzeSubExpNumericCharacter(current);
+
+            } else if (current == ')') {
+                analyzeClosingParenthesis(current);
+
+            } else if (isOperator(current) && current != peek) {
+                analyzeOperator(current);
+            }
+
+            previous = current;
+        }
+
+        return getExpression(subExpressionStack);
+    }
+
+    private Stack loadStack(String str,Stack expressionStack) {
+            for(int i = str.length()-1; i >= 0; i--) {
+                expressionStack.push(str.charAt(i));
+            }
+        return expressionStack;
+        }
+
+    private String currencyLookAhead(Stack expressionStack) {
+            return expressionStack.pop()+"" +  expressionStack.pop();
+        }
+
+    private void initializeVariables() {
+        expressionStack = new Stack();
+        subExpressionStack = new Stack();
         expressionParts = new ArrayList<>();
         currentExpressionString = "";
         subexpression = "";
@@ -137,23 +98,11 @@ public class ExpressionAnalyzer {
         sourceCurrency = "";
         expression = new Expression();
         previous = '\0';
-        current = '\0';
-        subExpressionCurrencyOperand = "";
-        count = 0;
-    }
-
-    private boolean expressionStartsWithUnaryOperator() {
-        return (index == 0 && current == '-');
+        currentExpressionString = "";
     }
 
     private boolean isOperator(char expressionPart) {
-
         return (expressionPart == ('+')||expressionPart == ('-')||expressionPart == ('*')||expressionPart == ('/' ));
-    }
-
-    private void updateCurrentExpressionString() {
-
-        currentExpressionString += current;
     }
 
     private boolean currentExpressionStringEmpty() {
@@ -165,53 +114,125 @@ public class ExpressionAnalyzer {
             expressionParts.add(new Operand(currentExpressionString));
             clearCurrentExpressionString();
         }
-        currency = false;
     }
 
-    private void updateExpressionPartWithOperator() {
-        expressionParts.add(new Operator(current + ""));
-        currency = false;
-    }
-
-    private void updateExpressionPartWithOperator(String operator) {
-        expressionParts.add(new Operator(operator));
-        currency = false;
-    }
-
-    private void updateExpressionPartWithSubExpression() {
-        expressionParts.add(new Operand(subexpression));
-        subexpression="";
-        currency = false;
+    private void updateExpressionPartWithSubExpression(Stack subexpressionStack) {
+        while (!subexpressionStack.empty()){
+            subexpression+=subexpressionStack.pop();
+        }
+        if(subexpression != "") {
+            expressionParts.add(new Operand(new StringBuilder(subexpression).reverse().toString()));
+            subexpression = "";
+        }
     }
 
     private void clearCurrentExpressionString(){
         currentExpressionString = "";
     }
 
-    private boolean currentExpressionPartIsOpeningBracket() {
-        return current =='(';
-    }
-
-    public void updateSubExpressionString() {
-        if(!currency) {
-            subexpression += current;
-        }
-    }
-
     private double getExchangeRate(String source, String destination) {
        String rate = exchangeRateDbHelper.query(source,destination);
         return Double.parseDouble(rate);
     }
-
-    private String removeLastSubexpresssion(String currencyOperand) {
-        int len = currencyOperand.length();
-        return subexpression.substring(0,subexpression.length()-len);
+    private void updateCurrentExpressionString(char current) {
+        currentExpressionString += current;
     }
 
-    private void resetCurrencyParameters(){
-        count = 0;
-        sourceCurrency = "";
-        currency = false;
-        subExpressionCurrencyOperand = "";
+    private void updateExpressionPartWithOperand(String str) {
+        if (!str.equals("")) {
+            expressionParts.add(new Operand(str));
+            clearCurrentExpressionString();
+        }
     }
+
+    private void updateExpressionPartWithOperator(char current) {
+        expressionParts.add(new Operator(current + ""));
+    }
+
+    public void updateSubExpressionString(Stack subexpressionStack, char current) {
+        subexpressionStack.push(current);
+    }
+
+    private String popOutLastOperand(Stack subexpressionStack) {
+        String lastOperand  = "";
+        while (!subexpressionStack.empty()) {
+            char current = (char)subexpressionStack.pop();
+            if(Character.isDigit(current)){
+            lastOperand += current;
+            } else {
+                subexpressionStack.push(current);
+                break;
+            }
+        }
+        return new StringBuilder(lastOperand).reverse().toString();
+    }
+
+    private double getRateValue(String str) {
+        return Double.parseDouble(str) * getExchangeRate(sourceCurrency,destinationCurrency);
+    }
+
+    private Expression getExpression(Stack subExpressionStack) {
+        updateExpressionPartWithOperand();
+        updateExpressionPartWithSubExpression(subExpressionStack);
+        expression.setExpressionParts(expressionParts);
+        return expression;
+    }
+
+    private void preBreakDown(String expressionString, Stack stack) {
+        loadStack(expressionString, stack);
+    }
+
+    private void updateSubExpressionStack() {
+        double currentExpressionValue = getRateValue(popOutLastOperand(subExpressionStack));
+        subExpressionStack.push(new StringBuilder(currentExpressionValue + "").reverse().toString());
+    }
+
+    private void analyzeOpenParenthesis(char current) {
+        isBracketOpen = true;
+        updateSubExpressionString(subExpressionStack, current);
+
+        if(!isOperator(previous) && previous!='\0') {
+            updateExpressionPartWithOperand(currentExpressionString);
+            updateExpressionPartWithOperator('*');
+        }
+        else {
+            updateExpressionPartWithOperand(currentExpressionString);
+        }
+    }
+
+    private void analyzeNumericCharacter(char current) {
+        if(previous == ')') {
+            updateExpressionPartWithOperator('*');
+        }
+        updateCurrentExpressionString(current);
+    }
+
+    private void analyzeSubExpNumericCharacter(char current) {
+        updateSubExpressionString(subExpressionStack, current);
+        if(expressionStack.empty()) {
+            updateExpressionPartWithSubExpression(subExpressionStack);
+        }
+    }
+
+    private void analyzeClosingParenthesis(char current) {
+        isBracketOpen = false;
+        updateSubExpressionString(subExpressionStack, current);
+        updateExpressionPartWithSubExpression(subExpressionStack);
+    }
+
+    private void analyzeOperator(char current) {
+        updateExpressionPartWithOperand(currentExpressionString);
+        updateExpressionPartWithOperator(current);
+    }
+
+    private void analyzeCurrency(char current) {
+        sourceCurrency = current + currencyLookAhead(expressionStack);
+
+        if(!isBracketOpen) {
+            currentExpressionString = getRateValue(currentExpressionString) + "";
+        } else {
+            updateSubExpressionStack();
+        }
+    }
+
 }

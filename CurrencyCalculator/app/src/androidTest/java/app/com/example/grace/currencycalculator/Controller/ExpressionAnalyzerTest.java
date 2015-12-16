@@ -13,7 +13,6 @@ public class ExpressionAnalyzerTest extends TestCase {
         super.setUp();
         validator = new Validator();
         expressionAnalyzer = new ExpressionAnalyzer();
-
     }
 
     public void testBreakDownExpression() throws Exception {
@@ -24,17 +23,16 @@ public class ExpressionAnalyzerTest extends TestCase {
         assertEquals("3", expression.getExpressionParts().get(2).getValue());
         assertEquals("+",expression.getExpressionParts().get(3).getValue());
         assertEquals("5",expression.getExpressionParts().get(4).getValue());
-
     }
 
     public void testBreakDownExpressionWhenExpressionHasSubExpression() throws Exception {
-        String expressionString = "2*3+(6+4*5)+26";
+        String expressionString = "2*3+(6-4*5)+26";
         Expression expression = expressionAnalyzer.breakDownExpression(expressionString);
         assertEquals("2",expression.getExpressionParts().get(0).getValue());
         assertEquals("*",expression.getExpressionParts().get(1).getValue());
         assertEquals("3", expression.getExpressionParts().get(2).getValue());
         assertEquals("+",expression.getExpressionParts().get(3).getValue());
-        assertEquals("(6+4*5)",expression.getExpressionParts().get(4).getValue());
+        assertEquals("(6-4*5)",expression.getExpressionParts().get(4).getValue());
         assertEquals("+",expression.getExpressionParts().get(5).getValue());
         assertEquals("26",expression.getExpressionParts().get(6).getValue());
     }
@@ -46,5 +44,4 @@ public class ExpressionAnalyzerTest extends TestCase {
         assertEquals("*",expression.getExpressionParts().get(1).getValue());
         assertEquals("3",expression.getExpressionParts().get(2).getValue());
     }
-
 }
