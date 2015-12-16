@@ -53,7 +53,6 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
 
     public void testComputeExpressionWhenExpressionHasSubExpression() throws Exception {
         String expression = "2*4+(3+5*2-1)/2";
-
        assertEquals(14.0, calculator.compute(expressionAnalyzer.breakDownExpression(expression)));
     }
 

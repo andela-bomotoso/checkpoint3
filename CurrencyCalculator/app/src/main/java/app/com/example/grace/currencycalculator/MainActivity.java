@@ -32,6 +32,9 @@ import app.com.example.grace.currencycalculator.models.ExpressionPart;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ExchangeRatesFetcher exchangeRatesFetcher;
+
+    private ExchangeRateDbHelper exchangeRateDbHelper;
 
     private List<ExpressionPart>expressionParts;
 
@@ -113,11 +116,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        exchangeRatesFetcher = new ExchangeRatesFetcher(this);
+        exchangeRateDbHelper = new ExchangeRateDbHelper(this);
 
+        if(exchangeRateDbHelper.tableRows() == 0){
+            exchangeRatesFetcher.execute();
+        }
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-       setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
         initializeComponents();
 
         if (savedInstanceState != null) {

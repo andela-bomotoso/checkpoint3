@@ -14,14 +14,15 @@ import app.com.example.grace.currencycalculator.controller.ExchangeRatesFetcher;
 
 public class ExchangeRateDbHelper extends SQLiteOpenHelper {
 
-    Context context;
+    private Context context;
+    private ExchangeRatesFetcher exchangeRatesFetcher;
     public static final String DATABASE_NAME = "exchange.db";
     static final int DATABASE_VERSION = 2;
-    public static boolean downloadCompleted = false;
 
     public ExchangeRateDbHelper(Context context) {
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+        exchangeRatesFetcher = new ExchangeRatesFetcher(context);
     }
 
     @Override
@@ -50,8 +51,12 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
         String query = "SELECT rate FROM exchange_rate where SOURCE ='" + source + "' and DESTINATION ='" + destination + "'";
         SQLiteDatabase database = getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
-        cursor.moveToFirst();
-        return cursor.getString(cursor.getColumnIndex("rate"));
+        if( cursor.moveToFirst()){
+            return cursor.getString(cursor.getColumnIndex("rate"));
+        } else {
+            String exchangeKey = source+""+destination;
+            return exchangeRatesFetcher.getSharedPreferences().getString(exchangeKey,"1");
+        }
     }
 
     public int bulkInsert(Uri uri, ContentValues[] values){

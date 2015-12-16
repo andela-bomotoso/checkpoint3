@@ -3,6 +3,7 @@ package app.com.example.grace.currencycalculator.controller;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,6 +26,7 @@ import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
 import app.com.example.grace.currencycalculator.models.ExchangeRate;
 
 public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
+    SharedPreferences sharedPreferences;
 
     private Context context;
 
@@ -42,6 +44,7 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
 
     public ExchangeRatesFetcher(Context context) {
         this.context = context;
+        sharedPreferences = context.getSharedPreferences("app.com.example.grace",Context.MODE_PRIVATE);
     }
 
     @Override
@@ -62,6 +65,7 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
                 contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_SOURCE, exchangeRate.getSource());
                 contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_DESTINATION, exchangeRate.getDestination());
                 contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_RATE, exchangeRate.getRate());
+                loadSharedPreferences(exchangeRate.getSource(),exchangeRate.getDestination(),exchangeRate.getRate()+"");
                 Log.v("RESULT", exchangeRate.getDestination() + " " + exchangeRate.getDestination()+exchangeRate.getRate());
                 values[count] = contentValues;
                 count++;
@@ -123,6 +127,15 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
             str+=items[i].toString()+" ";
         }
         return currencies;
+    }
+
+    private void loadSharedPreferences(String source, String destination, String rate) {
+        String currencyKey =source+""+destination;
+        sharedPreferences.edit().putString(currencyKey,rate);
+    }
+
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
     }
 
 }
