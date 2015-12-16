@@ -74,7 +74,8 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     }
     public void testComputeWhenExpressionStartsWithAUnaryOperator() throws Exception {
         String expression = "-2*3";
-        assertEquals(-6.0,calculator.compute(expressionAnalyzer.breakDownExpression(expression)));
+        Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
+        assertEquals(-6.0,calculator.compute(expression1));
     }
 
     public void testComputeWhenExpressionStartsWithSubExpressionFollowedByALowerPrecedence() {
@@ -98,16 +99,34 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         //assertEquals(2287.665296, calculator.compute(expression1));
     }
 
+    public void testComputeWhenExpressionHasASubExpressionWithSameCurrency() {
+        String expression = "4NGN+5NGN-2";
+        Calculator calculator = new Calculator();
+        ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(getActivity(),"NGN");
+        Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
+        assertEquals(7.0,calculator.compute(expression1));
+    }
+
+
     public void testComputeWhenExpressionIsIncomplete() {
         String expression = "2(-3";
         Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
         assertEquals(-6.0, calculator.compute(expression1));
     }
 
-    public void testBugFix() {
-        String expression = "2+2*3*4";
+    public void testComputeWhenExpressionHasASubExpressionWithCurrency() {
+        String expression = "2+(26NGN*2)";
+        Calculator calculator = new Calculator();
+        ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(getActivity(),"NGN");
         Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
-        assertEquals(26.0,calculator.compute(expression1));
+        assertEquals(54.0,calculator.compute(expression1));
     }
 
+    public void testBugFix() {
+        String expression = "(26NGN*2)";
+        Calculator calculator = new Calculator();
+        ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(getActivity(),"NGN");
+        Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
+        assertEquals(52.0,calculator.compute(expression1));
+    }
 }
