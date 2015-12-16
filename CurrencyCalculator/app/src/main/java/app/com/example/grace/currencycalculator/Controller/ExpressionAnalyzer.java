@@ -120,7 +120,7 @@ public class ExpressionAnalyzer {
         while (!subexpressionStack.empty()){
             subexpression+=subexpressionStack.pop();
         }
-        if(subexpression != "") {
+        if(!subexpression.equals("") & !subexpression.equals("(")) {
             expressionParts.add(new Operand(new StringBuilder(subexpression).reverse().toString()));
             subexpression = "";
         }

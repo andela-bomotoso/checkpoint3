@@ -33,11 +33,11 @@ public class Calculator {
 
         if(firstExpressionPart.contains("(")) {
            currentOperandString = expressionValidator.removeBrackets(firstExpressionPart);
-            computedValue = 0.0;
-            analyzeExpressionInParenthesis(expressionParts,0);
+           computedValue = 0.0;
+           analyzeExpressionInParenthesis(expressionParts,0);
         }
         else
-                computedValue = Double.parseDouble(expressionParts.get(0).getValue());
+            computedValue = Double.parseDouble(expressionParts.get(0).getValue());
 
         for(int index = 1; index < expressionParts.size(); index++) {
 

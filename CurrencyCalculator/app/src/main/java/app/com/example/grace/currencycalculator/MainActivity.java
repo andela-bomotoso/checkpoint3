@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
         String expressionAfterDel = expressionAfterDelete(currentExpression);
 
         return expressionAfterDel.equals("(") || expressionAfterDel.equals("-") || expressionAfterDel.equals("(-") ||
-                (currentExpression.length() > 1 && expressionAfterDel.charAt(expressionAfterDel.length()-1)=='-');
+                (currentExpression.length() > 1 && (expressionAfterDel.charAt(expressionAfterDel.length()-1)=='-'));
     }
 
     private void updateWorkAreaAfterDelete() {
