@@ -43,6 +43,7 @@ public class ExpressionAnalyzer {
         Stack subExpressionStack = new Stack();
         loadStack(expressionString,expressionStack);
         char peek = (char)expressionStack.peek();
+
         while (!expressionStack.empty()) {
            char current = (char) expressionStack.pop();
             if(current == '-' && current == peek ) {
@@ -97,6 +98,7 @@ public class ExpressionAnalyzer {
             previous = current;
         }
         updateExpressionPartWithOperand();
+        updateExpressionPartWithSubExpression(subExpressionStack);
         expression.setExpressionParts(expressionParts);
         return expression;
     }
@@ -143,8 +145,10 @@ public class ExpressionAnalyzer {
         while (!subexpressionStack.empty()){
             subexpression+=subexpressionStack.pop();
         }
-        expressionParts.add(new Operand(new StringBuilder(subexpression).reverse().toString()));
-        subexpression="";
+        if(subexpression != "") {
+            expressionParts.add(new Operand(new StringBuilder(subexpression).reverse().toString()));
+            subexpression = "";
+        }
     }
 
     private void clearCurrentExpressionString(){

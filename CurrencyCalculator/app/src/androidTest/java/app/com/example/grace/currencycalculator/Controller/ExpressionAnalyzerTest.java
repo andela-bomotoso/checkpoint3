@@ -44,15 +44,4 @@ public class ExpressionAnalyzerTest extends TestCase {
         assertEquals("*",expression.getExpressionParts().get(1).getValue());
         assertEquals("3",expression.getExpressionParts().get(2).getValue());
     }
-
-//    public void testBreakDownWhenExpressionHasCurrencies() throws Exception {
-//        String expressionString = "3NGN+5";
-//        Expression expression = expressionAnalyzer.breakDownExpression(expressionString);
-//        assertEquals("3",expression.getExpressionParts().get(0).getValue());
-//        assertEquals("+",expression.getExpressionParts().get(1).getValue());
-//        assertEquals("5",expression.getExpressionParts().get(2).getValue());
-//    }
-
-
-
 }

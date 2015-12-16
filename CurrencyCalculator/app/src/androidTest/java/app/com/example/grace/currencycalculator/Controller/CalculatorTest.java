@@ -123,10 +123,10 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
     }
 
     public void testBugFix() {
-        String expression = "(26NGN*2)";
+        String expression = "(26NGN";
         Calculator calculator = new Calculator();
         ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(getActivity(),"NGN");
         Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
-        assertEquals(52.0,calculator.compute(expression1));
+        assertEquals(26.0,calculator.compute(expression1));
     }
 }
