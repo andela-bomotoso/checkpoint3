@@ -1,10 +1,13 @@
 package app.com.example.grace.currencycalculator.controller;
 
+import android.app.Dialog;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.robotium.solo.Solo;
 
 import app.com.example.grace.currencycalculator.MainActivity;
 import app.com.example.grace.currencycalculator.R;
@@ -34,13 +37,18 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     TextView result_area;
     Button plus_button;
     Button equals_button;
+    Button sourceCurrency;
+    Button destinationCurrency;
+    Solo solo;
 
     public MainActivityTest() {
         super(MainActivity.class);
     }
 
     public void setUp() throws Exception {
+
         super.setUp();
+        solo =  new Solo(getInstrumentation(),getActivity());
 
         activity = getActivity();
         one_button = (Button) activity.findViewById(R.id.one);
@@ -61,6 +69,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         plus_button = (Button)activity.findViewById(R.id.plus);
         equals_button = (Button)activity.findViewById(R.id.equals);
         del_button = (ImageButton)activity.findViewById(R.id.del);
+        sourceCurrency = (Button)activity.findViewById(R.id.source_currency);
+        destinationCurrency = (Button)activity.findViewById(R.id.destination_currency);
 
         computation_area = (TextView) activity.findViewById(R.id.computation_area);
         result_area = (TextView)activity.findViewById(R.id.result_area);
@@ -233,7 +243,64 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         ans = result_area.getText().toString();
         expected = "4";
         assertEquals(expected, ans);
+    }
+
+    public void testWhenExpressionHasCurrencies() throws Exception  {
+        //2USD+6EUR+7
+        TouchUtils.clickView(this, two_button);
+        TouchUtils.clickView(this, sourceCurrency);
+        solo.clickOnText("USD");
+        solo.searchText("USD");
+
+        String ans = result_area.getText().toString();
+        String expected = "398.276";
+        assertEquals(expected, ans);
+
+        TouchUtils.clickView(this, del_button);
+
+        ans = result_area.getText().toString();
+        expected = "2";
+        assertEquals(expected, ans);
+
+        TouchUtils.clickView(this, sourceCurrency);
+        solo.clickOnText("USD");
+        solo.searchText("USD");
+
+        ans = result_area.getText().toString();
+        expected = "398.276";
+        assertEquals(expected, ans);
+
+        TouchUtils.clickView(this, plus_button);
+        TouchUtils.clickView(this,six_button);
+
+        ans = result_area.getText().toString();
+        expected = "404.276";
+        assertEquals(expected, ans);
+
+        TouchUtils.clickView(this, sourceCurrency);
+        solo.clickOnText("EUR");
+        solo.searchText("EUR");
+
+        ans = result_area.getText().toString();
+        expected = "1694.603";
+        assertEquals(expected, ans);
+
+        //Change destination currency
+        TouchUtils.clickView(this,destinationCurrency);
+        solo.clickOnText("KWD");
+        solo.searchText("KWD");
+
+        ans = result_area.getText().toString();
+        expected = "2.585";
+        assertEquals(expected, ans);
+
 
     }
+
+    public void tearDown() throws Exception {
+        solo.finishOpenedActivities();
+
+    }
+
 
 }

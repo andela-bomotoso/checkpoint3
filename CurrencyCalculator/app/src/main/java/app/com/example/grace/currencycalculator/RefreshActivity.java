@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import app.com.example.grace.currencycalculator.controller.ExchangeRatesFetcher;
 import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
@@ -16,24 +17,15 @@ public class RefreshActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        progressText = (TextView)findViewById(R.id.progress_text);
+        progressText = (TextView) findViewById(R.id.progress_text);
 
         exchangeRatesFetcher = new ExchangeRatesFetcher(this);
         exchangeRateDbHelper = new ExchangeRateDbHelper(this);
-
-        if(exchangeRateDbHelper.tableRows() == 0){
-            exchangeRatesFetcher.execute();
-        }
-
-        else {
-            Intent myIntent = new Intent(RefreshActivity.this, MainActivity.class);
-            RefreshActivity.this.startActivity(myIntent);
-        }
-
     }
 
 }

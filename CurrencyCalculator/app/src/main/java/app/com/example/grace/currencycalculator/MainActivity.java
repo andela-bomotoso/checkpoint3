@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         initializeComponents();
 
-        if(exchangeRatesFetcher.isOnline(this) && exchangeRateDbHelper.tableRows() == 0) {
+        if(exchangeRatesFetcher.isOnline(this)) {
             exchangeRatesFetcher.execute();
         }
 
@@ -154,6 +154,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
+
+        if(id == R.id.action_refresh) {
+            exchangeRatesFetcher.updateData();
             return true;
         }
 

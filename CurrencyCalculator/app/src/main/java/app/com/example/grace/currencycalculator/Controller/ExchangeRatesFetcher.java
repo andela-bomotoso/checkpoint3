@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,15 +59,23 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                addToContentValues();
+                if(result!=null) {
+                    addToContentValues();
+                }
             }
         }
-            if (dbhelper.tableRows() == 0) {
-                dbhelper.bulkInsert(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
-            } else {
-                dbhelper.updateTable(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
-            }
+        if(isOnline(context)) {
+            manipulateDatabase();
+        }
         return null;
+    }
+
+    private void manipulateDatabase() {
+        if (dbhelper.tableRows() == 0) {
+            dbhelper.bulkInsert(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
+        } else {
+            dbhelper.updateTable(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
+        }
     }
 
     private void addToContentValues()  {
@@ -99,7 +108,7 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
         } catch (IOException ioException) {
-            ioException.printStackTrace();
+            return null;
 
         } finally {
             if (urlConnection == null) {
@@ -142,6 +151,19 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
             return true;
         }
         return false;
+    }
+
+    public void updateData() {
+        if (isOnline(context)) {
+            try {
+                execute();
+            }
+            catch (Exception exception) {
+                return;
+            }
+        } else {
+            Toast.makeText(context, "No Internet Connection detected", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
