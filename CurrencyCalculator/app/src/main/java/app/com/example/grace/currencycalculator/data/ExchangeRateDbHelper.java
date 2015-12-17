@@ -59,6 +59,7 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
         if( cursor.moveToFirst()){
             return cursor.getString(cursor.getColumnIndex("rate"));
         } else {
+
             return Utilities.retrieveSavedData(source,destination);
         }
     }

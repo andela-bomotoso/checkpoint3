@@ -1,9 +1,5 @@
 package app.com.example.grace.currencycalculator.controller.utilities;
 
-
-import android.util.Log;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

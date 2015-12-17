@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
 
     private ExchangeRateDbHelper dbhelper;
 
-    private ExchangeRate exchangeRate = new ExchangeRate();
+    private ExchangeRate exchangeRate;
 
     private String result = "";
 
@@ -42,41 +44,38 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
 
     public ExchangeRatesFetcher(Context context) {
         this.context = context;
-
     }
 
     @Override
     protected String[] doInBackground(String... params) {
-        contentValues = new ContentValues();
         dbhelper = new ExchangeRateDbHelper(context);
         List<String> currencies = getCurrencyCodes();
         for (int i = 0; i < currencies.size(); i++) {
             for (int j = 0; j < currencies.size(); j++) {
                 exchangeRate = new ExchangeRate(currencies.get(i), currencies.get(j));
-
                     try {
                         result = connectToApi(exchangeRate);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    contentValues = new ContentValues();
-                    exchangeRate.setRate(Double.parseDouble(result));
-                    contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_SOURCE, exchangeRate.getSource());
-                    contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_DESTINATION, exchangeRate.getDestination());
-                    contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_RATE, exchangeRate.getRate());
-                    values[count] = contentValues;
-                    count++;
-                }
-
+                addToContentValues();
             }
-
+        }
             if (dbhelper.tableRows() == 0) {
                 dbhelper.bulkInsert(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
             } else {
                 dbhelper.updateTable(ExchangeRateContract.ExchangeRates.CONTENT_URI, values);
             }
-
         return null;
+    }
+
+    private void addToContentValues()  {
+        contentValues = new ContentValues();
+        exchangeRate.setRate(Double.parseDouble(result));
+        contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_SOURCE, exchangeRate.getSource());
+        contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_DESTINATION, exchangeRate.getDestination());
+        contentValues.put(ExchangeRateContract.ExchangeRates.COLUMN_RATE, exchangeRate.getRate());
+        values[count] = contentValues;
     }
 
     @Override
@@ -88,15 +87,8 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
     public String connectToApi(ExchangeRate exchangeRate) throws IOException {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-
         try {
-            String source = exchangeRate.getSource();
-            String destination = exchangeRate.getDestination();
-            final String EXCHANGE_RATE_BASE_URL = Utilities.ApiURl;
-            String url_query = EXCHANGE_RATE_BASE_URL + source + "/" + destination + "?k=" + BuildConfig.EXCHANGE_RATE_API_KEY;
-            URL url = new URL(url_query);
-
-            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection = (HttpURLConnection) getUrl(exchangeRate).openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
             InputStream inputStream = urlConnection.getInputStream();
@@ -104,7 +96,6 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
             if (inputStream == null) {
                 return null;
             }
-
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
         } catch (IOException ioException) {
@@ -115,9 +106,22 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
                 urlConnection.disconnect();
             }
         }
-
         return reader.readLine();
+    }
 
+    private URL getUrl(ExchangeRate exchangeRate) {
+        URL url = null;
+        String source = exchangeRate.getSource();
+        String destination = exchangeRate.getDestination();
+        final String EXCHANGE_RATE_BASE_URL = Utilities.ApiURl;
+        String url_query = EXCHANGE_RATE_BASE_URL + source + "/" + destination + "?k=" + BuildConfig.EXCHANGE_RATE_API_KEY;
+        try {
+            url = new URL(url_query);
+        }
+        catch (MalformedURLException exception) {
+            exception.printStackTrace();
+        }
+        return url;
     }
 
     private List<String> getCurrencyCodes() {
@@ -139,6 +143,5 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
         }
         return false;
     }
-
 
 }

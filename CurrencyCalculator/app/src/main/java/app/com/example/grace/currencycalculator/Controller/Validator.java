@@ -14,14 +14,15 @@ public class Validator {
 
     public boolean validate(char keyPressed) {
 
-       return ( !startWithInvalidCharacter(keyPressed)) && (!operatorAfterOpeningBracket(keyPressed))&& (!isDivisionByZero(keyPressed)) && (!isRepeatedZeros(keyPressed))
-                && (!isMismatchedBrackets(keyPressed)) && (!closingBracketAfterOperator(keyPressed))
-                && (!repeatedOpeningBracket(keyPressed)) && (!isEmptyParenthesis(keyPressed)) && (!repeatedClosingBracket(keyPressed))
-                && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed))
-                && (!isOperandAfterCurrency(keyPressed)) && (!isRepeatedDecimal(keyPressed));
+       return ( !startWithInvalidCharacter(keyPressed)) && (!operatorAfterOpeningBracket(keyPressed)) && (!isDivisionByZero(keyPressed))
+               && (!isRepeatedZeros(keyPressed)) && (!isMismatchedBrackets(keyPressed)) && (!closingBracketAfterOperator(keyPressed))
+               && (!repeatedOpeningBracket(keyPressed)) && (!isEmptyParenthesis(keyPressed)) && (!repeatedClosingBracket(keyPressed))
+               && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed))
+               && (!isOperandAfterCurrency(keyPressed)) && (!isRepeatedDecimal(keyPressed));
     }
 
     public boolean validateCurrency() {
+
         return (isLastCharacterADigit());
     }
 
@@ -69,9 +70,7 @@ public class Validator {
 
     public boolean operatorAfterOpeningBracket(char keyPressed) {
             return (expression.length() > 1) && expression.charAt(expression.length() - 1) == '(' && isOperator(keyPressed);
-
     }
-
 
     public boolean repeatedOpeningBracket(char keyPressed) {
 

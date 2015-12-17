@@ -11,57 +11,73 @@ public class Calculator {
 
     private Validator expressionValidator;
     private ExpressionAnalyzer expressionAnalyzer;
-    private String previousOperator = "";
-    private String currentOperator = "";
-    private String currentOperandString = "";
-    private String firstExpressionPart="";
-    private double previousOperand = 0.0;
-    private double currentOperand = 0.0;
-    private double computedValue = 0.0;
-    private double previousExpressionValue = 1;
-    private double previousExpValue = 0;
-    private double nonPrecedenceComputedValue = 0;
-    private boolean nonPrecedence = false;
-    double operandBeforePrecedence = 0;
+    private String previousOperator;
+    private String currentOperator;
+    private String currentOperandString;
+    private String firstExpressionPart;
+    private double previousOperand;
+    private double currentOperand ;
+    private double computedValue;
+    private double previousExpressionValue;
+    private double previousExpValue;
+    private double nonPrecedenceComputedValue;
+    private boolean nonPrecedence;
+    double operandBeforePrecedence;
 
     public double compute(Expression expression) {
-        expressionAnalyzer = new ExpressionAnalyzer();
+
+        initializeVariables();
         expressionValidator = new Validator();
+        expressionAnalyzer = new ExpressionAnalyzer();
 
         List < ExpressionPart > expressionParts = expression.getExpressionParts();
         firstExpressionPart = expressionParts.get(0).getValue();
 
-        if(firstExpressionPart.contains("(")) {
-           currentOperandString = expressionValidator.removeBrackets(firstExpressionPart);
-           computedValue = 0.0;
-           analyzeExpressionInParenthesis(expressionParts,0);
-        }
-        else
-            computedValue = Double.parseDouble(expressionParts.get(0).getValue());
+        analyzeFirstExpressionPart(expressionParts);
 
         for(int index = 1; index < expressionParts.size(); index++) {
-
-            ExpressionPart currentExpressionPart = expressionParts.get(index);
-            ExpressionPart previousExpressionPart = expressionParts.get(index-1);
-
-            if(currentExpressionPart.isOperand()) {
-
-                currentOperandString = currentExpressionPart.getValue();
-                currentOperator = previousExpressionPart.getValue();
-
-                if ((currentOperandString).startsWith("(")) {
-                    currentOperandString = expressionValidator.removeBrackets(currentOperandString);
-                    currentExpressionPart.setValue(currentOperandString);
-                    analyzeExpressionInParenthesis(expressionParts,index);
-                }
-                else {
-                    currentOperand = Double.parseDouble(currentOperandString);
-                }
-                computedValue = getTemporaryValue();
-            }
+            analyzeCurrentExpressionPart(expressionParts,index);
         }
         clear();
         return computedValue;
+    }
+
+    private void analyzeFirstExpressionPart(List<ExpressionPart> expressionParts) {
+
+        if(firstExpressionPart.contains("(")) {
+            currentOperandString = expressionValidator.removeBrackets(firstExpressionPart);
+            computedValue = 0.0;
+            analyzeExpressionInParenthesis(expressionParts,0);
+        }
+        else
+            computedValue = Double.parseDouble(expressionParts.get(0).getValue());
+    }
+
+    private void analyzeCurrentExpressionPart(List<ExpressionPart>expressionParts,int index) {
+
+        ExpressionPart currentExpressionPart = expressionParts.get(index);
+        ExpressionPart previousExpressionPart = expressionParts.get(index-1);
+
+        if(currentExpressionPart.isOperand()) {
+
+            currentOperandString = currentExpressionPart.getValue();
+            currentOperator = previousExpressionPart.getValue();
+
+            if ((currentOperandString).startsWith("(")) {
+                analyzeOpenParenthesis(expressionParts,currentExpressionPart,index);
+            }
+            else {
+                currentOperand = Double.parseDouble(currentOperandString);
+            }
+            computedValue = getTemporaryValue();
+        }
+    }
+
+    private void analyzeOpenParenthesis(List<ExpressionPart>expressionParts,ExpressionPart currentExpressionPart, int index) {
+
+        currentOperandString = expressionValidator.removeBrackets(currentOperandString);
+        currentExpressionPart.setValue(currentOperandString);
+        analyzeExpressionInParenthesis(expressionParts,index);
     }
 
     private void analyzeExpressionInParenthesis(List<ExpressionPart> expressionParts,int currentIndex) {
@@ -79,22 +95,14 @@ public class Calculator {
     }
 
     private double getTemporaryValue() {
+
         switch (currentOperator) {
-
             case "+":
-                operandBeforePrecedence = computedValue;
-                computedValue = computedValue + currentOperand;
-                previousExpValue = 1;
-                updatePrecedence();
+                analyzeAddition();
                 break;
-
             case "-":
-                operandBeforePrecedence = computedValue;
-                computedValue = computedValue - currentOperand;
-                previousExpValue = -1;
-                updatePrecedence();
+                analyzeSubtraction();
                 break;
-
             case "*":
             case "/":
               computedValue = evaluatePrecedence();
@@ -104,10 +112,25 @@ public class Calculator {
         return computedValue;
     }
 
+    private void analyzeAddition() {
+
+        operandBeforePrecedence = computedValue;
+        computedValue = computedValue + currentOperand;
+        previousExpValue = 1;
+        updatePrecedence();
+    }
+
+    private void analyzeSubtraction() {
+
+        operandBeforePrecedence = computedValue;
+        computedValue = computedValue - currentOperand;
+        previousExpValue = -1;
+        updatePrecedence();
+    }
+
     private double evaluatePrecedence() {
 
         double expressionValue;
-
         switch (currentOperator) {
 
             case "*":
@@ -167,6 +190,7 @@ public class Calculator {
     }
 
     private double getAdjustedDivision() {
+
         if(operandBeforePrecedence != 0) {
             computedValue = previousExpressionValue / currentOperand + operandBeforePrecedence;
         } else
@@ -175,6 +199,7 @@ public class Calculator {
     }
 
     private double getAdjustedMultiplication() {
+
         if(operandBeforePrecedence != 0) {
             computedValue = previousExpressionValue * currentOperand + operandBeforePrecedence;
         } else
@@ -195,6 +220,21 @@ public class Calculator {
         previousExpValue = 0;
         firstExpressionPart = "";
         expressionAnalyzer = new ExpressionAnalyzer();
+        operandBeforePrecedence = 0;
+    }
+
+    private void initializeVariables() {
+        previousOperator = "";
+        currentOperator = "";
+        currentOperandString = "";
+        firstExpressionPart="";
+        previousOperand = 0.0;
+        currentOperand = 0.0;
+        computedValue = 0.0;
+        previousExpressionValue = 1;
+        previousExpValue = 0;
+        nonPrecedenceComputedValue = 0;
+        nonPrecedence = false;
         operandBeforePrecedence = 0;
     }
 
