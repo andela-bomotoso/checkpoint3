@@ -2,17 +2,14 @@ package app.com.example.grace.currencycalculator;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.TextView;
 
 import app.com.example.grace.currencycalculator.controller.ExchangeRatesFetcher;
 import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class RefreshActivity extends AppCompatActivity {
     ExchangeRatesFetcher exchangeRatesFetcher ;
     ExchangeRateDbHelper exchangeRateDbHelper;
     TextView progressText;
@@ -33,8 +30,8 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         else {
-            Intent myIntent = new Intent(WelcomeActivity.this, MainActivity.class);
-            WelcomeActivity.this.startActivity(myIntent);
+            Intent myIntent = new Intent(RefreshActivity.this, MainActivity.class);
+            RefreshActivity.this.startActivity(myIntent);
         }
 
     }

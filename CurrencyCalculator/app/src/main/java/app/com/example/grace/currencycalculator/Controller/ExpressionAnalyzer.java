@@ -48,45 +48,48 @@ public class ExpressionAnalyzer {
 
         while (!expressionStack.empty()) {
             char current = (char) expressionStack.pop();
-
-            if(current == '-' && current == peek ) {
-                updateCurrentExpressionString(current);
-
-            } else if (Character.isLetter(current)) {
-                analyzeCurrency(current);
-
-            } else if (current == '(') {
-                analyzeOpenParenthesis(current);
-
-            } else if (!isBracketOpen && !isOperator(current) && !Character.isLetter(current)) {
-                analyzeNumericCharacter(current);
-
-            } else if (isBracketOpen && current != ')') {
-                analyzeSubExpNumericCharacter(current);
-
-            } else if (current == ')') {
-                analyzeClosingParenthesis(current);
-
-            } else if (isOperator(current) && current != peek) {
-                analyzeOperator(current);
-            }
-
-            previous = current;
+            checkCharacters(current,peek);
         }
 
         return getExpression(subExpressionStack);
     }
 
-    private Stack loadStack(String str,Stack expressionStack) {
-            for(int i = str.length()-1; i >= 0; i--) {
-                expressionStack.push(str.charAt(i));
-            }
-        return expressionStack;
+    private void checkCharacters(char current,char peek) {
+        if(current == '-' && current == peek ) {
+            updateCurrentExpressionString(current);
+
+        } else if (Character.isLetter(current)) {
+            analyzeCurrency(current);
+
+        } else if (current == '(') {
+            analyzeOpenParenthesis(current);
+
+        } else if (!isBracketOpen && !isOperator(current) && !Character.isLetter(current)) {
+            analyzeNumericCharacter(current);
+
+        } else if (isBracketOpen && current != ')') {
+            analyzeSubExpNumericCharacter(current);
+
+        } else if (current == ')') {
+            analyzeClosingParenthesis(current);
+
+        } else if (isOperator(current) && current != peek) {
+            analyzeOperator(current);
         }
 
-    private String currencyLookAhead(Stack expressionStack) {
-            return expressionStack.pop()+"" +  expressionStack.pop();
+        previous = current;
+    }
+
+    private Stack loadStack(String str,Stack expressionStack) {
+        for(int i = str.length()-1; i >= 0; i--) {
+            expressionStack.push(str.charAt(i));
         }
+        return expressionStack;
+    }
+
+    private String currencyLookAhead(Stack expressionStack) {
+        return expressionStack.pop()+"" +  expressionStack.pop();
+    }
 
     private void initializeVariables() {
         expressionStack = new Stack();

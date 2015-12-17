@@ -3,13 +3,18 @@ package app.com.example.grace.currencycalculator.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 
+import java.util.List;
+import java.util.Map;
+
 import app.com.example.grace.currencycalculator.MainActivity;
 import app.com.example.grace.currencycalculator.controller.ExchangeRatesFetcher;
+import app.com.example.grace.currencycalculator.controller.utilities.Utilities;
 
 
 public class ExchangeRateDbHelper extends SQLiteOpenHelper {
@@ -54,8 +59,7 @@ public class ExchangeRateDbHelper extends SQLiteOpenHelper {
         if( cursor.moveToFirst()){
             return cursor.getString(cursor.getColumnIndex("rate"));
         } else {
-            String exchangeKey = source+""+destination;
-            return exchangeRatesFetcher.getSharedPreferences().getString(exchangeKey,"1");
+            return Utilities.retrieveSavedData(source,destination);
         }
     }
 

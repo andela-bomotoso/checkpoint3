@@ -10,7 +10,7 @@
     android:orientation="horizontal"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_welcome"
-    tools:context="app.com.example.grace.currencycalculator.WelcomeActivity">
+    tools:context="app.com.example.grace.currencycalculator.RefreshActivity">
 
     <ProgressBar
         android:layout_width="wrap_content"

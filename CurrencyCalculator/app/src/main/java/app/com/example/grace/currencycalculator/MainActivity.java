@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import app.com.example.grace.currencycalculator.controller.Calculator;
 import app.com.example.grace.currencycalculator.controller.ExchangeRatesFetcher;
 import app.com.example.grace.currencycalculator.controller.ExpressionAnalyzer;
 import app.com.example.grace.currencycalculator.controller.Validator;
+import app.com.example.grace.currencycalculator.controller.utilities.Utilities;
 import app.com.example.grace.currencycalculator.data.ExchangeRateDbHelper;
 import app.com.example.grace.currencycalculator.models.Expression;
 import app.com.example.grace.currencycalculator.models.ExpressionPart;
@@ -112,29 +114,31 @@ public class MainActivity extends AppCompatActivity {
 
     ExpressionAnalyzer expressionAnalyzer;
 
-    @TargetApi(21)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        exchangeRatesFetcher = new ExchangeRatesFetcher(this);
-        exchangeRateDbHelper = new ExchangeRateDbHelper(this);
-
-        if(exchangeRateDbHelper.tableRows() == 0){
-            exchangeRatesFetcher.execute();
-        }
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initializeComponents();
 
-        if (savedInstanceState != null) {
+        if(exchangeRatesFetcher.isOnline(this) && exchangeRateDbHelper.tableRows() == 0) {
+            exchangeRatesFetcher.execute();
+        }
 
-            computationArea.setText(savedInstanceState.getString(KEY_COMPUTATION_AREA, "computationArea"));
-            resultArea.setText(savedInstanceState.getString(KEY_RESULT_AREA, "resultArea"));
-            sourceCurrencyButton.setText(savedInstanceState.getString(KEY_SOURCE_CURRENCY, "sourceCurrency"));
-            destinationCurrencyButton.setText(savedInstanceState.getString(KEY_DESTINATION_CURRENCY,"destinationCurrency"));
+        if (savedInstanceState != null) {
+            saveBundle(savedInstanceState);
        }
+    }
+
+    @TargetApi(21)
+    private void saveBundle(Bundle savedInstanceState) {
+        computationArea.setText(savedInstanceState.getString(KEY_COMPUTATION_AREA, "computationArea"));
+        resultArea.setText(savedInstanceState.getString(KEY_RESULT_AREA, "resultArea"));
+        sourceCurrencyButton.setText(savedInstanceState.getString(KEY_SOURCE_CURRENCY, "sourceCurrency"));
+        destinationCurrencyButton.setText(savedInstanceState.getString(KEY_DESTINATION_CURRENCY, "destinationCurrency"));
     }
 
     @Override
@@ -167,6 +171,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeComponents() {
+        exchangeRatesFetcher = new ExchangeRatesFetcher(this);
+        exchangeRateDbHelper = new ExchangeRateDbHelper(this);
         expressionParts = new ArrayList<>();
         numberFormat = new DecimalFormat("##.###");
         expression = new Expression();
@@ -201,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
         destinationButtonText = destinationCurrencyButton.getText().toString();
         calculator = new Calculator();
         expressionAnalyzer = new ExpressionAnalyzer(this,destinationButtonText);
-
     }
 
     public void display(View view) {
@@ -296,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     public void updateWorkArea(String sourceCurrency) {
 
         setValidatorExpression();
@@ -392,9 +398,7 @@ public class MainActivity extends AppCompatActivity {
         expressionValidator.setExpression(currentExpression);
     }
 
-
     private void clearWorkArea() {
-
         computationArea.setText("");
         initializeResultArea();
     }
@@ -416,15 +420,14 @@ public class MainActivity extends AppCompatActivity {
                     case "source":
                         sourceCurrencyButton.setText(items[item]);
                         updateWorkArea(sourceCurrencyButton.getText().toString());
-                        updateWorkArea();
                         break;
                     case "destination":
                         destinationCurrencyButton.setText(items[item]);
                         destinationButtonText = items[item].toString();
                         currencyText.setText(items[item]);
-                        updateWorkArea();
                         break;
                 }
+                updateWorkArea();
                 dialogInterface.dismiss();
             }
 
