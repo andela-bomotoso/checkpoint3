@@ -47,13 +47,12 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
 
     public void testComputeExpressionWhenExpressionHasBracketWithNoPrecedingOperator() throws Exception {
         String expression = "12(3)";
-
-        assertEquals(36.0, calculator.compute(expressionAnalyzer.breakDownExpression(expression)));
+        Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
+        assertEquals(36.0, calculator.compute(expression1));
     }
 
     public void testComputeExpressionWhenExpressionHasSubExpression() throws Exception {
         String expression = "2*4+(3+5*2-1)/2";
-
        assertEquals(14.0, calculator.compute(expressionAnalyzer.breakDownExpression(expression)));
     }
 
@@ -92,13 +91,6 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(7.0,calculator.compute(expression1));
     }
 
-    public void testComputeWhenExpressionHasMixedCurrencies() {
-        String expression = "4USD+5GBP-2";
-        ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(getActivity(),"NGN");
-        Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
-        //assertEquals(2287.665296, calculator.compute(expression1));
-    }
-
     public void testComputeWhenExpressionHasASubExpressionWithSameCurrency() {
         String expression = "4NGN+5NGN-2";
         Calculator calculator = new Calculator();
@@ -116,17 +108,11 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
 
     public void testComputeWhenExpressionHasASubExpressionWithCurrency() {
         String expression = "2+(26NGN*2)";
+
         Calculator calculator = new Calculator();
         ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(getActivity(),"NGN");
         Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
         assertEquals(54.0,calculator.compute(expression1));
     }
 
-    public void testBugFix() {
-        String expression = "(26NGN";
-        Calculator calculator = new Calculator();
-        ExpressionAnalyzer expressionAnalyzer = new ExpressionAnalyzer(getActivity(),"NGN");
-        Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
-        assertEquals(26.0,calculator.compute(expression1));
-    }
 }

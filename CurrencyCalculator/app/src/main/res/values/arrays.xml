@@ -13,7 +13,6 @@
         <item>CAD</item>
         <item>ARS</item>
         <item>AUD</item>
-        <item>CFA</item>
         <item>BSD</item>
         <item>BDT</item>
         <item>BBD</item>
@@ -30,6 +29,7 @@
         <item>EGP</item>
         <item>QAR</item>
         <item>ZAR</item>
+        <item>EUR</item>
         <item>HKD</item>
 
     </string-array>
