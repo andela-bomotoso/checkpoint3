@@ -89,8 +89,7 @@ public class ExchangeRatesFetcher extends AsyncTask<String, Void, String[]> {
 
     @Override
     protected void onPostExecute(String[] result) {
-        Intent myIntent = new Intent(context, MainActivity.class);
-        context.startActivity(myIntent);
+        
     }
 
     public String connectToApi(ExchangeRate exchangeRate) throws IOException {
