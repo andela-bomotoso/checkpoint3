@@ -115,4 +115,10 @@ public class ValidatorTest extends TestCase {
         assertFalse(validator.operatorAfterOpeningBracket('/'));
     }
 
+    public void testOperatorsAfterOpeningParenthesis() {
+        String expression = "(2+3)+(";
+        validator.setExpression(expression);
+        assertTrue(validator.operatorAfterOpeningBracket('+'));
+    }
+
 }
