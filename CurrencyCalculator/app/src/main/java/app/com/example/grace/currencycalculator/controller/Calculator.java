@@ -38,6 +38,7 @@ public class Calculator {
         for(int index = 1; index < expressionParts.size(); index++) {
             analyzeCurrentExpressionPart(expressionParts,index);
         }
+        
         clear();
         return computedValue;
     }
