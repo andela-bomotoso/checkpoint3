@@ -182,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
         numberFormat = new DecimalFormat("##.###");
         expression = new Expression();
         expressionValidator = new Validator();
-        computationAreaScroll = (HorizontalScrollView) findViewById(R.id.horizontal_view);
         computationArea = (TextView) findViewById(R.id.computation_area);
         resultArea = (TextView) findViewById(R.id.result_area);
         clearButton = (Button) findViewById(R.id.clear);

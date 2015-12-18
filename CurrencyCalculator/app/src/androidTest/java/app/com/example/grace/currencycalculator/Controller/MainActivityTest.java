@@ -293,8 +293,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         ans = result_area.getText().toString();
         expected = "2.585";
         assertEquals(expected, ans);
-
-
     }
 
     public void tearDown() throws Exception {

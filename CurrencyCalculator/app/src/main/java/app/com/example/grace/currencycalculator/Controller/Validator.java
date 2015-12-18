@@ -18,7 +18,8 @@ public class Validator {
                && (!isRepeatedZeros(keyPressed)) && (!isMismatchedBrackets(keyPressed)) && (!closingBracketAfterOperator(keyPressed))
                && (!repeatedOpeningBracket(keyPressed)) && (!isEmptyParenthesis(keyPressed)) && (!repeatedClosingBracket(keyPressed))
                && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed))
-               && (!isOperandAfterCurrency(keyPressed)) && (!isRepeatedDecimal(keyPressed));
+               && (!isOperandAfterCurrency(keyPressed)) && (!isRepeatedDecimal(keyPressed))
+               && (!isInvalidDecimal(keyPressed));
     }
 
     public boolean validateCurrency() {
@@ -69,7 +70,8 @@ public class Validator {
     }
 
     public boolean operatorAfterOpeningBracket(char keyPressed) {
-            return (expression.length() > 1) && expression.charAt(expression.length() - 1) == '(' && isOperator(keyPressed);
+            return (expression.length() > 1) && (expression.charAt(expression.length() - 1) == '(')
+                    && (isOperator(keyPressed) | keyPressed == '.');
     }
 
     public boolean repeatedOpeningBracket(char keyPressed) {
@@ -146,4 +148,10 @@ public class Validator {
         return currentOperand.contains(".") && keyPressed == '.';
     }
 
+    public boolean isInvalidDecimal(char keyPressed) {
+
+        return ((expression.length() > 1) && ((expression.charAt(expression.length() - 1) == '(')
+                && (keyPressed == '.')) || ((expression.equals("(") && keyPressed == '.')
+                || (isOperator(expression.charAt(expression.length()-1) && keyPressed == '.')) ;
+    }
 }
