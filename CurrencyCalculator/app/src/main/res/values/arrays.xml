@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="currency_codes">
+        <item>KWD</item>
+        <item>BHD</item>
+        <item>USD</item>
+        <item>OMR</item>
+        <item>GBP</item>
+        <item>JOD</item>
+        <item>EUR</item>
+        <item>NGN</item>
+        <item>CHF</item>
+        <item>CAD</item>
+        <item>ARS</item>
+        <item>AUD</item>
+        <item>BSD</item>
+        <item>BDT</item>
+        <item>BBD</item>
+        <item>XOF</item>
+        <item>BRL</item>
+        <item>BGN</item>
+        <item>FJD</item>
+        <item>XAF</item>
+        <item>CNY</item>
+        <item>COP</item>
+        <item>HRK</item>
+        <item>CZK</item>
+        <item>DKK</item>
+        <item>EGP</item>
+        <item>QAR</item>
+        <item>ZAR</item>
+        <item>EUR</item>
+        <item>HKD</item>
+
+    </string-array>
+</resources>
+
+
