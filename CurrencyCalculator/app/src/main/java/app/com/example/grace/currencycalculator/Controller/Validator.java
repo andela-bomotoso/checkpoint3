@@ -15,10 +15,10 @@ public class Validator {
     public boolean validate(char keyPressed) {
 
        return ( !startWithInvalidCharacter(keyPressed)) && (!operatorAfterOpeningBracket(keyPressed)) && (!isDivisionByZero(keyPressed))
-               && (!isRepeatedZeros(keyPressed)) && (!isMismatchedBrackets(keyPressed)) && (!closingBracketAfterOperator(keyPressed))
+               && (!isRepeatedZeros(keyPressed)) && (!isMismatchedBrackets(keyPressed)) && (!invalidClosingBracket(keyPressed))
                && (!repeatedOpeningBracket(keyPressed)) && (!isEmptyParenthesis(keyPressed)) && (!repeatedClosingBracket(keyPressed))
                && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed))
-               && (!isOperandAfterCurrency(keyPressed)) && (!isRepeatedDecimal(keyPressed))
+               && (!isOperandAfterCurrency(keyPressed                                                                             )) && (!isRepeatedDecimal(keyPressed))
                && (!isInvalidDecimal(keyPressed));
     }
 
@@ -64,14 +64,18 @@ public class Validator {
                 && isOperator(expression.charAt(expression.length() - 2));
     }
 
-    public boolean closingBracketAfterOperator(char keyPressed) {
+    public boolean invalidClosingBracket(char keyPressed) {
 
-        return (expression.length() > 1) && isOperator(expression.charAt(expression.length() - 1)) && keyPressed == ')';
+        return (expression.length() > 1) &&
+                (isOperator(expression.charAt(expression.length() - 1)) || expression.charAt(expression.length()-1) == '.')
+                && keyPressed == ')';
     }
 
     public boolean operatorAfterOpeningBracket(char keyPressed) {
-            return (expression.length() > 1) && (expression.charAt(expression.length() - 1) == '(')
-                    && (isOperator(keyPressed) | keyPressed == '.');
+
+            return (((expression.length() > 1) && (expression.charAt(expression.length() - 1) == '(')
+                    && (isOperator(keyPressed)))
+                    || (expression.equals("(") && isOperator(keyPressed)));
     }
 
     public boolean repeatedOpeningBracket(char keyPressed) {
@@ -145,13 +149,13 @@ public class Validator {
                 }
             }
         }
-        return currentOperand.contains(".") && keyPressed == '.';
+        return (currentOperand.contains(".") && keyPressed == '.');
     }
 
     public boolean isInvalidDecimal(char keyPressed) {
 
-        return ((expression.length() > 1) && ((expression.charAt(expression.length() - 1) == '(')
-                && (keyPressed == '.')) || ((expression.equals("(") && keyPressed == '.')
-                || (isOperator(expression.charAt(expression.length()-1) && keyPressed == '.')) ;
+        return ((expression.length() > 1) && ((expression.charAt(expression.length() - 1) == '(') ||
+                (isOperator(expression.charAt(expression.length()-1))))
+                && (keyPressed == '.')) || ((expression.equals("(") && keyPressed == '.'));
     }
 }
