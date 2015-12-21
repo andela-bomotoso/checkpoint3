@@ -99,7 +99,6 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(7.0,calculator.compute(expression1));
     }
 
-
     public void testComputeWhenExpressionIsIncomplete() {
         String expression = "2(-3";
         Expression expression1 = expressionAnalyzer.breakDownExpression(expression);

@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String currentExpression;
 
-    private HorizontalScrollView computationAreaScroll;
+    private HorizontalScrollView computationAreaScrollView;
 
     ExpressionAnalyzer expressionAnalyzer;
 
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         initializeComponents();
 
         if(exchangeRatesFetcher.isOnline(this)) {
-            //exchangeRatesFetcher.execute();
+            exchangeRatesFetcher.execute();
         }
 
         if (savedInstanceState != null) {
@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeComponents() {
+        computationAreaScrollView = (HorizontalScrollView)findViewById(R.id.computation_scroll);
         exchangeRatesFetcher = new ExchangeRatesFetcher(this);
         exchangeRateDbHelper = new ExchangeRateDbHelper(this);
         expressionParts = new ArrayList<>();
@@ -286,6 +287,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateWorkArea(char buttonText) {
+        computationAreaScrollView.fullScroll(View.FOCUS_RIGHT);
 
         String currentExpression = computationArea.getText().toString();
         expressionValidator.setExpression(currentExpression);
@@ -337,7 +339,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkOperatorValidity(char buttonText) {
         setValidatorExpression();
-        computationArea.setText(expressionValidator.validateOperator(buttonText));
+        if(expressionValidator.validate(buttonText)) {
+            computationArea.setText(expressionValidator.validateOperator(buttonText));
+        }
+        computationAreaScrollView.fullScroll(View.FOCUS_RIGHT);
     }
 
     public void deleteFromWorkArea() {
