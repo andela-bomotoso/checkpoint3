@@ -84,7 +84,9 @@ public class Calculator {
     private void analyzeExpressionInParenthesis(List<ExpressionPart> expressionParts,int currentIndex) {
 
         double computedValueBuffer = computedValue;
+        String previousOperatorBuffer = previousOperator;
         String currentOperatorBuffer = currentOperator;
+        double previousOperandBuffer = previousOperand;
         Expression expression = expressionAnalyzer.breakDownExpression(currentOperandString);
         currentOperand = compute(expression);
         expressionParts.set(currentIndex, new Operand(currentOperand + ""));
@@ -93,6 +95,9 @@ public class Calculator {
             computedValue = computedValueBuffer;
         }
         currentOperator = currentOperatorBuffer;
+        previousOperator = previousOperatorBuffer;
+        previousOperand = previousOperandBuffer;
+
     }
 
     private double getTemporaryValue() {

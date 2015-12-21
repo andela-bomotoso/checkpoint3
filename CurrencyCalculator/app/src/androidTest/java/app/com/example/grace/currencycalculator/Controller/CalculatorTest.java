@@ -115,4 +115,10 @@ public class CalculatorTest extends ActivityInstrumentationTestCase2<MainActivit
         assertEquals(54.0,calculator.compute(expression1));
     }
 
+    public void testFixBug() {
+        String expression = "2-3(5+2)";
+        Expression expression1 = expressionAnalyzer.breakDownExpression(expression);
+        assertEquals(-19.0,calculator.compute(expression1));
+    }
+
 }

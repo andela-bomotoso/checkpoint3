@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         initializeComponents();
 
         if(exchangeRatesFetcher.isOnline(this)) {
-            exchangeRatesFetcher.execute();
+            //exchangeRatesFetcher.execute();
         }
 
         if (savedInstanceState != null) {
