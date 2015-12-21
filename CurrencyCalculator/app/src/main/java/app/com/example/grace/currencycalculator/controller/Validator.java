@@ -73,9 +73,9 @@ public class Validator {
 
     public boolean operatorAfterOpeningBracket(char keyPressed) {
 
-            return (((expression.length() > 1) && (expression.charAt(expression.length() - 1) == '(')
-                    && (isOperator(keyPressed)))
+        boolean ans =  (((expression.length() >= 1) && (expression.charAt(expression.length() - 1) == '(') && (isOperator(keyPressed)))
                     || (expression.equals("(") && isOperator(keyPressed)));
+        return ans;
     }
 
     public boolean repeatedOpeningBracket(char keyPressed) {

@@ -337,7 +337,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkOperatorValidity(char buttonText) {
         setValidatorExpression();
-        computationArea.setText(expressionValidator.validateOperator(buttonText));
+        if(expressionValidator.validate(buttonText)) {
+            computationArea.setText(expressionValidator.validateOperator(buttonText));
+        }
     }
 
     public void deleteFromWorkArea() {
