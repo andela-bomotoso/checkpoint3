@@ -17,8 +17,7 @@ public class Validator {
        return ( !startWithInvalidCharacter(keyPressed)) && (!operatorAfterOpeningBracket(keyPressed)) && (!isDivisionByZero(keyPressed))
                && (!isRepeatedZeros(keyPressed)) && (!isMismatchedBrackets(keyPressed)) && (!invalidClosingBracket(keyPressed))
                && (!repeatedOpeningBracket(keyPressed)) && (!isEmptyParenthesis(keyPressed)) && (!repeatedClosingBracket(keyPressed))
-               && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed))
-               && (!isOperandAfterCurrency(keyPressed                                                                             )) && (!isRepeatedDecimal(keyPressed))
+               && (!openingBracketsDoesNotMatchClosingBrackets(keyPressed)) && (!isOperandAfterCurrency(keyPressed                                                                             )) && (!isRepeatedDecimal(keyPressed))
                && (!isInvalidDecimal(keyPressed));
     }
 
